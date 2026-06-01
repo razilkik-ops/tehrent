@@ -55,7 +55,7 @@ async function createApp() {
   });
 
   if (isProduction) {
-    const clientPath = path.join(root, "dist/client");
+    const clientPath = path.join(root, "dist");
     app.use(express.static(clientPath));
     app.get("*", (_request, response) => {
       response.sendFile(path.join(clientPath, "index.html"));
