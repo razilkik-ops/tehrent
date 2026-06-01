@@ -10,9 +10,22 @@ if (!isRender) {
 const root = process.cwd();
 const distPath = path.join(root, "dist");
 const rootIndexPath = path.join(root, "index.html");
-const distIndexPath = path.join(distPath, "index.html");
-const assetsSourcePath = path.join(distPath, "assets");
-const assetsTargetPath = path.join(root, "assets");
+
+async function copyDistToRoot() {
+  const entries = await fs.readdir(distPath, { withFileTypes: true });
+
+  for (const entry of entries) {
+    const sourcePath = path.join(distPath, entry.name);
+    const targetPath = path.join(root, entry.name);
+
+    if (entry.isDirectory()) {
+      await fs.rm(targetPath, { recursive: true, force: true });
+      await fs.cp(sourcePath, targetPath, { recursive: true });
+    } else if (entry.isFile()) {
+      await fs.copyFile(sourcePath, targetPath);
+    }
+  }
+}
 
 async function copyIndexToRoute(routePath) {
   const targetDirectory = path.join(root, routePath);
@@ -25,9 +38,7 @@ async function equipmentSlugs() {
   return [...equipmentSource.matchAll(/slug:\s*"([^"]+)"/g)].map((match) => match[1]);
 }
 
-await fs.copyFile(distIndexPath, rootIndexPath);
-await fs.rm(assetsTargetPath, { recursive: true, force: true });
-await fs.cp(assetsSourcePath, assetsTargetPath, { recursive: true });
+await copyDistToRoot();
 
 await copyIndexToRoute("catalog");
 
