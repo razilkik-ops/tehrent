@@ -3,7 +3,7 @@ services:
     name: tehrent
     runtime: static
     buildCommand: npm ci && npm run build
-    staticPublishPath: ./dist
+    staticPublishPath: .
     routes:
       - type: rewrite
         source: /*
