@@ -39,8 +39,8 @@ export function FinalCTA() {
   }
 
   return (
-    <section id="contacts" className="w-full content-gutter pb-14 pt-6">
-      <div className="relative isolate mx-auto max-w-none overflow-hidden rounded-[16px] bg-night p-7 text-white shadow-[0_30px_90px_rgba(23,27,22,0.28),0_10px_28px_rgba(23,27,22,0.16)] lg:h-[392px] lg:p-[66px_76px]">
+    <section id="contacts" className="w-full content-gutter pb-10 pt-4 md:pb-14 md:pt-6">
+      <div className="relative isolate mx-auto max-w-none overflow-hidden rounded-[14px] bg-night p-5 text-white shadow-[0_30px_90px_rgba(23,27,22,0.28),0_10px_28px_rgba(23,27,22,0.16)] md:rounded-[16px] lg:h-[392px] lg:p-[66px_76px]">
         <img
           src="/images/equipment/hero-excavator.png"
           alt=""
@@ -64,15 +64,15 @@ export function FinalCTA() {
         <span className="pointer-events-none absolute inset-x-8 bottom-[-24px] -z-20 hidden h-16 rounded-full bg-night/35 blur-3xl lg:block" />
 
         <div className="max-w-[700px]">
-          <h2 className="text-[42px] font-black leading-tight lg:text-[42px]">Готовы приступить к работе?</h2>
-          <p className="mt-4 max-w-[620px] text-xl font-semibold leading-9 text-white/72">
+          <h2 className="text-[30px] font-black leading-tight md:text-[42px]">Готовы приступить к работе?</h2>
+          <p className="mt-3 max-w-[620px] text-sm font-semibold leading-6 text-white/72 md:mt-4 md:text-xl md:leading-9">
             Оставьте заявку прямо сейчас — подберём технику и рассчитаем стоимость за 15 минут.
           </p>
-          <div className="mt-10 grid max-w-[720px] gap-6 text-base font-bold leading-7 text-white/70 sm:grid-cols-3">
+          <div className="mt-5 grid max-w-[720px] gap-3 text-sm font-bold leading-5 text-white/70 sm:grid-cols-3 md:mt-10 md:gap-6 md:text-base md:leading-7">
             {ctaBenefits.map((item, index) => (
-              <span key={item} className="flex items-center gap-4">
-                <span className="grid size-11 shrink-0 place-items-center rounded-full bg-accent text-night">
-                  {index === 0 ? <Zap size={23} /> : <ShieldCheck size={23} />}
+              <span key={item} className="flex items-center gap-3 md:gap-4">
+                <span className="grid size-9 shrink-0 place-items-center rounded-full bg-accent text-night md:size-11">
+                  {index === 0 ? <Zap size={19} className="md:size-[23px]" /> : <ShieldCheck size={19} className="md:size-[23px]" />}
                 </span>
                 {item}
               </span>
@@ -82,17 +82,17 @@ export function FinalCTA() {
 
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="mt-8 max-w-[590px] lg:absolute lg:right-[76px] lg:top-[62px] lg:mt-0 lg:w-[590px]"
+          className="mt-5 max-w-[590px] md:mt-8 lg:absolute lg:right-[76px] lg:top-[62px] lg:mt-0 lg:w-[590px]"
         >
-          <div className="grid gap-4 sm:grid-cols-2">
+          <div className="grid gap-3 sm:grid-cols-2 md:gap-4">
             <input
-              className="focus-ring h-[80px] rounded-[8px] border border-white/22 bg-night/72 px-6 text-lg font-bold text-white placeholder:text-white/42 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_16px_35px_rgba(0,0,0,0.22)] backdrop-blur"
+              className="focus-ring h-12 rounded-[8px] border border-white/22 bg-night/72 px-4 text-sm font-bold text-white placeholder:text-white/42 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_16px_35px_rgba(0,0,0,0.22)] backdrop-blur md:h-[80px] md:px-6 md:text-lg"
               style={{ backgroundColor: "rgba(23, 27, 22, 0.78)" }}
               placeholder="Ваше имя"
               {...register("name")}
             />
             <input
-              className="focus-ring h-[80px] rounded-[8px] border border-white/22 bg-night/72 px-6 text-lg font-bold text-white placeholder:text-white/42 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_16px_35px_rgba(0,0,0,0.22)] backdrop-blur"
+              className="focus-ring h-12 rounded-[8px] border border-white/22 bg-night/72 px-4 text-sm font-bold text-white placeholder:text-white/42 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_16px_35px_rgba(0,0,0,0.22)] backdrop-blur md:h-[80px] md:px-6 md:text-lg"
               style={{ backgroundColor: "rgba(23, 27, 22, 0.78)" }}
               placeholder="Телефон"
               {...register("phone")}
@@ -100,10 +100,10 @@ export function FinalCTA() {
           </div>
           <input type="hidden" {...register("task")} />
           {errors.phone ? <p className="mt-2 text-sm font-bold text-accent">{errors.phone.message}</p> : null}
-          <Button type="submit" disabled={isSubmitting} className="mt-4 h-[76px] w-full rounded-[8px] text-xl font-black shadow-[0_18px_38px_rgba(240,180,41,0.26)]">
+          <Button type="submit" disabled={isSubmitting} className="mt-3 h-12 w-full rounded-[8px] text-sm font-black shadow-[0_18px_38px_rgba(240,180,41,0.26)] md:mt-4 md:h-[76px] md:text-xl">
             {isSubmitting ? "Отправляем..." : "Оставить заявку"}
           </Button>
-          <p className="mt-7 max-w-[590px] text-base font-semibold leading-8 text-white/58">
+          <p className="mt-4 max-w-[590px] text-xs font-semibold leading-5 text-white/58 md:mt-7 md:text-base md:leading-8">
             Нажимая кнопку, вы соглашаетесь на обработку персональных данных.
           </p>
           {sent ? <p className="mt-3 text-base font-black text-accent">Заявка отправлена. Скоро свяжемся.</p> : null}

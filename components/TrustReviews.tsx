@@ -34,23 +34,23 @@ const reviews = [
 export function TrustReviews() {
   return (
     <section id="reviews" className="w-full content-gutter py-12">
-      <div className="relative mx-auto grid max-w-none gap-7 rounded-[18px] bg-white/76 p-8 shadow-soft lg:grid-cols-[330px_1fr] xl:p-10">
-        <div className="flex flex-col justify-center">
+      <div className="relative mx-auto grid max-w-none gap-7 rounded-[18px] bg-white/76 p-5 shadow-soft sm:p-8 lg:grid-cols-[330px_1fr] xl:p-10">
+        <div className="flex min-w-0 flex-col justify-center">
           <h2 className="text-[34px] font-black leading-tight">Нам доверяют</h2>
           <p className="mt-8 text-xl font-black leading-8 text-ink/78">
             <span className="text-[34px] text-accent">300+</span> компаний уже
             <br />
             работают с нами
           </p>
-          <div className="mt-8 h-px w-[250px] bg-ink/10" />
-          <Button href="#reviews" variant="outline" className="mt-6 h-[62px] w-[250px] rounded-[8px] text-base">
+          <div className="mt-8 h-px w-full max-w-[250px] bg-ink/10" />
+          <Button href="#reviews" variant="outline" className="mt-6 h-[62px] w-full max-w-[250px] rounded-[8px] text-base">
             Смотреть все отзывы
           </Button>
         </div>
 
-        <div className="grid gap-5 lg:grid-cols-3">
+        <div className="grid min-w-0 gap-5 lg:grid-cols-3">
           {reviews.map((review) => (
-            <article key={review.company} className="rounded-[12px] border border-ink/8 bg-white p-8 shadow-card">
+            <article key={review.company} className="min-w-0 rounded-[12px] border border-ink/8 bg-white p-5 shadow-card sm:p-8">
               <div className="flex items-start gap-5">
                 <span className={`grid size-12 shrink-0 place-items-center rounded-[10px] text-2xl ${review.logoClass}`}>
                   {review.logo}

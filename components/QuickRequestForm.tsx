@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { leadSchema, submitLead, type LeadFormValues } from "@/lib/forms";
 import { Button } from "./Button";
 
-export function QuickRequestForm({ sourcePage = "home" }: { sourcePage?: string }) {
+export function QuickRequestForm({ sourcePage = "home", id = "lead" }: { sourcePage?: string; id?: string }) {
   const [sent, setSent] = useState(false);
   const {
     register,
@@ -33,7 +33,7 @@ export function QuickRequestForm({ sourcePage = "home" }: { sourcePage?: string 
 
   return (
     <form
-      id="lead"
+      id={id}
       onSubmit={handleSubmit(onSubmit)}
       className="rounded-[14px] border-0 bg-night/95 p-4 text-white shadow-[0_18px_45px_rgba(0,0,0,0.28)] outline-none ring-0 focus-within:outline-none focus-within:ring-0 md:rounded-[18px] md:p-4 2xl:p-5"
     >
