@@ -61,11 +61,12 @@ export function HomePage() {
                 <img
                   src="/images/equipment/hero-excavator.png"
                   alt=""
-                  className="absolute inset-0 h-full w-full object-cover object-[67%_50%] opacity-48"
+                  className="absolute inset-0 h-full w-full object-cover object-[67%_50%]"
                   loading="eager"
                 />
-                <span className="absolute inset-0 bg-gradient-to-b from-night/80 via-night/66 to-night/92" />
-                <div className="relative z-10 [text-shadow:0_2px_10px_rgba(0,0,0,0.62)]">
+                <span className="absolute inset-0 bg-night/62" />
+                <span className="absolute inset-0 bg-gradient-to-b from-night/48 via-night/34 to-night/72" />
+                <div className="relative z-10">
                   <h1 className="max-w-[290px] text-[34px] font-black leading-[1.08]">
                     Аренда техники для стройки и участка
                   </h1>
@@ -76,7 +77,7 @@ export function HomePage() {
                     {mobileHeroItems.map(({ icon: Icon, label }) => (
                       <span
                         key={label}
-                        className="grid min-h-[64px] place-items-center gap-1.5 rounded-[12px] border border-white/18 bg-night/42 px-2 py-2 text-center text-[11px] font-black leading-tight text-white/94 backdrop-blur-sm"
+                        className="grid min-h-[64px] place-items-center gap-1.5 rounded-[12px] bg-night/48 px-2 py-2 text-center text-[11px] font-black leading-tight text-white/94 backdrop-blur-sm"
                       >
                         <Icon size={18} className="text-accent" />
                         {label}
