@@ -8,12 +8,14 @@ export type Equipment = {
   title: string;
   category: string;
   shortDescription: string;
+  hourlyPrice?: number;
   pricePerShift: number;
   availability: Availability;
   specs: Record<string, string | number>;
   attachments: string[];
   useCases: string[];
   imagePlaceholderType: ImagePlaceholderType;
+  imageUrl?: string;
   withOperatorAvailable: boolean;
   deliveryAvailable: boolean;
 };
@@ -21,98 +23,102 @@ export type Equipment = {
 export const equipment: Equipment[] = [
   {
     id: "eq-bobcat-e35",
-    slug: "bobcat-e35",
-    title: "Bobcat E35",
+    slug: "kubota-kx41-3v",
+    title: "KUBOTA KX41-3V",
     category: "Мини-экскаваторы",
     shortDescription:
-      "Маневренный мини-экскаватор для траншей, котлованов и работ на ограниченной площадке.",
-    pricePerShift: 12000,
+      "Мощный японский мини-экскаватор для траншей, котлованов и работ на ограниченной территории.",
+    hourlyPrice: 85,
+    pricePerShift: 680,
     availability: "today",
     specs: {
-      "Эксплуатационная масса": "3.5 т",
-      "Глубина копания": "3.1 м",
-      "Ширина гусениц": "300 мм",
-      "Ширина прохода": "1.55 м",
-      "Объем ковша": "0.11 м3",
-      "Мощность двигателя": "24.2 л.с."
+      "Эксплуатационная масса": "2 т",
+      "Глубина копания": "2.3 м",
+      "Ширина прохода": "1.4 м",
+      "Объем ковша": "0.08 м3",
+      "Мощность двигателя": "17 л.с."
     },
-    attachments: ["Ковш 30/40/60 см", "Гидромолот", "Ямобур"],
+    attachments: ["Ковши 20, 30, 50 см", "Планировочный ковш"],
     useCases: [
       "Траншеи под коммуникации",
       "Подготовка фундамента",
       "Планировка участка",
-      "Демонтаж с гидромолотом"
+      "Работы на ограниченной территории"
     ],
     imagePlaceholderType: "excavator",
+    imageUrl: "/images/equipment/kubota-kx41-3v.png",
     withOperatorAvailable: true,
     deliveryAvailable: true
   },
   {
     id: "eq-kubota-u27",
-    slug: "kubota-u27",
-    title: "Kubota U27",
+    slug: "kubota-kx41-3v-auger",
+    title: "KUBOTA KX41-3V с буром",
     category: "Мини-экскаваторы",
     shortDescription:
-      "Компактная модель с узким корпусом для дворов, садов и плотной городской застройки.",
-    pricePerShift: 10500,
+      "Бурение свай под забор, фундамент дома и другие строительные работы.",
+    hourlyPrice: 120,
+    pricePerShift: 920,
     availability: "today",
     specs: {
-      "Эксплуатационная масса": "2.7 т",
-      "Глубина копания": "2.8 м",
-      "Ширина прохода": "1.5 м",
-      "Объем ковша": "0.08 м3",
-      "Радиус поворота": "компактный",
+      "Эксплуатационная масса": "2 т",
+      "Глубина копания": "2.5 м",
+      "Глубина отверстий": "до 2.5 м",
+      "Диаметр шнека": "200, 250, 300, 400 мм",
       "Тип хода": "гусеничный"
     },
-    attachments: ["Ковши", "Ямобур"],
-    useCases: ["Работы во дворе", "Благоустройство", "Траншеи до 2.8 м", "Посадочные ямы"],
+    attachments: ["Шнеки 200-400 мм", "Ковши"],
+    useCases: ["Бурение под сваи", "Заборы", "Фундамент", "Посадочные ямы"],
     imagePlaceholderType: "excavator",
+    imageUrl: "/images/equipment/excavator-auger.png",
     withOperatorAvailable: true,
     deliveryAvailable: true
   },
   {
     id: "eq-jcb-1cx",
-    slug: "jcb-1cx",
-    title: "JCB 1CX",
-    category: "Погрузчики",
+    slug: "new-holland-l160",
+    title: "NEW HOLLAND L160",
+    category: "Мини-погрузчики",
     shortDescription:
-      "Погрузчик-экскаватор для погрузки, планировки, уборки грунта и смешанных задач.",
-    pricePerShift: 13500,
+      "Мини-погрузчик для строительных площадок, планировки участка, уборки снега и погрузочных работ.",
+    hourlyPrice: 85,
+    pricePerShift: 680,
     availability: "today",
     specs: {
       "Эксплуатационная масса": "3.2 т",
-      "Глубина копания": "2.5 м",
-      "Ковш фронтальный": "0.28 м3",
-      "Грузоподъемность": "610 кг",
-      "Ширина": "1.56 м",
+      "Грузоподъемность": "870 кг",
+      "Ширина ковша": "1.6 м",
+      "Высота выгрузки": "2.5 м",
       "Привод": "колесный"
     },
-    attachments: ["Ковш", "Вилы", "Щетка"],
-    useCases: ["Погрузка грунта", "Уборка территории", "Планировка", "Перемещение паллет"],
+    attachments: ["Ковш 0.35 м3", "Гидробур", "Вилы"],
+    useCases: ["Погрузка грунта", "Уборка территории", "Планировка", "Перемещение материалов"],
     imagePlaceholderType: "loader",
+    imageUrl: "/images/equipment/new-holland-l160.png",
     withOperatorAvailable: true,
     deliveryAvailable: true
   },
   {
     id: "eq-bobcat-s650",
-    slug: "bobcat-s650",
-    title: "Bobcat S650",
-    category: "Погрузчики",
+    slug: "new-holland-l160-auger",
+    title: "NEW HOLLAND L160 с гидробуром",
+    category: "Мини-погрузчики",
     shortDescription:
-      "Мини-погрузчик для строительных площадок, складов, уборки снега и погрузочных работ.",
-    pricePerShift: 11500,
-    availability: "tomorrow",
+      "Бурение свай, посадка деревьев, планировка участка и погрузочные работы на объекте.",
+    hourlyPrice: 120,
+    pricePerShift: 960,
+    availability: "today",
     specs: {
+      "Эксплуатационная масса": "3.2 т",
       "Грузоподъемность": "870 кг",
-      "Высота выгрузки": "3.2 м",
-      "Мощность": "74 л.с.",
-      "Ширина": "1.83 м",
-      "Тип хода": "колесный",
-      "Навесное": "щетка, вилы"
+      "Глубина отверстий": "до 4 м",
+      "Диаметр шнека": "200, 300, 400 мм",
+      "Работа": "1.83 м"
     },
-    attachments: ["Ковш", "Щетка", "Вилы", "Снегоуборщик"],
-    useCases: ["Погрузка", "Уборка снега", "Складские работы", "Перемещение материалов"],
+    attachments: ["Гидробур", "Ковш", "Вилы"],
+    useCases: ["Бурение свай", "Посадка деревьев", "Погрузка", "Планировка"],
     imagePlaceholderType: "loader",
+    imageUrl: "/images/equipment/loader-auger.png",
     withOperatorAvailable: true,
     deliveryAvailable: true
   },
@@ -212,7 +218,7 @@ export const equipment: Equipment[] = [
 
 export const categories = [
   "Мини-экскаваторы",
-  "Погрузчики",
+  "Мини-погрузчики",
   "Автовышки",
   "Самосвалы",
   "Катки",
@@ -226,7 +232,7 @@ export const availabilityLabels: Record<Availability, string> = {
 };
 
 export function formatPrice(value: number) {
-  return new Intl.NumberFormat("ru-BY").format(value) + " BYN";
+  return new Intl.NumberFormat("ru-BY").format(value) + " руб";
 }
 
 export function getEquipmentBySlug(slug: string) {

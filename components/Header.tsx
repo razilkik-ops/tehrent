@@ -3,10 +3,7 @@ import { useState } from "react";
 import { Button } from "./Button";
 
 const nav = [
-  { href: "/catalog", label: "Каталог" },
   { href: "/#services", label: "Услуги" },
-  { href: "/#delivery", label: "Доставка" },
-  { href: "/#prices", label: "Цены" },
   { href: "/#about", label: "О компании" },
   { href: "/#contacts", label: "Контакты" }
 ];

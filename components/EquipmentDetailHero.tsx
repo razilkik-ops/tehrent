@@ -5,7 +5,7 @@ import { EquipmentVisual } from "./EquipmentVisual";
 
 const detailPrefixes: Record<string, string> = {
   "Мини-экскаваторы": "Мини-экскаватор",
-  Погрузчики: "Погрузчик",
+  "Мини-погрузчики": "Мини-погрузчик",
   Автовышки: "Автовышка",
   Самосвалы: "Самосвал",
   Катки: "Каток",
@@ -16,7 +16,7 @@ export function EquipmentDetailHero({ item }: { item: Equipment }) {
   return (
     <section className="container-page pt-6 md:pt-8">
       <nav className="text-xs text-ink/48">
-        Главная / Каталог / {item.category} / <span className="text-ink">{item.title}</span>
+        Главная / Техника / {item.category} / <span className="text-ink">{item.title}</span>
       </nav>
       <div className="mt-5">
         <h1 className="max-w-4xl text-[34px] font-black leading-tight tracking-normal md:text-[40px]">
@@ -28,6 +28,7 @@ export function EquipmentDetailHero({ item }: { item: Equipment }) {
         <div className="rounded-[22px] bg-white p-3 shadow-soft">
           <EquipmentVisual
             type={item.imagePlaceholderType}
+            imageUrl={item.imageUrl}
             className="min-h-[300px] rounded-[18px] md:min-h-[360px]"
             priorityLabel="1 / 6"
           />
@@ -36,6 +37,7 @@ export function EquipmentDetailHero({ item }: { item: Equipment }) {
               <EquipmentVisual
                 key={index}
                 type={item.imagePlaceholderType}
+                imageUrl={item.imageUrl}
                 className={`min-h-20 rounded-xl ${index === 0 ? "ring-3 ring-accent" : ""}`}
               />
             ))}
@@ -46,7 +48,7 @@ export function EquipmentDetailHero({ item }: { item: Equipment }) {
             {availabilityLabels[item.availability]}
           </span>
           <div className="mt-6">
-            <p className="text-3xl font-black">{formatPrice(item.pricePerShift)}/смена</p>
+            <p className="text-3xl font-black">от {formatPrice(item.pricePerShift)}/смена</p>
             <p className="mt-3 text-sm leading-6 text-ink/62">
               Смена 8 часов. Оператор, доставка и навесное оборудование рассчитываются под объект.
             </p>

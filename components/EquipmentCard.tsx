@@ -17,6 +17,7 @@ export function EquipmentCard({ item, selected, onToggleSelected, onRequest }: E
         <a href={`/equipment/${item.slug}`}>
           <EquipmentVisual
             type={item.imagePlaceholderType}
+            imageUrl={item.imageUrl}
             className="h-[102px] !min-h-0 rounded-none xl:h-[128px] 2xl:h-[136px]"
             priorityLabel={availabilityLabels[item.availability]}
           />

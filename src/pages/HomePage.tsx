@@ -1,11 +1,8 @@
-import { ArrowRight, BadgeCheck, CalendarCheck, Clock3, PhoneCall, ShieldCheck, Truck, X } from "lucide-react";
+import { BadgeCheck, CalendarCheck, Clock3, PhoneCall, ShieldCheck, Truck, X } from "lucide-react";
 import { useState } from "react";
 import { BenefitsGrid } from "@/components/BenefitsGrid";
 import { Button } from "@/components/Button";
-import { CalculatorBlock } from "@/components/CalculatorBlock";
-import { CategorySlider } from "@/components/CategorySlider";
 import { EquipmentVisual } from "@/components/EquipmentVisual";
-import { FAQ } from "@/components/FAQ";
 import { FinalCTA } from "@/components/FinalCTA";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
@@ -13,14 +10,13 @@ import { HowItWorks } from "@/components/HowItWorks";
 import { QuickRequestForm } from "@/components/QuickRequestForm";
 import { SectionTitle } from "@/components/SectionTitle";
 import { StickyMobileCTA } from "@/components/StickyMobileCTA";
-import { TrustReviews } from "@/components/TrustReviews";
 import { equipment, formatPrice } from "@/lib/equipment";
 import { usePageMeta } from "@/src/usePageMeta";
 
 const stats = [
-  { icon: Truck, value: "150+", label: "единиц техники" },
+  { icon: Truck, value: "Своя", label: "доставка" },
   { icon: Clock3, value: "2 часа", label: "подача техники" },
-  { icon: ShieldCheck, value: "24/7", label: "поддержка" }
+  { icon: ShieldCheck, value: "8:00–22:00", label: "без выходных" }
 ];
 
 const heroTrustItems = ["Собственный парк", "Исправная техника", "ТО по регламенту", "Быстрый выезд на объект"];
@@ -59,16 +55,16 @@ export function HomePage() {
             <div className="rounded-[18px]">
               <div className="relative isolate min-h-[360px] overflow-hidden rounded-[18px] bg-night px-5 py-6 text-white shadow-soft">
                 <img
-                  src="/images/equipment/hero-excavator.png"
+                  src="/images/equipment/hero-mini-equipment.png"
                   alt=""
                   className="absolute inset-0 h-full w-full object-cover object-[67%_50%]"
                   loading="eager"
                 />
-                <span className="absolute inset-0 bg-night/62" />
-                <span className="absolute inset-0 bg-gradient-to-b from-night/48 via-night/34 to-night/72" />
+                <span className="absolute inset-0 bg-night/72" />
+                <span className="absolute inset-0 bg-gradient-to-b from-night/62 via-night/42 to-night/80" />
                 <div className="relative z-10">
                   <h1 className="max-w-[290px] text-[34px] font-black leading-[1.08]">
-                    Аренда техники для стройки и участка
+                    Аренда мини-техники для стройки и участка
                   </h1>
                   <p className="mt-3 max-w-[285px] text-sm font-semibold leading-6 text-white/78">
                     Подберём мини-экскаватор, погрузчик или самосвал под задачу, привезём на объект и согласуем смену.
@@ -117,20 +113,25 @@ export function HomePage() {
                   <p className="text-xs font-black uppercase text-accent">Каталог аренды</p>
                   <h2 className="mt-1 text-[34px] font-black leading-tight text-ink">Техника в наличии</h2>
                 </div>
-                <a href="/catalog" className="pb-1 text-xs font-black text-ink/58">
-                  Все
-                </a>
               </div>
 
               <div className="mt-5 grid gap-4">
                 {mobileFeaturedEquipment.map((item) => {
-                  const hourlyPrice = Math.round(item.pricePerShift / 8 / 50) * 50;
+                  const hourlyPrice = item.hourlyPrice ?? Math.round(item.pricePerShift / 8);
+                  const workSpec =
+                    item.specs["Глубина копания"] ||
+                    item.specs["Глубина отверстий"] ||
+                    item.specs["Высота выгрузки"] ||
+                    item.specs["Работа"] ||
+                    item.specs["Ширина"];
+                  const workLabel = item.specs["Глубина отверстий"] ? "Глубина" : item.specs["Глубина копания"] ? "Копания" : "Работа";
 
                   return (
                     <article key={item.id} className="overflow-hidden rounded-[12px] bg-white shadow-card">
                       <a href={`/equipment/${item.slug}`} aria-label={item.title}>
                         <EquipmentVisual
                           type={item.imagePlaceholderType}
+                          imageUrl={item.imageUrl}
                           priorityLabel="В наличии"
                           className="h-[220px] !min-h-0 rounded-none"
                         />
@@ -148,8 +149,8 @@ export function HomePage() {
                               value: item.specs["Эксплуатационная масса"] || item.specs["Масса"] || item.specs["Грузоподъемность"]
                             },
                             {
-                              label: "Работа",
-                              value: item.specs["Глубина копания"] || item.specs["Высота подъема"] || item.specs["Ширина"]
+                              label: workLabel,
+                              value: workSpec
                             },
                             {
                               label: "Навесное",
@@ -165,11 +166,11 @@ export function HomePage() {
                         <div className="mt-5 grid grid-cols-2 gap-3 border-y border-ink/8 py-4">
                           <div>
                             <p className="text-xs font-bold text-ink/48">1 час</p>
-                            <p className="mt-1 text-lg font-black text-ink">{formatPrice(hourlyPrice)}</p>
+                            <p className="mt-1 text-lg font-black text-ink">от {formatPrice(hourlyPrice)}</p>
                           </div>
                           <div>
-                            <p className="text-xs font-bold text-ink/48">Смена</p>
-                            <p className="mt-1 text-lg font-black text-accent">{formatPrice(item.pricePerShift)}</p>
+                            <p className="text-xs font-bold text-ink/48">Смена 8ч</p>
+                            <p className="mt-1 text-lg font-black text-accent">от {formatPrice(item.pricePerShift)}</p>
                           </div>
                         </div>
                         <Button href="#mobile-lead" className="mt-4 h-12 w-full rounded-[10px] text-base font-black">
@@ -181,10 +182,6 @@ export function HomePage() {
                 })}
               </div>
 
-              <Button href="/catalog" variant="outline" className="mt-5 h-12 w-full rounded-[10px] text-base font-black">
-                Показать всю технику
-              </Button>
-
               <div className="mt-5">
                 <QuickRequestForm id="mobile-lead" />
               </div>
@@ -193,7 +190,7 @@ export function HomePage() {
 
           <div className="relative isolate mx-auto hidden overflow-hidden rounded-[26px] bg-white shadow-soft md:block md:h-[720px] lg:h-[760px] lg:rounded-[30px] xl:h-[820px] 2xl:h-[880px]">
             <img
-              src="/images/equipment/hero-excavator.png"
+              src="/images/equipment/hero-mini-equipment.png"
               alt=""
               className="absolute inset-y-0 right-0 hidden h-full w-[61.5%] object-cover object-[100%_50%] md:block"
               loading="eager"
@@ -216,22 +213,21 @@ export function HomePage() {
               </p>
               <div className="mt-5 rounded-[14px] border border-ink/8 bg-paper px-4 py-3 md:hidden">
                 <p className="text-sm font-black leading-5 text-ink">
-                  ТехПрокат — сервис аренды техники для стройки, благоустройства и перевозок.
+                  ТехПрокат — сервис аренды мини-техники для стройки и участка.
                 </p>
                 <p className="mt-1.5 text-xs font-semibold leading-5 text-ink/62">
                   Подберём машину под задачу, согласуем доставку на объект и поможем с оператором.
                 </p>
                 <Button href="#lead" className="mt-3 h-11 w-full gap-2 rounded-[10px] px-5 text-sm font-black">
-                  Быстрая заявка <ArrowRight size={16} />
+                  Быстрая заявка
                 </Button>
               </div>
               <h1 className="mt-5 text-[38px] font-black leading-[1.12] tracking-normal md:mt-8 md:text-[48px] lg:text-[48px] xl:text-[48px] 2xl:text-[68px]">
-                Мини-экскаваторы, погрузчики и другая спецтехника в аренду{" "}
+                Мини-экскаваторы, мини-погрузчики и навесное оборудование в аренду{" "}
                 <span className="block text-accent">с доставкой</span>
               </h1>
               <p className="mt-4 max-w-[670px] text-base font-semibold leading-7 text-ink/72 md:mt-5 md:text-lg lg:text-[19px] lg:leading-[1.55] 2xl:mt-8 2xl:text-[21px] 2xl:leading-[1.62]">
-                Современная техника от проверенных поставщиков для любых задач. Подача в день
-                обращения.
+                Предоставляем исправную технику с оператором. Возможна договорная цена под объём и срок аренды.
               </p>
               <div className="mt-6 grid max-w-[790px] grid-cols-1 gap-4 sm:grid-cols-3 md:mt-7 md:gap-5 2xl:mt-11 2xl:gap-7">
                 {stats.map(({ icon: Icon, value, label }) => (
@@ -247,22 +243,15 @@ export function HomePage() {
                 ))}
               </div>
               <div className="mt-7 flex flex-col gap-3 sm:flex-row md:mt-8 md:gap-4 2xl:mt-14">
-                <Button href="/catalog" className="hidden h-14 rounded-[12px] px-9 text-base font-black md:inline-flex 2xl:h-[64px] 2xl:px-14 2xl:text-xl">
-                  Перейти в каталог
-                </Button>
                 <Button
-                  href="#prices"
+                  href="#lead"
                   variant="outline"
                   className="h-[52px] rounded-[12px] px-7 text-base font-black md:h-14 md:px-9 2xl:h-[64px] 2xl:px-14 2xl:text-xl"
                 >
-                  Рассчитать стоимость
+                  Оставить заявку
                 </Button>
               </div>
 
-              <EquipmentVisual type="excavator" variant="hero" className="mt-8 min-h-[310px] md:hidden" />
-              <div className="mt-5 md:hidden">
-                <QuickRequestForm />
-              </div>
             </div>
 
             <div className="absolute bottom-[92px] right-9 z-20 hidden w-[50%] max-w-[1000px] md:block xl:right-10 2xl:w-[52%]">
@@ -277,30 +266,12 @@ export function HomePage() {
               ))}
             </div>
           </div>
-          <div className="hidden">
-            {heroTrustItems.map((item) => (
-              <span key={item} className="flex items-center gap-1">
-                <BadgeCheck size={15} className="text-accent" /> {item}
-              </span>
-            ))}
-          </div>
         </section>
 
-        <section id="services" className="hidden w-full content-gutter py-12 md:block">
-          <div className="mx-auto flex max-w-none flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <SectionTitle title="Популярные категории" />
-            <Button href="/catalog" variant="outline" className="h-auto border-none bg-transparent px-0 text-lg text-ink/72 hover:bg-transparent hover:text-ink">
-              Смотреть весь каталог <ArrowRight size={17} />
-            </Button>
-          </div>
-          <CategorySlider />
-        </section>
-
-        <CalculatorBlock />
         <BenefitsGrid />
         <HowItWorks />
 
-        <section className="w-full content-gutter py-12">
+        <section id="services" className="w-full content-gutter py-12">
           <div className="mx-auto max-w-none">
           <SectionTitle title="Решаем задачи на любых объектах" />
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-6">
@@ -317,10 +288,6 @@ export function HomePage() {
           </div>
           </div>
         </section>
-
-        <TrustReviews />
-
-        <FAQ />
 
         <FinalCTA />
       </main>
@@ -364,7 +331,7 @@ export function HomePage() {
         </div>
       ) : null}
       <Footer />
-      <StickyMobileCTA target="#mobile-lead" />
+      {!bookingModalOpen ? <StickyMobileCTA target="#mobile-lead" /> : null}
     </>
   );
 }

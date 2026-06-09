@@ -8,7 +8,7 @@ import { LeadForm } from "@/components/LeadForm";
 import { RelatedEquipment } from "@/components/RelatedEquipment";
 import { SpecsTable } from "@/components/SpecsTable";
 import { StickyMobileCTA } from "@/components/StickyMobileCTA";
-import { getEquipmentBySlug } from "@/lib/equipment";
+import { formatPrice, getEquipmentBySlug } from "@/lib/equipment";
 import { usePageMeta } from "@/src/usePageMeta";
 
 export function EquipmentPage() {
@@ -18,9 +18,7 @@ export function EquipmentPage() {
   usePageMeta(
     item ? `${item.title} аренда | ТехПрокат` : "Техника не найдена | ТехПрокат",
     item
-      ? `${item.title} в аренду: ${item.shortDescription} Цена от ${item.pricePerShift.toLocaleString(
-          "ru-BY"
-        )} BYN/смена.`
+      ? `${item.title} в аренду: ${item.shortDescription} Цена от ${formatPrice(item.pricePerShift)} за смену.`
       : "Запрошенная техника не найдена в каталоге."
   );
 
@@ -95,6 +93,7 @@ export function EquipmentPage() {
           <div className="relative isolate grid gap-6 overflow-hidden rounded-[32px] bg-night p-6 text-white shadow-soft md:grid-cols-[1fr_auto] md:items-center lg:p-10">
             <EquipmentVisual
               type={item.imagePlaceholderType}
+              imageUrl={item.imageUrl}
               variant="dark"
               className="absolute inset-y-0 right-0 -z-10 hidden min-h-0 w-1/2 rounded-none opacity-72 lg:block"
             />

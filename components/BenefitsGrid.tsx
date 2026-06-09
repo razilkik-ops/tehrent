@@ -14,18 +14,18 @@ export function BenefitsGrid() {
   return (
     <section id="about" className="w-full content-gutter py-12">
       <div className="mx-auto max-w-none">
-      <SectionTitle title="Почему выбирают ТехПрокат" />
-      <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-6">
-        {benefits.map(({ icon: Icon, title, text }) => (
-          <div key={title} className="flex min-h-[150px] items-center gap-5 rounded-[12px] border border-ink/8 bg-white p-6 shadow-card">
-            <Icon className="shrink-0 text-accent" size={40} strokeWidth={1.9} />
-            <div>
-              <h3 className="text-lg font-black leading-tight">{title}</h3>
-              <p className="mt-2 text-base font-semibold leading-6 text-ink/58">{text}</p>
+        <SectionTitle title="Почему выбирают ТехПрокат" />
+        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-6">
+          {benefits.map(({ icon: Icon, title, text }) => (
+            <div key={title} className="flex min-h-[150px] items-center gap-5 rounded-[12px] border border-ink/8 bg-white p-6 shadow-card">
+              <Icon className="shrink-0 text-accent" size={40} strokeWidth={1.9} />
+              <div>
+                <h3 className="text-lg font-black leading-tight">{title}</h3>
+                <p className="mt-2 text-base font-semibold leading-6 text-ink/58">{text}</p>
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
       </div>
     </section>
   );

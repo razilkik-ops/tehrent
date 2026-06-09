@@ -3,15 +3,13 @@ import { Logo } from "./Header";
 
 export function Footer() {
   const clientLinks = [
-    { label: "Как работаем", href: "/#how" },
-    { label: "Доставка", href: "/#delivery" },
-    { label: "Цены", href: "/#prices" },
-    { label: "FAQ", href: "/#faq" },
+    { label: "Услуги", href: "/#services" },
+    { label: "О компании", href: "/#about" },
     { label: "Контакты", href: "/#contacts" }
   ];
 
   return (
-    <footer id="contacts" className="bg-night text-white">
+    <footer className="bg-night text-white">
       <div className="container-page grid gap-8 py-10 md:grid-cols-[1.1fr_1.35fr_1.1fr] md:gap-5 md:py-2 xl:grid-cols-[1.2fr_2fr_1.2fr] xl:gap-10 xl:py-12">
         <div>
           <Logo />
@@ -33,11 +31,11 @@ export function Footer() {
         </div>
         <div className="grid gap-8 sm:grid-cols-2 md:gap-5 xl:gap-8">
           <div>
-            <h3 className="font-black md:text-xs xl:text-base">Каталог</h3>
+            <h3 className="font-black md:text-xs xl:text-base">Техника</h3>
             <div className="mt-4 grid gap-2 text-sm text-white/62 md:mt-1 md:gap-0 md:text-[9px] xl:mt-4 xl:gap-2 xl:text-sm">
-              {["Мини-экскаваторы", "Погрузчики", "Самосвалы", "Автовышки", "Навесное"].map(
+              {["Мини-экскаваторы", "Мини-погрузчики", "Бурение", "Планировка", "Вывоз грунта"].map(
                 (item) => (
-                  <a href="/catalog" key={item} className="hover:text-white">
+                  <a href="/#services" key={item} className="hover:text-white">
                     {item}
                   </a>
                 )

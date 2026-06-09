@@ -3,6 +3,7 @@ import type { ImagePlaceholderType } from "@/lib/equipment";
 type EquipmentVisualProps = {
   type: ImagePlaceholderType;
   className?: string;
+  imageUrl?: string;
   priorityLabel?: string;
   variant?: "card" | "hero" | "dark";
 };
@@ -24,6 +25,7 @@ const objectPosition: Record<ImagePlaceholderType, string> = {
 export function EquipmentVisual({
   type,
   className = "",
+  imageUrl,
   priorityLabel,
   variant = "card"
 }: EquipmentVisualProps) {
@@ -33,7 +35,7 @@ export function EquipmentVisual({
       className={`relative isolate min-h-56 overflow-hidden rounded-[28px] bg-[#dde4dc] ${className}`}
     >
       <img
-        src={imageMap[type]}
+        src={imageUrl || imageMap[type]}
         alt=""
         className={`absolute inset-0 h-full w-full object-cover ${objectPosition[type]}`}
         loading="lazy"
