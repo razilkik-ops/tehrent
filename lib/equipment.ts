@@ -70,7 +70,7 @@ export const equipment: Equipment[] = [
     attachments: ["Шнеки 200-400 мм", "Ковши"],
     useCases: ["Бурение под сваи", "Заборы", "Фундамент", "Посадочные ямы"],
     imagePlaceholderType: "excavator",
-    imageUrl: "/images/equipment/excavator-auger.png",
+    imageUrl: "/images/equipment/kubota-kx41-3v-auger.png",
     withOperatorAvailable: true,
     deliveryAvailable: true
   },
@@ -118,7 +118,7 @@ export const equipment: Equipment[] = [
     attachments: ["Гидробур", "Ковш", "Вилы"],
     useCases: ["Бурение свай", "Посадка деревьев", "Погрузка", "Планировка"],
     imagePlaceholderType: "loader",
-    imageUrl: "/images/equipment/loader-auger.png",
+    imageUrl: "/images/equipment/new-holland-l160-auger.png",
     withOperatorAvailable: true,
     deliveryAvailable: true
   },
@@ -142,6 +142,7 @@ export const equipment: Equipment[] = [
     attachments: ["Люлька", "Страховочный комплект"],
     useCases: ["Фасады", "Монтаж рекламы", "Электромонтаж", "Работы на складах"],
     imagePlaceholderType: "lift",
+    imageUrl: "/images/equipment/manitou-180-atj.png",
     withOperatorAvailable: true,
     deliveryAvailable: true
   },
@@ -165,6 +166,7 @@ export const equipment: Equipment[] = [
     attachments: ["Тент", "Доставка сыпучих материалов"],
     useCases: ["Вывоз грунта", "Доставка песка", "Доставка щебня", "Снабжение объекта"],
     imagePlaceholderType: "truck",
+    imageUrl: "/images/equipment/kamaz-6520.png",
     withOperatorAvailable: true,
     deliveryAvailable: true
   },
@@ -188,6 +190,7 @@ export const equipment: Equipment[] = [
     attachments: ["Оператор", "Доставка"],
     useCases: ["Асфальтирование", "Дорожки", "Парковки", "Благоустройство"],
     imagePlaceholderType: "loader",
+    imageUrl: "/images/equipment/hamm-hd12.png",
     withOperatorAvailable: true,
     deliveryAvailable: true
   },
@@ -211,6 +214,7 @@ export const equipment: Equipment[] = [
     attachments: ["Пика", "Долото"],
     useCases: ["Демонтаж бетона", "Разрушение кирпича", "Мерзлый грунт", "Проемы"],
     imagePlaceholderType: "excavator",
+    imageUrl: "/images/equipment/delta-f5-hydraulic-hammer.png",
     withOperatorAvailable: true,
     deliveryAvailable: true
   }
