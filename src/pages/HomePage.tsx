@@ -22,9 +22,9 @@ const stats = [
 const heroTrustItems = ["Собственный парк", "Исправная техника", "ТО по регламенту", "Быстрый выезд на объект"];
 
 const mobileHeroItems = [
-  { icon: Truck, label: "Доставка" },
-  { icon: Clock3, label: "от 2 часов" },
-  { icon: ShieldCheck, label: "Оператор" }
+  { icon: Truck, label: "Собственная доставка" },
+  { icon: Clock3, label: "Минимальный заказ от 3 часов" },
+  { icon: ShieldCheck, label: "Опытнейшие операторы" }
 ];
 
 const mobileFeaturedEquipment = equipment.slice(0, 4);
@@ -42,7 +42,7 @@ export function HomePage() {
   const [bookingModalOpen, setBookingModalOpen] = useState(false);
 
   usePageMeta(
-    "Аренда спецтехники с доставкой | ТехПрокат",
+    "Аренда спецтехники с доставкой | Arentex.by",
     "Аренда мини-экскаваторов, мини-погрузчиков, автовышек, самосвалов и навесного оборудования с оператором."
   );
 
@@ -63,17 +63,17 @@ export function HomePage() {
                 <span className="absolute inset-0 bg-night/72" />
                 <span className="absolute inset-0 bg-gradient-to-b from-night/62 via-night/42 to-night/80" />
                 <div className="relative z-10">
-                  <h1 className="max-w-[290px] text-[34px] font-black leading-[1.08]">
-                    Аренда мини-техники для стройки и участка
+                  <h1 className="max-w-[340px] text-[22px] font-black leading-[1.2]">
+                    Аренда мини-техники для копки траншей, планировки участка и других строительных работ
                   </h1>
-                  <p className="mt-3 max-w-[285px] text-sm font-semibold leading-6 text-white/78">
-                    Подберём мини-экскаватор, погрузчик или самосвал под задачу, привезём на объект и согласуем смену.
+                  <p className="mt-5 max-w-[300px] text-base font-semibold leading-7 text-white/86">
+                    Подберем мини-экскаватор, мини-погрузчик под любую задачу, доставим на объект в течение двух часов.
                   </p>
                   <div className="mt-8 grid grid-cols-3 gap-2">
                     {mobileHeroItems.map(({ icon: Icon, label }) => (
                       <span
                         key={label}
-                        className="grid min-h-[64px] place-items-center gap-1.5 rounded-[12px] bg-night/48 px-2 py-2 text-center text-[11px] font-black leading-tight text-white/94 backdrop-blur-sm"
+                        className="grid min-h-[76px] place-items-center gap-1.5 rounded-[12px] bg-night/58 px-1.5 py-2 text-center text-[10px] font-black leading-tight text-white/94 backdrop-blur-sm"
                       >
                         <Icon size={18} className="text-accent" />
                         {label}
@@ -85,13 +85,13 @@ export function HomePage() {
 
               <div className="mt-3 grid gap-3">
                 <a
-                  href="tel:+375291234567"
+                  href="tel:+3752920958258"
                   className="flex min-h-[74px] items-center gap-4 rounded-[14px] border border-accent/55 bg-white px-5 text-night shadow-card"
                 >
                   <span className="grid size-11 shrink-0 place-items-center rounded-[11px] border border-accent/45 bg-accent/12 text-accent">
                     <PhoneCall size={23} />
                   </span>
-                  <span className="text-xl font-black">+375 29 123-45-67</span>
+                  <span className="text-xl font-black">+375 29 209-58-25</span>
                 </a>
 
                 <button
@@ -102,7 +102,7 @@ export function HomePage() {
                   <span className="grid size-11 shrink-0 place-items-center rounded-[11px] border border-night/12 bg-white/24">
                     <CalendarCheck size={23} />
                   </span>
-                  <span className="text-xl font-black uppercase leading-tight">Бронировать онлайн</span>
+                  <span className="text-xl font-black uppercase leading-tight">Заявка</span>
                 </button>
               </div>
             </div>
@@ -118,13 +118,56 @@ export function HomePage() {
               <div className="mt-5 grid gap-4">
                 {mobileFeaturedEquipment.map((item) => {
                   const hourlyPrice = item.hourlyPrice ?? Math.round(item.pricePerShift / 8);
+                  const cardTitle =
+                    item.id === "eq-kubota-u27"
+                      ? "Аренда мини-экскаватора с буром на базе KX41-3V"
+                      : item.id === "eq-jcb-1cx"
+                        ? "Аренда мини-погрузчика New Holland L160"
+                        : item.id === "eq-bobcat-s650"
+                          ? "Аренда мини-погрузчика с гидробуром на базе New Holland L160"
+                        : `Аренда ${item.title}`;
                   const workSpec =
-                    item.specs["Глубина копания"] ||
+                    item.id === "eq-kubota-u27"
+                      ? item.specs["Глубина отверстий"]
+                      : item.id === "eq-jcb-1cx"
+                        ? item.specs["Ширина ковша"]
+                        : item.id === "eq-bobcat-s650"
+                          ? item.specs["Глубина отверстий"]
+                        : item.specs["Глубина копания"] ||
                     item.specs["Глубина отверстий"] ||
                     item.specs["Высота выгрузки"] ||
                     item.specs["Работа"] ||
                     item.specs["Ширина"];
-                  const workLabel = item.specs["Глубина отверстий"] ? "Глубина" : item.specs["Глубина копания"] ? "Копания" : "Работа";
+                  const workLabel =
+                    item.id === "eq-kubota-u27"
+                      ? "Глубина отверстий"
+                      : item.specs["Глубина копания"]
+                        ? "Глубина копания"
+                        : item.id === "eq-jcb-1cx"
+                          ? "Ширина ковша"
+                          : item.id === "eq-bobcat-s650"
+                            ? "Глубина отверстий"
+                          : item.specs["Глубина отверстий"]
+                            ? "Глубина"
+                            : "Работа";
+                  const attachmentsLabel =
+                    item.id === "eq-bobcat-e35"
+                      ? "Ковши"
+                      : item.id === "eq-kubota-u27"
+                        ? "Шнеки"
+                        : item.id === "eq-bobcat-s650"
+                          ? "Диаметр шнека"
+                          : "Навесное";
+                  const attachmentsValue =
+                    item.id === "eq-bobcat-e35"
+                      ? "20, 30, 50 см, планировочные"
+                      : item.id === "eq-kubota-u27"
+                        ? "Шнеки 200, 250, 300, 400 мм"
+                        : item.id === "eq-jcb-1cx"
+                          ? "Ковш 0,35 м3, гидробур"
+                          : item.id === "eq-bobcat-s650"
+                            ? "200, 300, 400 мм"
+                          : item.attachments[0];
 
                   return (
                     <article key={item.id} className="overflow-hidden rounded-[12px] bg-white shadow-card">
@@ -139,7 +182,7 @@ export function HomePage() {
                       <div className="px-5 pb-5 pt-4">
                         <p className="text-[11px] font-black uppercase text-ink/44">{item.category}</p>
                         <h3 className="mt-2 text-[22px] font-black uppercase leading-tight text-ink">
-                          Аренда {item.title}
+                          {cardTitle}
                         </h3>
                         <p className="mt-3 text-sm font-semibold leading-6 text-ink/62">{item.shortDescription}</p>
                         <dl className="mt-4 grid grid-cols-3 overflow-hidden rounded-[10px] border border-ink/8 bg-paper/70 text-center">
@@ -153,12 +196,12 @@ export function HomePage() {
                               value: workSpec
                             },
                             {
-                              label: "Навесное",
-                              value: item.attachments[0]
+                              label: attachmentsLabel,
+                              value: attachmentsValue
                             }
                           ].map((spec) => (
                             <div key={spec.label} className="border-r border-ink/8 px-2 py-3 last:border-r-0">
-                              <dt className="text-[10px] font-black uppercase leading-none text-ink/42">{spec.label}</dt>
+                              <dt className="text-[9px] font-black uppercase leading-tight text-ink/42">{spec.label}</dt>
                               <dd className="mt-1.5 text-xs font-black leading-tight text-ink">{spec.value}</dd>
                             </div>
                           ))}
@@ -213,7 +256,7 @@ export function HomePage() {
               </p>
               <div className="mt-5 rounded-[14px] border border-ink/8 bg-paper px-4 py-3 md:hidden">
                 <p className="text-sm font-black leading-5 text-ink">
-                  ТехПрокат — сервис аренды мини-техники для стройки и участка.
+                  Arentex.by — сервис аренды мини-техники для стройки и участка.
                 </p>
                 <p className="mt-1.5 text-xs font-semibold leading-5 text-ink/62">
                   Подберём машину под задачу, согласуем доставку на объект и поможем с оператором.

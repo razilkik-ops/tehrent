@@ -9,7 +9,7 @@ export function StickyMobileCTA({ target = "/#lead" }: { target?: string }) {
           Заявка
         </Button>
         <a
-          href="tel:+375291234567"
+          href="tel:+3752920958258"
           className="grid h-12 w-12 place-items-center rounded-2xl bg-night text-white"
           aria-label="Позвонить"
         >

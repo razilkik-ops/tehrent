@@ -65,7 +65,7 @@ export function EquipmentDetailHero({ item }: { item: Equipment }) {
           </dl>
           <div className="mt-8 grid gap-3 sm:grid-cols-2">
             <Button href="#equipment-lead">В заявку</Button>
-            <Button href="tel:+375291234567" variant="dark" className="gap-2">
+            <Button href="tel:+3752920958258" variant="dark" className="gap-2">
               <Phone size={17} /> Позвонить
             </Button>
           </div>

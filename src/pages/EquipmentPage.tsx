@@ -16,7 +16,7 @@ export function EquipmentPage() {
   const item = getEquipmentBySlug(slug);
 
   usePageMeta(
-    item ? `${item.title} аренда | ТехПрокат` : "Техника не найдена | ТехПрокат",
+    item ? `${item.title} аренда | Arentex.by` : "Техника не найдена | Arentex.by",
     item
       ? `${item.title} в аренду: ${item.shortDescription} Цена от ${formatPrice(item.pricePerShift)} за смену.`
       : "Запрошенная техника не найдена в каталоге."

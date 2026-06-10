@@ -14,7 +14,7 @@ export function BenefitsGrid() {
   return (
     <section id="about" className="w-full content-gutter py-12">
       <div className="mx-auto max-w-none">
-        <SectionTitle title="Почему выбирают ТехПрокат" />
+        <SectionTitle title="Почему выбирают Arentex.by" />
         <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-6">
           {benefits.map(({ icon: Icon, title, text }) => (
             <div key={title} className="flex min-h-[150px] items-center gap-5 rounded-[12px] border border-ink/8 bg-white p-6 shadow-card">
