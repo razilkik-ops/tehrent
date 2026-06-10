@@ -1,4 +1,4 @@
-import { BadgeCheck, CalendarCheck, Clock3, PhoneCall, ShieldCheck, Truck, X } from "lucide-react";
+import { CalendarCheck, Clock3, PhoneCall, ShieldCheck, Truck, X } from "lucide-react";
 import { useState } from "react";
 import { BenefitsGrid } from "@/components/BenefitsGrid";
 import { Button } from "@/components/Button";
@@ -10,16 +10,8 @@ import { HowItWorks } from "@/components/HowItWorks";
 import { QuickRequestForm } from "@/components/QuickRequestForm";
 import { SectionTitle } from "@/components/SectionTitle";
 import { StickyMobileCTA } from "@/components/StickyMobileCTA";
-import { equipment, formatPrice } from "@/lib/equipment";
+import { equipment, formatPrice, type Equipment } from "@/lib/equipment";
 import { usePageMeta } from "@/src/usePageMeta";
-
-const stats = [
-  { icon: Truck, value: "Своя", label: "доставка" },
-  { icon: Clock3, value: "2 часа", label: "подача техники" },
-  { icon: ShieldCheck, value: "8:00–22:00", label: "без выходных" }
-];
-
-const heroTrustItems = ["Собственный парк", "Исправная техника", "ТО по регламенту", "Быстрый выезд на объект"];
 
 const mobileHeroItems = [
   { icon: Truck, label: "Собственная доставка" },
@@ -37,6 +29,57 @@ const cases = [
   "Промышленные объекты",
   "Складская и логистика"
 ];
+
+function getFeaturedEquipmentCard(item: Equipment) {
+  const hourlyPrice = item.hourlyPrice ?? Math.round(item.pricePerShift / 8);
+
+  if (item.id === "eq-kubota-u27") {
+    return {
+      hourlyPrice,
+      title: "Аренда мини-экскаватора с буром на базе KX41-3V",
+      workLabel: "Глубина отверстий",
+      workSpec: item.specs["Глубина отверстий"],
+      attachmentsLabel: "Шнеки",
+      attachmentsValue: "Шнеки 200, 250, 300, 400 мм"
+    };
+  }
+
+  if (item.id === "eq-jcb-1cx") {
+    return {
+      hourlyPrice,
+      title: "Аренда мини-погрузчика New Holland L160",
+      workLabel: "Ширина ковша",
+      workSpec: item.specs["Ширина ковша"],
+      attachmentsLabel: "Навесное",
+      attachmentsValue: "Ковш 0,35 м3, гидробур"
+    };
+  }
+
+  if (item.id === "eq-bobcat-s650") {
+    return {
+      hourlyPrice,
+      title: "Аренда мини-погрузчика с гидробуром на базе New Holland L160",
+      workLabel: "Глубина отверстий",
+      workSpec: item.specs["Глубина отверстий"],
+      attachmentsLabel: "Диаметр шнека",
+      attachmentsValue: "200, 300, 400 мм"
+    };
+  }
+
+  return {
+    hourlyPrice,
+    title: `Аренда ${item.title}`,
+    workLabel: item.specs["Глубина копания"] ? "Глубина копания" : item.specs["Глубина отверстий"] ? "Глубина" : "Работа",
+    workSpec:
+      item.specs["Глубина копания"] ||
+      item.specs["Глубина отверстий"] ||
+      item.specs["Высота выгрузки"] ||
+      item.specs["Работа"] ||
+      item.specs["Ширина"],
+    attachmentsLabel: item.id === "eq-bobcat-e35" ? "Ковши" : "Навесное",
+    attachmentsValue: item.id === "eq-bobcat-e35" ? "20, 30, 50 см, планировочные" : item.attachments[0]
+  };
+}
 
 export function HomePage() {
   const [bookingModalOpen, setBookingModalOpen] = useState(false);
@@ -117,57 +160,7 @@ export function HomePage() {
 
               <div className="mt-5 grid gap-4">
                 {mobileFeaturedEquipment.map((item) => {
-                  const hourlyPrice = item.hourlyPrice ?? Math.round(item.pricePerShift / 8);
-                  const cardTitle =
-                    item.id === "eq-kubota-u27"
-                      ? "Аренда мини-экскаватора с буром на базе KX41-3V"
-                      : item.id === "eq-jcb-1cx"
-                        ? "Аренда мини-погрузчика New Holland L160"
-                        : item.id === "eq-bobcat-s650"
-                          ? "Аренда мини-погрузчика с гидробуром на базе New Holland L160"
-                        : `Аренда ${item.title}`;
-                  const workSpec =
-                    item.id === "eq-kubota-u27"
-                      ? item.specs["Глубина отверстий"]
-                      : item.id === "eq-jcb-1cx"
-                        ? item.specs["Ширина ковша"]
-                        : item.id === "eq-bobcat-s650"
-                          ? item.specs["Глубина отверстий"]
-                        : item.specs["Глубина копания"] ||
-                    item.specs["Глубина отверстий"] ||
-                    item.specs["Высота выгрузки"] ||
-                    item.specs["Работа"] ||
-                    item.specs["Ширина"];
-                  const workLabel =
-                    item.id === "eq-kubota-u27"
-                      ? "Глубина отверстий"
-                      : item.specs["Глубина копания"]
-                        ? "Глубина копания"
-                        : item.id === "eq-jcb-1cx"
-                          ? "Ширина ковша"
-                          : item.id === "eq-bobcat-s650"
-                            ? "Глубина отверстий"
-                          : item.specs["Глубина отверстий"]
-                            ? "Глубина"
-                            : "Работа";
-                  const attachmentsLabel =
-                    item.id === "eq-bobcat-e35"
-                      ? "Ковши"
-                      : item.id === "eq-kubota-u27"
-                        ? "Шнеки"
-                        : item.id === "eq-bobcat-s650"
-                          ? "Диаметр шнека"
-                          : "Навесное";
-                  const attachmentsValue =
-                    item.id === "eq-bobcat-e35"
-                      ? "20, 30, 50 см, планировочные"
-                      : item.id === "eq-kubota-u27"
-                        ? "Шнеки 200, 250, 300, 400 мм"
-                        : item.id === "eq-jcb-1cx"
-                          ? "Ковш 0,35 м3, гидробур"
-                          : item.id === "eq-bobcat-s650"
-                            ? "200, 300, 400 мм"
-                          : item.attachments[0];
+                  const card = getFeaturedEquipmentCard(item);
 
                   return (
                     <article key={item.id} className="overflow-hidden rounded-[12px] bg-white shadow-card">
@@ -182,7 +175,7 @@ export function HomePage() {
                       <div className="px-5 pb-5 pt-4">
                         <p className="text-[11px] font-black uppercase text-ink/44">{item.category}</p>
                         <h3 className="mt-2 text-[22px] font-black uppercase leading-tight text-ink">
-                          {cardTitle}
+                          {card.title}
                         </h3>
                         <p className="mt-3 text-sm font-semibold leading-6 text-ink/62">{item.shortDescription}</p>
                         <dl className="mt-4 grid grid-cols-3 overflow-hidden rounded-[10px] border border-ink/8 bg-paper/70 text-center">
@@ -192,24 +185,24 @@ export function HomePage() {
                               value: item.specs["Эксплуатационная масса"] || item.specs["Масса"] || item.specs["Грузоподъемность"]
                             },
                             {
-                              label: workLabel,
-                              value: workSpec
+                              label: card.workLabel,
+                              value: card.workSpec
                             },
                             {
-                              label: attachmentsLabel,
-                              value: attachmentsValue
+                              label: card.attachmentsLabel,
+                              value: card.attachmentsValue
                             }
                           ].map((spec) => (
                             <div key={spec.label} className="border-r border-ink/8 px-2 py-3 last:border-r-0">
                               <dt className="text-[9px] font-black uppercase leading-tight text-ink/42">{spec.label}</dt>
-                              <dd className="mt-1.5 text-xs font-black leading-tight text-ink">{spec.value}</dd>
+                              <dd className="mt-1.5 break-words text-xs font-black leading-tight text-ink">{spec.value}</dd>
                             </div>
                           ))}
                         </dl>
                         <div className="mt-5 grid grid-cols-2 gap-3 border-y border-ink/8 py-4">
                           <div>
                             <p className="text-xs font-bold text-ink/48">1 час</p>
-                            <p className="mt-1 text-lg font-black text-ink">от {formatPrice(hourlyPrice)}</p>
+                            <p className="mt-1 text-lg font-black text-ink">от {formatPrice(card.hourlyPrice)}</p>
                           </div>
                           <div>
                             <p className="text-xs font-bold text-ink/48">Смена 8ч</p>
@@ -231,83 +224,140 @@ export function HomePage() {
             </section>
           </div>
 
-          <div className="relative isolate mx-auto hidden overflow-hidden rounded-[26px] bg-white shadow-soft md:block md:h-[720px] lg:h-[760px] lg:rounded-[30px] xl:h-[820px] 2xl:h-[880px]">
-            <img
-              src="/images/equipment/hero-mini-equipment.png"
-              alt=""
-              className="absolute inset-y-0 right-0 hidden h-full w-[61.5%] object-cover object-[100%_50%] md:block"
-              loading="eager"
-            />
-            <span
-              className="absolute inset-0 hidden md:block"
-              style={{
-                background:
-                  "linear-gradient(90deg, #fff 0%, #fff 34%, rgba(255,255,255,.94) 43%, rgba(255,255,255,.62) 50%, rgba(255,255,255,.05) 62%, rgba(255,255,255,0) 100%)"
-              }}
-            />
-            <span className="absolute inset-x-0 bottom-0 hidden h-[21%] bg-gradient-to-t from-white via-white/70 to-transparent md:block" />
+          <div className="hidden md:block">
+            <div className="relative isolate overflow-hidden rounded-[24px] bg-white shadow-soft lg:rounded-[28px]">
+              <div className="grid min-h-[560px] lg:grid-cols-[1.02fr_0.98fr]">
+                <div className="relative z-10 flex flex-col justify-center px-8 py-10 lg:px-12 xl:px-16">
+                  <p className="text-sm font-black uppercase text-accent">Аренда мини-техники</p>
+                  <h1 className="mt-4 max-w-[720px] text-[40px] font-black leading-[1.08] tracking-normal text-ink lg:text-[48px] xl:text-[54px]">
+                    Аренда мини-техники для копки траншей, планировки участка и других строительных работ
+                  </h1>
+                  <p className="mt-6 max-w-[620px] text-xl font-semibold leading-8 text-ink/68">
+                    Подберем мини-экскаватор, мини-погрузчик под любую задачу, доставим на объект в течение двух часов.
+                  </p>
 
-            <div className="relative z-10 flex flex-col px-5 py-8 md:h-full md:w-[49%] md:px-16 md:pb-28 md:pt-14 lg:px-20 xl:px-[68px] xl:pt-16">
-              <p className="inline-flex w-fit items-center gap-3 text-sm font-black text-ink/72 md:text-base">
-                <span className="grid size-7 place-items-center rounded-full border-2 border-accent/45 text-accent">
-                  <ShieldCheck size={16} />
-                </span>
-                Аренда спецтехники с доставкой по Минску и Беларуси
-              </p>
-              <div className="mt-5 rounded-[14px] border border-ink/8 bg-paper px-4 py-3 md:hidden">
-                <p className="text-sm font-black leading-5 text-ink">
-                  Arentex.by — сервис аренды мини-техники для стройки и участка.
-                </p>
-                <p className="mt-1.5 text-xs font-semibold leading-5 text-ink/62">
-                  Подберём машину под задачу, согласуем доставку на объект и поможем с оператором.
-                </p>
-                <Button href="#lead" className="mt-3 h-11 w-full gap-2 rounded-[10px] px-5 text-sm font-black">
-                  Быстрая заявка
-                </Button>
-              </div>
-              <h1 className="mt-5 text-[38px] font-black leading-[1.12] tracking-normal md:mt-8 md:text-[48px] lg:text-[48px] xl:text-[48px] 2xl:text-[68px]">
-                Мини-экскаваторы, мини-погрузчики и навесное оборудование в аренду{" "}
-                <span className="block text-accent">с доставкой</span>
-              </h1>
-              <p className="mt-4 max-w-[670px] text-base font-semibold leading-7 text-ink/72 md:mt-5 md:text-lg lg:text-[19px] lg:leading-[1.55] 2xl:mt-8 2xl:text-[21px] 2xl:leading-[1.62]">
-                Предоставляем исправную технику с оператором. Возможна договорная цена под объём и срок аренды.
-              </p>
-              <div className="mt-6 grid max-w-[790px] grid-cols-1 gap-4 sm:grid-cols-3 md:mt-7 md:gap-5 2xl:mt-11 2xl:gap-7">
-                {stats.map(({ icon: Icon, value, label }) => (
-                  <div key={value} className="flex items-center gap-5">
-                    <span className="grid size-12 shrink-0 place-items-center rounded-2xl border-2 border-accent/65 text-accent md:size-11 2xl:size-[56px]">
-                      <Icon className="size-6 2xl:size-7" />
-                    </span>
-                    <div>
-                      <p className="whitespace-nowrap text-2xl font-black leading-none md:text-[26px] 2xl:text-[30px]">{value}</p>
-                      <p className="mt-1 text-sm font-semibold leading-4 text-ink/62 md:text-sm 2xl:text-base">{label}</p>
-                    </div>
+                  <div className="mt-8 grid max-w-[720px] grid-cols-3 gap-3">
+                    {mobileHeroItems.map(({ icon: Icon, label }) => (
+                      <div
+                        key={label}
+                        className="grid min-h-[112px] place-items-center gap-3 rounded-[14px] border border-ink/8 bg-paper px-4 py-5 text-center shadow-card"
+                      >
+                        <span className="grid size-11 place-items-center rounded-[12px] bg-accent/18 text-accent">
+                          <Icon size={22} />
+                        </span>
+                        <span className="text-sm font-black leading-tight text-ink">{label}</span>
+                      </div>
+                    ))}
                   </div>
-                ))}
+
+                  <div className="mt-8 grid max-w-[720px] grid-cols-[1fr_auto] gap-4">
+                    <a
+                      href="tel:+3752920958258"
+                      className="flex min-h-[76px] items-center gap-4 rounded-[14px] border border-accent/55 bg-white px-5 text-night shadow-card"
+                    >
+                      <span className="grid size-12 shrink-0 place-items-center rounded-[12px] border border-accent/45 bg-accent/12 text-accent">
+                        <PhoneCall size={24} />
+                      </span>
+                      <span className="text-2xl font-black">+375 29 209-58-25</span>
+                    </a>
+                    <Button href="#desktop-lead" className="h-[76px] rounded-[14px] px-10 text-lg font-black uppercase">
+                      Заявка
+                    </Button>
+                  </div>
+                </div>
+
+                <div className="relative min-h-[560px] overflow-hidden bg-night">
+                  <img
+                    src="/images/equipment/hero-mini-equipment.png"
+                    alt=""
+                    className="absolute inset-0 h-full w-full object-cover object-[66%_50%]"
+                    loading="eager"
+                  />
+                  <span className="absolute inset-0 bg-gradient-to-t from-night/70 via-night/12 to-transparent" />
+                  <span className="absolute bottom-8 left-8 rounded-[14px] bg-night/68 px-5 py-4 text-sm font-black leading-5 text-white shadow-card backdrop-blur-md">
+                    Мини-экскаваторы и мини-погрузчики в наличии сегодня
+                  </span>
+                </div>
               </div>
-              <div className="mt-7 flex flex-col gap-3 sm:flex-row md:mt-8 md:gap-4 2xl:mt-14">
-                <Button
-                  href="#lead"
-                  variant="outline"
-                  className="h-[52px] rounded-[12px] px-7 text-base font-black md:h-14 md:px-9 2xl:h-[64px] 2xl:px-14 2xl:text-xl"
-                >
-                  Оставить заявку
-                </Button>
+            </div>
+
+            <section id="desktop-equipment" className="pt-10">
+              <div className="flex items-end justify-between gap-8">
+                <div>
+                  <p className="text-sm font-black uppercase text-accent">Каталог аренды</p>
+                  <h2 className="mt-2 text-[44px] font-black leading-tight text-ink">Техника в наличии</h2>
+                </div>
+                <p className="max-w-[460px] text-right text-base font-semibold leading-7 text-ink/58">
+                  Мини-экскаваторы и мини-погрузчики для траншей, бурения, планировки, засыпки и погрузочных работ.
+                </p>
               </div>
 
-            </div>
+              <div className="mt-6 grid gap-5 lg:grid-cols-2">
+                {mobileFeaturedEquipment.map((item) => {
+                  const card = getFeaturedEquipmentCard(item);
 
-            <div className="absolute bottom-[92px] right-9 z-20 hidden w-[50%] max-w-[1000px] md:block xl:right-10 2xl:w-[52%]">
-              <QuickRequestForm />
-            </div>
+                  return (
+                    <article key={item.id} className="flex overflow-hidden rounded-[14px] bg-white shadow-card">
+                      <a href={`/equipment/${item.slug}`} aria-label={item.title} className="block shrink-0">
+                        <EquipmentVisual
+                          type={item.imagePlaceholderType}
+                          imageUrl={item.imageUrl}
+                          priorityLabel="В наличии"
+                          className="h-full min-h-[300px] w-[300px] !min-w-[300px] rounded-none"
+                        />
+                      </a>
+                      <div className="flex flex-1 flex-col px-6 pb-6 pt-5">
+                        <p className="text-[11px] font-black uppercase text-ink/44">{item.category}</p>
+                        <h3 className="mt-2 text-[22px] font-black uppercase leading-tight text-ink">
+                          {card.title}
+                        </h3>
+                        <p className="mt-3 text-sm font-semibold leading-6 text-ink/62">
+                          {item.shortDescription}
+                        </p>
+                        <dl className="mt-5 grid grid-cols-3 overflow-hidden rounded-[10px] border border-ink/8 bg-paper/70 text-center">
+                          {[
+                            {
+                              label: "Масса",
+                              value: item.specs["Эксплуатационная масса"] || item.specs["Масса"] || item.specs["Грузоподъемность"]
+                            },
+                            {
+                              label: card.workLabel,
+                              value: card.workSpec
+                            },
+                            {
+                              label: card.attachmentsLabel,
+                              value: card.attachmentsValue
+                            }
+                          ].map((spec) => (
+                            <div key={spec.label} className="border-r border-ink/8 px-2 py-3 last:border-r-0">
+                              <dt className="text-[9px] font-black uppercase leading-tight text-ink/42">{spec.label}</dt>
+                              <dd className="mt-1.5 break-words text-xs font-black leading-tight text-ink">{spec.value}</dd>
+                            </div>
+                          ))}
+                        </dl>
+                        <div className="mt-auto grid grid-cols-2 gap-3 border-y border-ink/8 py-4">
+                          <div>
+                            <p className="text-xs font-bold text-ink/48">1 час</p>
+                            <p className="mt-1 text-lg font-black text-ink">от {formatPrice(card.hourlyPrice)}</p>
+                          </div>
+                          <div>
+                            <p className="text-xs font-bold text-ink/48">Смена 8ч</p>
+                            <p className="mt-1 text-lg font-black text-accent">от {formatPrice(item.pricePerShift)}</p>
+                          </div>
+                        </div>
+                        <Button href="#desktop-lead" className="mt-4 h-12 w-full rounded-[10px] text-base font-black">
+                          Забронировать
+                        </Button>
+                      </div>
+                    </article>
+                  );
+                })}
+              </div>
 
-            <div className="absolute bottom-7 left-[43%] right-7 z-20 hidden items-center justify-between gap-4 text-[13px] font-bold text-ink/62 md:flex xl:left-[45%] xl:gap-5 xl:text-[14px] 2xl:left-[46%] 2xl:text-[15px]">
-              {heroTrustItems.map((item) => (
-                <span key={item} className="flex items-center gap-2 whitespace-nowrap">
-                  <BadgeCheck size={18} className="shrink-0 text-accent xl:size-5" /> {item}
-                </span>
-              ))}
-            </div>
+              <div id="desktop-lead" className="mt-8">
+                <QuickRequestForm />
+              </div>
+            </section>
           </div>
         </section>
 
