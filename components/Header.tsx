@@ -44,8 +44,8 @@ export function Header() {
               <span className="whitespace-nowrap text-[10px] text-ink/52 xl:text-xs">Ежедневно с 8:00 до 20:00</span>
             </span>
           </a>
-          <Button href="/#lead" size="sm" className="h-9 rounded-[8px] px-4 text-[11px] xl:h-12 xl:px-7 xl:text-xs">
-            Оставить заявку
+          <Button href="/#desktop-lead" size="sm" className="h-9 rounded-[8px] px-4 text-[11px] xl:h-12 xl:px-7 xl:text-xs">
+            Заказать
           </Button>
         </div>
         <a
@@ -85,7 +85,7 @@ export function Header() {
               <Phone size={18} /> +375 (29) 209-58-25
             </a>
             <Button href="/#mobile-lead" className="mt-1 rounded-[12px]" onClick={() => setOpen(false)}>
-              Быстрая заявка
+              Заказать
             </Button>
           </div>
         </div>

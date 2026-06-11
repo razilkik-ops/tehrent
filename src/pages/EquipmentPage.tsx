@@ -76,7 +76,7 @@ export function EquipmentPage() {
           <div id="equipment-lead">
             <LeadForm
               title="Уточните наличие и цену"
-              description="Оставьте заявку, диспетчер свяжется с вами в течение 15 минут."
+              description="Оставьте телефон, диспетчер свяжется с вами в течение 15 минут."
               sourcePage={`/equipment/${item.slug}`}
               formType="equipment-detail"
               equipmentId={item.id}

@@ -66,7 +66,7 @@ export function FinalCTA() {
         <div className="max-w-[700px]">
           <h2 className="text-[26px] font-black leading-tight md:text-[42px]">Готовы приступить к работе?</h2>
           <p className="mt-2 max-w-[620px] text-[13px] font-semibold leading-5 text-white/72 md:mt-4 md:text-xl md:leading-9">
-            Оставьте заявку прямо сейчас — подберём технику и рассчитаем стоимость за 15 минут.
+            Оставьте телефон прямо сейчас — подберём технику и рассчитаем стоимость за 15 минут.
           </p>
           <div className="mt-4 grid max-w-[720px] gap-2.5 text-xs font-bold leading-5 text-white/70 sm:grid-cols-3 md:mt-10 md:gap-6 md:text-base md:leading-7">
             {ctaBenefits.map((item, index) => (
@@ -101,12 +101,12 @@ export function FinalCTA() {
           <input type="hidden" {...register("task")} />
           {errors.phone ? <p className="mt-2 text-sm font-bold text-accent">{errors.phone.message}</p> : null}
           <Button type="submit" disabled={isSubmitting} className="mt-3 h-11 w-full rounded-[8px] text-sm font-black shadow-[0_18px_38px_rgba(240,180,41,0.26)] md:mt-4 md:h-[76px] md:text-xl">
-            {isSubmitting ? "Отправляем..." : "Оставить заявку"}
+            {isSubmitting ? "Отправляем..." : "Заказать"}
           </Button>
           <p className="mt-3 max-w-[590px] text-[11px] font-semibold leading-4 text-white/58 md:mt-7 md:text-base md:leading-8">
             Нажимая кнопку, вы соглашаетесь на обработку персональных данных.
           </p>
-          {sent ? <p className="mt-3 text-base font-black text-accent">Заявка отправлена. Скоро свяжемся.</p> : null}
+          {sent ? <p className="mt-3 text-base font-black text-accent">Заказ отправлен. Скоро свяжемся.</p> : null}
         </form>
       </div>
     </section>

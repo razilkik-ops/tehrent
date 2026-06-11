@@ -8,6 +8,7 @@ import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { HowItWorks } from "@/components/HowItWorks";
 import { QuickRequestForm } from "@/components/QuickRequestForm";
+import { RentalCalculator } from "@/components/RentalCalculator";
 import { SectionTitle } from "@/components/SectionTitle";
 import { StickyMobileCTA } from "@/components/StickyMobileCTA";
 import { equipment, formatPrice, type Equipment } from "@/lib/equipment";
@@ -145,10 +146,12 @@ export function HomePage() {
                   <span className="grid size-11 shrink-0 place-items-center rounded-[11px] border border-night/12 bg-white/24">
                     <CalendarCheck size={23} />
                   </span>
-                  <span className="text-xl font-black uppercase leading-tight">Заявка</span>
+                  <span className="text-xl font-black uppercase leading-tight">Заказать</span>
                 </button>
               </div>
             </div>
+
+            <RentalCalculator className="mt-7" target="#mobile-lead" />
 
             <section id="mobile-equipment" className="mt-7">
               <div className="flex items-end justify-between gap-4">
@@ -261,7 +264,7 @@ export function HomePage() {
                       <span className="text-2xl font-black">+375 29 209-58-25</span>
                     </a>
                     <Button href="#desktop-lead" className="h-[76px] rounded-[14px] px-10 text-lg font-black uppercase">
-                      Заявка
+                      Заказать
                     </Button>
                   </div>
                 </div>
@@ -280,6 +283,8 @@ export function HomePage() {
                 </div>
               </div>
             </div>
+
+            <RentalCalculator className="mt-10" target="#desktop-lead" />
 
             <section id="desktop-equipment" className="pt-10">
               <div className="flex items-end justify-between gap-8">
@@ -403,7 +408,7 @@ export function HomePage() {
                 </span>
                 <div>
                   <h2 id="booking-modal-title" className="text-xl font-black leading-tight text-ink">
-                    Быстрая заявка
+                    Быстрый заказ
                   </h2>
                   <p className="mt-1 text-xs font-semibold leading-5 text-ink/58">
                     Оставьте телефон, и мы подберём технику под задачу.

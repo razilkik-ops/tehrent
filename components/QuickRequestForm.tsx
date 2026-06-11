@@ -42,7 +42,7 @@ export function QuickRequestForm({ sourcePage = "home", id = "lead" }: { sourceP
         <span>Быстрый подбор техники</span>
       </div>
       <p className="mt-2 text-sm font-semibold leading-5 text-white/68 md:text-sm 2xl:text-[15px]">
-        Оставьте заявку — мы перезвоним и подберём технику за 15 минут
+        Оставьте телефон — мы перезвоним и подберём технику за 15 минут
       </p>
       <div className="mt-4 grid gap-3 md:grid-cols-[1fr_1fr_1fr_150px] 2xl:grid-cols-[1fr_1fr_1fr_185px]">
         <input
@@ -71,7 +71,7 @@ export function QuickRequestForm({ sourcePage = "home", id = "lead" }: { sourceP
       {errors.phone || errors.task ? (
         <p className="mt-2 text-xs text-accent">{errors.phone?.message || errors.task?.message}</p>
       ) : null}
-      {sent ? <p className="mt-2 text-xs text-accent">Заявка отправлена. Скоро свяжемся.</p> : null}
+      {sent ? <p className="mt-2 text-xs text-accent">Заказ отправлен. Скоро свяжемся.</p> : null}
     </form>
   );
 }

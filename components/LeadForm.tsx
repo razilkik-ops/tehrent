@@ -18,7 +18,7 @@ type LeadFormProps = {
 };
 
 export function LeadForm({
-  title = "Оставьте заявку",
+  title = "Оставьте заказ",
   description = "Диспетчер уточнит задачу, адрес и финальную стоимость.",
   sourcePage,
   formType,
@@ -91,7 +91,7 @@ export function LeadForm({
           {...register("address")}
         />
         <Button className="h-7 rounded-[6px] text-[10px]" type="submit" disabled={isSubmitting}>
-          {isSubmitting ? "Отправляем..." : "Отправить заявку"}
+          {isSubmitting ? "Отправляем..." : "Отправить заказ"}
         </Button>
       </form>
     );
@@ -105,7 +105,7 @@ export function LeadForm({
         }`}
       >
         <CheckCircle2 className="text-accent" size={34} />
-        <h3 className="mt-5 text-2xl font-black">Заявка отправлена</h3>
+        <h3 className="mt-5 text-2xl font-black">Заказ отправлен</h3>
         <p className={`mt-3 text-sm leading-6 ${dark ? "text-white/64" : "text-ink/62"}`}>
           Мы получили обращение и свяжемся с вами в ближайшее время.
         </p>
@@ -164,7 +164,7 @@ export function LeadForm({
       />
       {errors.task ? <p className="mt-1 text-xs text-accent">{errors.task.message}</p> : null}
       <Button className="mt-4 w-full" type="submit" disabled={isSubmitting}>
-        {isSubmitting ? "Отправляем..." : "Отправить заявку"}
+        {isSubmitting ? "Отправляем..." : "Отправить заказ"}
       </Button>
       <p className={`mt-4 text-xs leading-5 ${dark ? "text-white/46" : "text-ink/46"}`}>
         Нажимая кнопку, вы соглашаетесь с политикой обработки данных.

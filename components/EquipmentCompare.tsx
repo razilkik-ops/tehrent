@@ -95,11 +95,11 @@ export function EquipmentCompare({ items, selectedIds, onSelect, onClear }: Equi
       <div className="p-4 text-center xl:p-6">
         {selectedCount ? (
           <Button href="#catalog-lead" variant="outline" className="h-11 rounded-[10px] px-8 text-sm">
-            Передать выбранное в заявку
+            Передать выбранное в заказ
           </Button>
         ) : (
           <span className="inline-flex h-11 items-center justify-center rounded-[10px] border border-ink/10 px-8 text-sm font-bold text-ink/36">
-            Передать выбранное в заявку
+            Передать выбранное в заказ
           </span>
         )}
       </div>

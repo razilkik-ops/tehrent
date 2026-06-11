@@ -29,7 +29,7 @@ export function RelatedEquipment({ current }: { current: Equipment }) {
                   Подробнее
                 </Button>
                 <Button href={`/equipment/${item.slug}#equipment-lead`} size="sm">
-                  В заявку
+                  Заказать
                 </Button>
               </div>
             </div>
