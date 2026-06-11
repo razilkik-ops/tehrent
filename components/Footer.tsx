@@ -62,6 +62,9 @@ export function Footer() {
             <span>ежедневно 8:00–22:00</span>
             <a href="mailto:info@arentex.by">info@arentex.by</a>
             <span>г. Минск, ул. Строителей, 15</span>
+            <span className="mt-2 text-white/78">Индивидуальный предприниматель Силко А.А.</span>
+            <span>УНП 192947174</span>
+            <span className="break-all">р/с BY25PJCB30130688200000000933</span>
           </div>
         </div>
       </div>

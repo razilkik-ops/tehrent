@@ -48,7 +48,10 @@ export function EquipmentDetailHero({ item }: { item: Equipment }) {
             {availabilityLabels[item.availability]}
           </span>
           <div className="mt-6">
-            <p className="text-3xl font-black">от {formatPrice(item.pricePerShift)}/смена</p>
+            <p className="text-3xl font-black">{item.priceLabel || `от ${formatPrice(item.pricePerShift)}/смена`}</p>
+            <p className="mt-2 text-xs font-bold uppercase leading-5 text-accent">
+              Ориентировочный расчет. Точная сумма по телефону.
+            </p>
             <p className="mt-3 text-sm leading-6 text-ink/62">
               Смена 8 часов. Оператор, доставка и навесное оборудование рассчитываются под объект.
             </p>

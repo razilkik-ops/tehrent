@@ -16,7 +16,10 @@ export function RelatedEquipment({ current }: { current: Equipment }) {
             <EquipmentVisual type={item.imagePlaceholderType} imageUrl={item.imageUrl} className="min-h-40 rounded-none" />
             <div className="p-5">
               <h3 className="text-xl font-black">{item.title}</h3>
-              <p className="mt-2 font-bold text-ink/64">от {formatPrice(item.pricePerShift)}/смена</p>
+              <p className="mt-2 font-bold text-ink/64">{item.priceLabel || `от ${formatPrice(item.pricePerShift)}/смена`}</p>
+              <p className="mt-1 text-xs font-semibold leading-5 text-ink/44">
+                Ориентировочный расчет. Точная сумма по телефону.
+              </p>
               <ul className="mt-4 grid gap-2 text-sm text-ink/60">
                 {Object.entries(item.specs)
                   .slice(0, 3)

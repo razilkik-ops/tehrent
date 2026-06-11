@@ -18,7 +18,7 @@ export function EquipmentPage() {
   usePageMeta(
     item ? `${item.title} аренда | Arentex.by` : "Техника не найдена | Arentex.by",
     item
-      ? `${item.title} в аренду: ${item.shortDescription} Цена от ${formatPrice(item.pricePerShift)} за смену.`
+      ? `${item.title} в аренду: ${item.shortDescription} ${item.priceLabel || `Цена от ${formatPrice(item.pricePerShift)} за смену.`}`
       : "Запрошенная техника не найдена в каталоге."
   );
 

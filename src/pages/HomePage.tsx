@@ -20,7 +20,18 @@ const mobileHeroItems = [
   { icon: ShieldCheck, label: "Опытнейшие операторы" }
 ];
 
-const mobileFeaturedEquipment = equipment.slice(0, 4);
+const featuredEquipmentIds = [
+  "eq-bobcat-e35",
+  "eq-kubota-u27",
+  "eq-jcb-1cx",
+  "eq-bobcat-s650",
+  "eq-volvo-bl71",
+  "eq-kamaz-6520",
+  "eq-amkodor-loader"
+];
+const mobileFeaturedEquipment = featuredEquipmentIds
+  .map((id) => equipment.find((item) => item.id === id))
+  .filter((item): item is Equipment => Boolean(item));
 
 const cases = [
   "Строительство зданий и сооружений",
@@ -41,7 +52,9 @@ function getFeaturedEquipmentCard(item: Equipment) {
       workLabel: "Глубина отверстий",
       workSpec: item.specs["Глубина отверстий"],
       attachmentsLabel: "Шнеки",
-      attachmentsValue: "Шнеки 200, 250, 300, 400 мм"
+      attachmentsValue: "Шнеки 200, 250, 300, 400 мм",
+      hourlyPriceLabel: `от ${formatPrice(hourlyPrice)}`,
+      shiftPriceLabel: `от ${formatPrice(item.pricePerShift)}`
     };
   }
 
@@ -52,7 +65,9 @@ function getFeaturedEquipmentCard(item: Equipment) {
       workLabel: "Ширина ковша",
       workSpec: item.specs["Ширина ковша"],
       attachmentsLabel: "Навесное",
-      attachmentsValue: "Ковш 0,35 м3, гидробур"
+      attachmentsValue: "Ковш 0,35 м3, гидробур",
+      hourlyPriceLabel: `от ${formatPrice(hourlyPrice)}`,
+      shiftPriceLabel: `от ${formatPrice(item.pricePerShift)}`
     };
   }
 
@@ -63,7 +78,48 @@ function getFeaturedEquipmentCard(item: Equipment) {
       workLabel: "Глубина отверстий",
       workSpec: item.specs["Глубина отверстий"],
       attachmentsLabel: "Диаметр шнека",
-      attachmentsValue: "200, 300, 400 мм"
+      attachmentsValue: "200, 300, 400 мм",
+      hourlyPriceLabel: `от ${formatPrice(hourlyPrice)}`,
+      shiftPriceLabel: `от ${formatPrice(item.pricePerShift)}`
+    };
+  }
+
+  if (item.id === "eq-kamaz-6520") {
+    return {
+      hourlyPrice,
+      title: "Аренда самосвала 10-20 т",
+      workLabel: "Работы",
+      workSpec: "вывоз и доставка",
+      attachmentsLabel: "Цена",
+      attachmentsValue: "договорная",
+      hourlyPriceLabel: "Цена договорная",
+      shiftPriceLabel: "Цена договорная"
+    };
+  }
+
+  if (item.id === "eq-volvo-bl71") {
+    return {
+      hourlyPrice,
+      title: "Аренда экскаватора-погрузчика Volvo BL71",
+      workLabel: "Глубина копания",
+      workSpec: item.specs["Глубина копания"],
+      attachmentsLabel: "Цена",
+      attachmentsValue: "130 руб/час",
+      hourlyPriceLabel: `от ${formatPrice(hourlyPrice)}`,
+      shiftPriceLabel: `от ${formatPrice(item.pricePerShift)}`
+    };
+  }
+
+  if (item.id === "eq-amkodor-loader") {
+    return {
+      hourlyPrice,
+      title: "Аренда фронтального погрузчика Амкодор",
+      workLabel: "Объем ковша",
+      workSpec: item.specs["Объем ковша"],
+      attachmentsLabel: "Цена",
+      attachmentsValue: "130 руб/час",
+      hourlyPriceLabel: `от ${formatPrice(hourlyPrice)}`,
+      shiftPriceLabel: `от ${formatPrice(item.pricePerShift)}`
     };
   }
 
@@ -78,7 +134,9 @@ function getFeaturedEquipmentCard(item: Equipment) {
       item.specs["Работа"] ||
       item.specs["Ширина"],
     attachmentsLabel: item.id === "eq-bobcat-e35" ? "Ковши" : "Навесное",
-    attachmentsValue: item.id === "eq-bobcat-e35" ? "20, 30, 50 см, планировочные" : item.attachments[0]
+    attachmentsValue: item.id === "eq-bobcat-e35" ? "20, 30, 50 см, планировочные" : item.attachments[0],
+    hourlyPriceLabel: `от ${formatPrice(hourlyPrice)}`,
+    shiftPriceLabel: `от ${formatPrice(item.pricePerShift)}`
   };
 }
 
@@ -101,7 +159,13 @@ export function HomePage() {
                 <img
                   src="/images/equipment/hero-mini-equipment.png"
                   alt=""
-                  className="absolute inset-0 h-full w-full object-cover object-[67%_50%]"
+                  className="absolute inset-0 h-full w-full scale-110 object-cover object-center opacity-45 blur-sm"
+                  loading="eager"
+                />
+                <img
+                  src="/images/equipment/hero-mini-equipment.png"
+                  alt=""
+                  className="absolute inset-0 h-full w-full object-contain object-center"
                   loading="eager"
                 />
                 <span className="absolute inset-0 bg-night/72" />
@@ -151,13 +215,11 @@ export function HomePage() {
               </div>
             </div>
 
-            <RentalCalculator className="mt-7" target="#mobile-lead" />
-
             <section id="mobile-equipment" className="mt-7">
               <div className="flex items-end justify-between gap-4">
                 <div>
                   <p className="text-xs font-black uppercase text-accent">Каталог аренды</p>
-                  <h2 className="mt-1 text-[34px] font-black leading-tight text-ink">Техника в наличии</h2>
+                  <h2 className="mt-1 text-[34px] font-black leading-tight text-ink">Техника в наличии для заказа</h2>
                 </div>
               </div>
 
@@ -205,13 +267,16 @@ export function HomePage() {
                         <div className="mt-5 grid grid-cols-2 gap-3 border-y border-ink/8 py-4">
                           <div>
                             <p className="text-xs font-bold text-ink/48">1 час</p>
-                            <p className="mt-1 text-lg font-black text-ink">от {formatPrice(card.hourlyPrice)}</p>
+                            <p className="mt-1 text-lg font-black text-ink">{card.hourlyPriceLabel}</p>
                           </div>
                           <div>
                             <p className="text-xs font-bold text-ink/48">Смена 8ч</p>
-                            <p className="mt-1 text-lg font-black text-accent">от {formatPrice(item.pricePerShift)}</p>
+                            <p className="mt-1 text-lg font-black text-accent">{card.shiftPriceLabel}</p>
                           </div>
                         </div>
+                        <p className="mt-2 text-xs font-semibold leading-5 text-ink/48">
+                          Ориентировочный расчет. Точная сумма по телефону.
+                        </p>
                         <Button href="#mobile-lead" className="mt-4 h-12 w-full rounded-[10px] text-base font-black">
                           Забронировать
                         </Button>
@@ -220,6 +285,8 @@ export function HomePage() {
                   );
                 })}
               </div>
+
+              <RentalCalculator className="mt-5" target="#mobile-lead" />
 
               <div className="mt-5">
                 <QuickRequestForm id="mobile-lead" />
@@ -273,7 +340,13 @@ export function HomePage() {
                   <img
                     src="/images/equipment/hero-mini-equipment.png"
                     alt=""
-                    className="absolute inset-0 h-full w-full object-cover object-[66%_50%]"
+                    className="absolute inset-0 h-full w-full scale-110 object-cover object-center opacity-45 blur-sm"
+                    loading="eager"
+                  />
+                  <img
+                    src="/images/equipment/hero-mini-equipment.png"
+                    alt=""
+                    className="absolute inset-0 h-full w-full object-contain object-center"
                     loading="eager"
                   />
                   <span className="absolute inset-0 bg-gradient-to-t from-night/70 via-night/12 to-transparent" />
@@ -284,16 +357,14 @@ export function HomePage() {
               </div>
             </div>
 
-            <RentalCalculator className="mt-10" target="#desktop-lead" />
-
             <section id="desktop-equipment" className="pt-10">
               <div className="flex items-end justify-between gap-8">
                 <div>
                   <p className="text-sm font-black uppercase text-accent">Каталог аренды</p>
-                  <h2 className="mt-2 text-[44px] font-black leading-tight text-ink">Техника в наличии</h2>
+                  <h2 className="mt-2 text-[44px] font-black leading-tight text-ink">Техника в наличии для заказа</h2>
                 </div>
                 <p className="max-w-[460px] text-right text-base font-semibold leading-7 text-ink/58">
-                  Мини-экскаваторы и мини-погрузчики для траншей, бурения, планировки, засыпки и погрузочных работ.
+                  Мини-экскаваторы, мини-погрузчики и самосвалы для земляных, строительных и погрузочных работ.
                 </p>
               </div>
 
@@ -302,13 +373,13 @@ export function HomePage() {
                   const card = getFeaturedEquipmentCard(item);
 
                   return (
-                    <article key={item.id} className="flex overflow-hidden rounded-[14px] bg-white shadow-card">
-                      <a href={`/equipment/${item.slug}`} aria-label={item.title} className="block shrink-0">
+                    <article key={item.id} className="flex flex-col overflow-hidden rounded-[14px] bg-white shadow-card">
+                      <a href={`/equipment/${item.slug}`} aria-label={item.title} className="block">
                         <EquipmentVisual
                           type={item.imagePlaceholderType}
                           imageUrl={item.imageUrl}
                           priorityLabel="В наличии"
-                          className="h-full min-h-[300px] w-[300px] !min-w-[300px] rounded-none"
+                          className="h-[260px] !min-h-0 w-full rounded-none"
                         />
                       </a>
                       <div className="flex flex-1 flex-col px-6 pb-6 pt-5">
@@ -343,13 +414,16 @@ export function HomePage() {
                         <div className="mt-auto grid grid-cols-2 gap-3 border-y border-ink/8 py-4">
                           <div>
                             <p className="text-xs font-bold text-ink/48">1 час</p>
-                            <p className="mt-1 text-lg font-black text-ink">от {formatPrice(card.hourlyPrice)}</p>
+                            <p className="mt-1 text-lg font-black text-ink">{card.hourlyPriceLabel}</p>
                           </div>
                           <div>
                             <p className="text-xs font-bold text-ink/48">Смена 8ч</p>
-                            <p className="mt-1 text-lg font-black text-accent">от {formatPrice(item.pricePerShift)}</p>
+                            <p className="mt-1 text-lg font-black text-accent">{card.shiftPriceLabel}</p>
                           </div>
                         </div>
+                        <p className="mt-2 text-xs font-semibold leading-5 text-ink/48">
+                          Ориентировочный расчет. Точная сумма по телефону.
+                        </p>
                         <Button href="#desktop-lead" className="mt-4 h-12 w-full rounded-[10px] text-base font-black">
                           Забронировать
                         </Button>
@@ -358,6 +432,8 @@ export function HomePage() {
                   );
                 })}
               </div>
+
+              <RentalCalculator className="mt-8" target="#desktop-lead" />
 
               <div id="desktop-lead" className="mt-8">
                 <QuickRequestForm />

@@ -6,7 +6,7 @@ const DELIVERY_BASE_PRICE = 180;
 const DELIVERY_KM_PRICE = 3;
 const BASE_HOURLY_PRICE = 85;
 const ATTACHMENT_HOURLY_PRICE = 120;
-const MIN_HOURS = 3;
+const MIN_HOURS = 0;
 
 type RentalCalculatorProps = {
   className?: string;
@@ -27,7 +27,7 @@ export function RentalCalculator({ className = "", target = "#lead" }: RentalCal
   const hourlyPrice = attachmentSelected ? ATTACHMENT_HOURLY_PRICE : BASE_HOURLY_PRICE;
 
   const totals = useMemo(() => {
-    const safeHours = Math.max(MIN_HOURS, Number.isFinite(hours) ? hours : MIN_HOURS);
+    const safeHours = Math.max(0, Number.isFinite(hours) ? hours : MIN_HOURS);
     const safeDistance = Math.max(0, Number.isFinite(distanceKm) ? distanceKm : 0);
     const delivery = DELIVERY_BASE_PRICE + safeDistance * DELIVERY_KM_PRICE;
     const work = safeHours * hourlyPrice;
@@ -50,6 +50,17 @@ export function RentalCalculator({ className = "", target = "#lead" }: RentalCal
             <div>
               <p className="text-xs font-black uppercase text-accent">Калькулятор аренды</p>
               <h2 className="mt-1 text-2xl font-black leading-tight md:text-[34px]">Рассчитайте стоимость</h2>
+            </div>
+          </div>
+
+          <div className="mt-5 grid gap-2 text-sm font-black leading-5 text-white/82 md:grid-cols-2">
+            <div className="flex items-start gap-2 rounded-[12px] border border-white/10 bg-white/8 px-3 py-3">
+              <Truck size={17} className="mt-0.5 shrink-0 text-accent" />
+              <span>Доставка: Минск {formatRub(DELIVERY_BASE_PRICE)} + {formatRub(DELIVERY_KM_PRICE)} за 1 км от МКАД</span>
+            </div>
+            <div className="flex items-start gap-2 rounded-[12px] border border-white/10 bg-white/8 px-3 py-3">
+              <Clock3 size={17} className="mt-0.5 shrink-0 text-accent" />
+              <span>Работа: {formatRub(BASE_HOURLY_PRICE)}/час</span>
             </div>
           </div>
 

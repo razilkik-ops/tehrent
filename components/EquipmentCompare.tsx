@@ -162,7 +162,10 @@ function SelectedSlot({
             {availabilityLabels[item.availability]}
           </span>
           <span className="rounded-full bg-white px-3 py-1 text-xs font-black text-ink/58">
-            {formatPrice(item.pricePerShift)}/смена
+            {item.priceLabel || `${formatPrice(item.pricePerShift)}/смена`}
+          </span>
+          <span className="rounded-full bg-white px-3 py-1 text-xs font-black text-ink/48">
+            ориентировочно
           </span>
         </div>
         <button
@@ -204,7 +207,7 @@ function EquipmentPicker({
             <span>
               <span className="block text-sm font-black">{item.title}</span>
               <span className="mt-0.5 block text-xs font-semibold text-ink/52">
-                {item.category} · {formatPrice(item.pricePerShift)}/смена
+                {item.category} · {item.priceLabel || `${formatPrice(item.pricePerShift)}/смена`} · ориентировочно
               </span>
             </span>
             {item.id === activeId ? <Check className="size-5 shrink-0 text-moss" /> : null}
@@ -229,7 +232,7 @@ function compareValue(row: string, item: Equipment) {
   }
 
   if (row === "Цена от") {
-    return `${formatPrice(item.pricePerShift)}/смена`;
+    return `${item.priceLabel || `${formatPrice(item.pricePerShift)}/смена`}, ориентировочно`;
   }
 
   if (row === "Статус") {

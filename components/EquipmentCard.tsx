@@ -64,7 +64,10 @@ export function EquipmentCard({ item, selected, onToggleSelected, onRequest }: E
         <div className="mt-1.5 flex items-end justify-between gap-3 xl:mt-3">
           <div>
             <span className="text-[9px] text-ink/52 xl:text-[10px]">от</span>
-            <p className="text-xs font-black xl:text-sm">{formatPrice(item.pricePerShift)}/смена</p>
+            <p className="text-xs font-black xl:text-sm">{item.priceLabel || `${formatPrice(item.pricePerShift)}/смена`}</p>
+            <p className="mt-0.5 max-w-[120px] text-[8px] font-semibold leading-3 text-ink/42 xl:text-[9px]">
+              Ориентировочно, точная сумма по телефону
+            </p>
           </div>
           <Button
             size="sm"

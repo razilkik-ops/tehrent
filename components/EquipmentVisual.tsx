@@ -11,6 +11,7 @@ type EquipmentVisualProps = {
 const imageMap: Record<ImagePlaceholderType, string> = {
   excavator: "/images/equipment/excavator.png",
   loader: "/images/equipment/loader.png",
+  backhoe: "/images/equipment/volvo-bl71-model.webp",
   lift: "/images/equipment/lift.png",
   truck: "/images/equipment/truck.png"
 };
@@ -18,6 +19,7 @@ const imageMap: Record<ImagePlaceholderType, string> = {
 const objectPosition: Record<ImagePlaceholderType, string> = {
   excavator: "object-[58%_52%]",
   loader: "object-[50%_58%]",
+  backhoe: "object-[50%_54%]",
   lift: "object-[50%_54%]",
   truck: "object-[50%_56%]"
 };
@@ -37,7 +39,13 @@ export function EquipmentVisual({
       <img
         src={imageUrl || imageMap[type]}
         alt=""
-        className={`absolute inset-0 h-full w-full object-cover ${objectPosition[type]}`}
+        className={`absolute inset-0 h-full w-full scale-110 object-cover opacity-35 blur-sm ${objectPosition[type]}`}
+        loading="lazy"
+      />
+      <img
+        src={imageUrl || imageMap[type]}
+        alt=""
+        className={`absolute inset-0 h-full w-full object-contain p-2 ${objectPosition[type]}`}
         loading="lazy"
       />
       <span

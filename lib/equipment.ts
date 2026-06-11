@@ -1,6 +1,6 @@
 export type Availability = "today" | "tomorrow" | "request";
 
-export type ImagePlaceholderType = "excavator" | "loader" | "lift" | "truck";
+export type ImagePlaceholderType = "excavator" | "loader" | "backhoe" | "lift" | "truck";
 
 export type Equipment = {
   id: string;
@@ -10,6 +10,7 @@ export type Equipment = {
   shortDescription: string;
   hourlyPrice?: number;
   pricePerShift: number;
+  priceLabel?: string;
   availability: Availability;
   specs: Record<string, string | number>;
   attachments: string[];
@@ -46,7 +47,7 @@ export const equipment: Equipment[] = [
       "Работы на ограниченной территории"
     ],
     imagePlaceholderType: "excavator",
-    imageUrl: "/images/equipment/kubota-kx41-3v.png",
+    imageUrl: "/images/equipment/kubota-kx41-3w-model.webp",
     withOperatorAvailable: true,
     deliveryAvailable: true
   },
@@ -70,7 +71,7 @@ export const equipment: Equipment[] = [
     attachments: ["Шнеки 200, 250, 300, 400 мм", "Ковши"],
     useCases: ["Бурение под сваи", "Заборы", "Фундамент", "Посадочные ямы"],
     imagePlaceholderType: "excavator",
-    imageUrl: "/images/equipment/kubota-kx41-3v-auger.png",
+    imageUrl: "/images/equipment/kubota-kx41-3v-auger-model.webp",
     withOperatorAvailable: true,
     deliveryAvailable: true
   },
@@ -94,7 +95,7 @@ export const equipment: Equipment[] = [
     attachments: ["Ковш 0,35 м3", "Гидробур", "Вилы"],
     useCases: ["Погрузка грунта", "Уборка территории", "Планировка", "Перемещение материалов"],
     imagePlaceholderType: "loader",
-    imageUrl: "/images/equipment/new-holland-l160.png",
+    imageUrl: "/images/equipment/new-holland-l160-model.webp",
     withOperatorAvailable: true,
     deliveryAvailable: true
   },
@@ -118,7 +119,7 @@ export const equipment: Equipment[] = [
     attachments: ["Гидробур", "Ковш", "Вилы"],
     useCases: ["Бурение свай", "Посадка деревьев", "Погрузка", "Планировка"],
     imagePlaceholderType: "loader",
-    imageUrl: "/images/equipment/new-holland-l160-auger.png",
+    imageUrl: "/images/equipment/new-holland-l160-auger-model.webp",
     withOperatorAvailable: true,
     deliveryAvailable: true
   },
@@ -149,11 +150,12 @@ export const equipment: Equipment[] = [
   {
     id: "eq-kamaz-6520",
     slug: "kamaz-6520",
-    title: "Самосвал КамАЗ 6520",
+    title: "Самосвалы 10-20 т",
     category: "Самосвалы",
     shortDescription:
-      "Самосвал для вывоза грунта, доставки песка, щебня и строительных материалов.",
+      "Вывоз грунта, строительного мусора, доставка сыпучих материалов. Цена договорная.",
     pricePerShift: 15000,
+    priceLabel: "Цена договорная",
     availability: "today",
     specs: {
       "Грузоподъемность": "20 т",
@@ -164,9 +166,55 @@ export const equipment: Equipment[] = [
       "Маршруты": "Минск и Беларусь"
     },
     attachments: ["Тент", "Доставка сыпучих материалов"],
-    useCases: ["Вывоз грунта", "Доставка песка", "Доставка щебня", "Снабжение объекта"],
+    useCases: ["Вывоз грунта", "Вывоз строительного мусора", "Доставка сыпучих материалов", "Снабжение объекта"],
     imagePlaceholderType: "truck",
-    imageUrl: "/images/equipment/kamaz-6520.png",
+    imageUrl: "/images/equipment/samosval-10-20t-model.webp",
+    withOperatorAvailable: true,
+    deliveryAvailable: true
+  },
+  {
+    id: "eq-volvo-bl71",
+    slug: "volvo-bl71",
+    title: "Экскаватор-погрузчик Volvo BL71",
+    category: "Экскаваторы-погрузчики",
+    shortDescription:
+      "Копка траншей, погрузка грунта, планировка участка и обратная засыпка на строительных объектах.",
+    hourlyPrice: 130,
+    pricePerShift: 1040,
+    availability: "today",
+    specs: {
+      "Эксплуатационная масса": "7.8 т",
+      "Глубина копания": "до 5.8 м",
+      "Ковш": "погрузочный и экскаваторный",
+      "Работа": "копка и погрузка"
+    },
+    attachments: ["Погрузочный ковш", "Экскаваторный ковш"],
+    useCases: ["Копка траншей", "Погрузка грунта", "Планировка", "Обратная засыпка"],
+    imagePlaceholderType: "backhoe",
+    imageUrl: "/images/equipment/volvo-bl71-model.webp",
+    withOperatorAvailable: true,
+    deliveryAvailable: true
+  },
+  {
+    id: "eq-amkodor-loader",
+    slug: "amkodor-front-loader",
+    title: "Фронтальный погрузчик Амкодор",
+    category: "Фронтальные погрузчики",
+    shortDescription:
+      "Погрузка, разгрузка, перемещение грунта, песка, щебня и строительных материалов.",
+    hourlyPrice: 130,
+    pricePerShift: 1040,
+    availability: "today",
+    specs: {
+      "Эксплуатационная масса": "10 т",
+      "Объем ковша": "2 м3",
+      "Высота выгрузки": "до 3.2 м",
+      "Работа": "погрузка"
+    },
+    attachments: ["Фронтальный ковш"],
+    useCases: ["Погрузка материалов", "Разгрузка", "Планировка", "Работы на складе"],
+    imagePlaceholderType: "loader",
+    imageUrl: "/images/equipment/amkodor-front-loader-model.webp",
     withOperatorAvailable: true,
     deliveryAvailable: true
   },
@@ -223,6 +271,8 @@ export const equipment: Equipment[] = [
 export const categories = [
   "Мини-экскаваторы",
   "Мини-погрузчики",
+  "Экскаваторы-погрузчики",
+  "Фронтальные погрузчики",
   "Автовышки",
   "Самосвалы",
   "Катки",
