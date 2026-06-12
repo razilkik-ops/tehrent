@@ -48,10 +48,10 @@ export function Header() {
           ))}
         </nav>
         <div className="hidden items-center gap-3 md:flex xl:gap-5">
-          <a href="tel:+3752920958258" className="flex items-start gap-1.5 text-left">
+          <a href="tel:+375299209582" className="flex items-start gap-1.5 text-left">
             <Phone size={14} className="mt-0.5 shrink-0 text-ink xl:size-[18px]" />
             <span>
-              <span className="block whitespace-nowrap text-[12px] font-black leading-4 xl:text-sm">+375 (29) 209-58-25</span>
+              <span className="block whitespace-nowrap text-[12px] font-black leading-4 xl:text-sm">+375 (29) 920-95-82</span>
               <span className="whitespace-nowrap text-[10px] text-ink/52 xl:text-xs">Ежедневно с 8:00 до 20:00</span>
             </span>
           </a>
@@ -65,12 +65,12 @@ export function Header() {
           </Button>
         </div>
         <a
-          href="tel:+3752920958258"
+          href="tel:+375299209582"
           className="ml-auto inline-flex h-9 items-center gap-1 rounded-[10px] border border-accent/55 bg-[rgba(240,180,41,0.12)] px-2 text-[10px] font-black leading-none text-ink shadow-[0_8px_18px_rgba(240,180,41,0.14)] max-[340px]:gap-0.5 max-[340px]:px-1.5 max-[340px]:text-[9px] min-[380px]:h-10 min-[380px]:gap-1.5 min-[380px]:px-2.5 min-[380px]:text-[11px] md:hidden"
-          aria-label="Позвонить +375 (29) 209-58-25"
+          aria-label="Позвонить +375 (29) 920-95-82"
         >
           <Phone size={14} className="shrink-0 text-accent" />
-          <span className="whitespace-nowrap">+375 29 209-58-25</span>
+          <span className="whitespace-nowrap">+375 29 920-95-82</span>
         </a>
         <button
           className="focus-ring grid h-10 w-10 shrink-0 place-items-center rounded-[10px] border border-accent/55 bg-[rgba(240,180,41,0.12)] text-ink shadow-[0_8px_18px_rgba(240,180,41,0.14)] max-[340px]:h-9 max-[340px]:w-9 md:hidden"
@@ -96,9 +96,9 @@ export function Header() {
             ))}
             <a
               className="flex items-center gap-2 rounded-2xl bg-white px-4 py-3 text-sm font-bold"
-              href="tel:+3752920958258"
+              href="tel:+375299209582"
             >
-              <Phone size={18} /> +375 (29) 209-58-25
+              <Phone size={18} /> +375 (29) 920-95-82
             </a>
             <Button type="button" className="mt-1 rounded-[12px]" onClick={() => handleOrderClick("header-mobile")}>
               Заказать

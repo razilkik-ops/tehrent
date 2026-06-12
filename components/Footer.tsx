@@ -56,8 +56,8 @@ export function Footer() {
         <div>
           <h3 className="font-black md:text-xs xl:text-base">Контакты</h3>
           <div className="mt-4 grid gap-2 text-sm text-white/68 md:mt-1 md:gap-0 md:text-[9px] xl:mt-4 xl:gap-2 xl:text-sm">
-            <a className="text-lg font-black text-white md:text-sm xl:text-lg" href="tel:+3752920958258">
-              +375 (29) 209-58-25
+            <a className="text-lg font-black text-white md:text-sm xl:text-lg" href="tel:+375299209582">
+              +375 (29) 920-95-82
             </a>
             <span>ежедневно 8:00–22:00</span>
             <a href="mailto:info@arentex.by">info@arentex.by</a>

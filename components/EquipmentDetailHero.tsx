@@ -77,7 +77,7 @@ export function EquipmentDetailHero({ item, onOrderClick }: EquipmentDetailHeroP
             <Button type="button" onClick={onOrderClick}>
               Заказать
             </Button>
-            <Button href="tel:+3752920958258" variant="dark" className="gap-2">
+            <Button href="tel:+375299209582" variant="dark" className="gap-2">
               <Phone size={17} /> Позвонить
             </Button>
           </div>

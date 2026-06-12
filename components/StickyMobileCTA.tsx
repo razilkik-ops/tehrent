@@ -22,7 +22,7 @@ export function StickyMobileCTA({ sourcePage = "sticky-mobile" }: { sourcePage?:
           Заказать
         </Button>
         <a
-          href="tel:+3752920958258"
+          href="tel:+375299209582"
           className="grid h-12 w-12 place-items-center rounded-2xl bg-night text-white"
           aria-label="Позвонить"
         >

@@ -205,7 +205,7 @@ export function HomePage() {
                 <span className="absolute inset-x-0 top-0 h-[48%] bg-gradient-to-b from-night/96 via-night/82 to-night/8" />
                 <div className="relative z-10">
                   <h1 className="max-w-[340px] text-[22px] font-black leading-[1.2] drop-shadow-[0_3px_12px_rgba(0,0,0,0.86)]">
-                    Аренда мини-техники для копки траншей, планировки участка и других строительных работ
+                    Мини-экскаваторы, погрузчики и другая спецтехника в аренду с доставкой
                   </h1>
                   <p className="mt-5 max-w-[300px] text-base font-semibold leading-7 text-white/92 drop-shadow-[0_2px_10px_rgba(0,0,0,0.82)]">
                     Подберем мини-экскаватор, мини-погрузчик под любую задачу, доставим на объект в течение двух часов.
@@ -226,13 +226,13 @@ export function HomePage() {
 
               <div className="mt-3 grid gap-3">
                 <a
-                  href="tel:+3752920958258"
+                  href="tel:+375299209582"
                   className="flex min-h-[74px] items-center gap-4 rounded-[14px] border border-accent/55 bg-white px-5 text-night shadow-card"
                 >
                   <span className="grid size-11 shrink-0 place-items-center rounded-[11px] border border-accent/45 bg-accent/12 text-accent">
                     <PhoneCall size={23} />
                   </span>
-                  <span className="text-xl font-black">+375 29 209-58-25</span>
+                  <span className="text-xl font-black">+375 29 920-95-82</span>
                 </a>
 
                 <button
@@ -372,7 +372,7 @@ export function HomePage() {
                       Аренда мини-техники
                     </p>
                     <h1 className="mt-5 max-w-[760px] text-[42px] font-black leading-[1.08] tracking-normal text-white drop-shadow-[0_4px_18px_rgba(0,0,0,0.82)] lg:text-[52px] xl:text-[60px]">
-                    Аренда мини-техники для копки траншей, планировки участка и других строительных работ
+                    Мини-экскаваторы, погрузчики и другая спецтехника в аренду с доставкой
                     </h1>
                     <p className="mt-6 max-w-[620px] text-xl font-semibold leading-8 text-white/92 drop-shadow-[0_3px_14px_rgba(0,0,0,0.78)] xl:text-[22px] xl:leading-9">
                     Подберем мини-экскаватор, мини-погрузчик под любую задачу, доставим на объект в течение двух часов.
@@ -396,13 +396,13 @@ export function HomePage() {
 
                     <div className="mt-5 grid grid-cols-2 gap-4">
                       <a
-                        href="tel:+3752920958258"
+                        href="tel:+375299209582"
                         className="flex h-[76px] min-w-0 items-center gap-4 rounded-[14px] border border-accent/55 bg-white px-5 text-night shadow-[0_18px_45px_rgba(0,0,0,0.22)]"
                       >
                         <span className="grid size-12 shrink-0 place-items-center rounded-[12px] border border-accent/45 bg-accent/12 text-accent">
                           <PhoneCall size={24} />
                         </span>
-                        <span className="truncate text-2xl font-black">+375 29 209-58-25</span>
+                        <span className="truncate text-2xl font-black">+375 29 920-95-82</span>
                       </a>
                       <Button
                         type="button"
