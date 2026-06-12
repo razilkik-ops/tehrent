@@ -12,7 +12,12 @@ const detailPrefixes: Record<string, string> = {
   "Навесное оборудование": "Навесное оборудование"
 };
 
-export function EquipmentDetailHero({ item }: { item: Equipment }) {
+type EquipmentDetailHeroProps = {
+  item: Equipment;
+  onOrderClick?: () => void;
+};
+
+export function EquipmentDetailHero({ item, onOrderClick }: EquipmentDetailHeroProps) {
   return (
     <section className="container-page pt-6 md:pt-8">
       <nav className="text-xs text-ink/48">
@@ -29,7 +34,8 @@ export function EquipmentDetailHero({ item }: { item: Equipment }) {
           <EquipmentVisual
             type={item.imagePlaceholderType}
             imageUrl={item.imageUrl}
-            className="min-h-[300px] rounded-[18px] md:min-h-[360px]"
+            imageBackdrop="none"
+            className="aspect-[1200/751] !min-h-0 rounded-[18px]"
             priorityLabel="1 / 6"
           />
           <div className="mt-3 grid grid-cols-3 gap-3 md:grid-cols-6">
@@ -38,12 +44,13 @@ export function EquipmentDetailHero({ item }: { item: Equipment }) {
                 key={index}
                 type={item.imagePlaceholderType}
                 imageUrl={item.imageUrl}
-                className={`min-h-20 rounded-xl ${index === 0 ? "ring-3 ring-accent" : ""}`}
+                imageBackdrop="none"
+                className={`aspect-square !min-h-0 rounded-xl ${index === 0 ? "ring-3 ring-accent" : ""}`}
               />
             ))}
           </div>
         </div>
-        <aside className="rounded-[22px] bg-white p-6 shadow-soft md:p-7">
+        <aside id="equipment-lead" className="scroll-mt-24 rounded-[22px] bg-white p-6 shadow-soft md:p-7">
           <span className="rounded-full bg-moss/12 px-3 py-1 text-sm font-bold text-moss">
             {availabilityLabels[item.availability]}
           </span>
@@ -67,7 +74,9 @@ export function EquipmentDetailHero({ item }: { item: Equipment }) {
               ))}
           </dl>
           <div className="mt-8 grid gap-3 sm:grid-cols-2">
-            <Button href="#equipment-lead">Заказать</Button>
+            <Button type="button" onClick={onOrderClick}>
+              Заказать
+            </Button>
             <Button href="tel:+3752920958258" variant="dark" className="gap-2">
               <Phone size={17} /> Позвонить
             </Button>

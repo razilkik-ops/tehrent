@@ -1,6 +1,7 @@
 import { Menu, Phone, X } from "lucide-react";
 import { useState } from "react";
 import { Button } from "./Button";
+import { useOrderModal } from "./OrderModal";
 
 const nav = [
   { href: "/#services", label: "Услуги" },
@@ -24,6 +25,16 @@ export function Logo() {
 
 export function Header() {
   const [open, setOpen] = useState(false);
+  const { openOrderModal } = useOrderModal();
+
+  function handleOrderClick(sourcePage: string) {
+    setOpen(false);
+    openOrderModal({
+      sourcePage,
+      formType: "header-order",
+      hiddenTask: "Заявка из шапки сайта"
+    });
+  }
 
   return (
     <header className="sticky top-0 z-50 bg-white/92 backdrop-blur-xl">
@@ -44,7 +55,12 @@ export function Header() {
               <span className="whitespace-nowrap text-[10px] text-ink/52 xl:text-xs">Ежедневно с 8:00 до 20:00</span>
             </span>
           </a>
-          <Button href="/#desktop-lead" size="sm" className="h-9 rounded-[8px] px-4 text-[11px] xl:h-12 xl:px-7 xl:text-xs">
+          <Button
+            type="button"
+            size="sm"
+            className="h-9 rounded-[8px] px-4 text-[11px] xl:h-12 xl:px-7 xl:text-xs"
+            onClick={() => handleOrderClick("header-desktop")}
+          >
             Заказать
           </Button>
         </div>
@@ -84,7 +100,7 @@ export function Header() {
             >
               <Phone size={18} /> +375 (29) 209-58-25
             </a>
-            <Button href="/#mobile-lead" className="mt-1 rounded-[12px]" onClick={() => setOpen(false)}>
+            <Button type="button" className="mt-1 rounded-[12px]" onClick={() => handleOrderClick("header-mobile")}>
               Заказать
             </Button>
           </div>

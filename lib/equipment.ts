@@ -79,6 +79,37 @@ export const equipment: Equipment[] = [
     deliveryAvailable: true
   },
   {
+    id: "eq-bobcat-e32",
+    slug: "bobcat-e32",
+    title: "BOBCAT E32",
+    category: "Мини-экскаваторы",
+    shortDescription:
+      "Копка траншей под коммуникации, фундамент, дренажные канавы, монтаж бетонных колец и демонтаж бетонных стяжек.",
+    hourlyPrice: 85,
+    pricePerShift: 680,
+    availability: "today",
+    specs: {
+      "Эксплуатационная масса": "3,3 т",
+      "Глубина копания": "3,2 м",
+      "Ковши": "30, 50, 60, 120 см",
+      "Навесное": "гидромолот",
+      "Тип хода": "гусеничный"
+    },
+    attachments: ["Ковши 30, 50, 60, 120 см", "Гидромолот"],
+    useCases: [
+      "Копка траншей под коммуникации",
+      "Фундамент",
+      "Дренажные канавы",
+      "Монтаж бетонных колец",
+      "Демонтаж бетонных стяжек"
+    ],
+    imagePlaceholderType: "excavator",
+    imageUrl: "/images/equipment/bobcat-e32-model.webp",
+    mobileImageUrl: "/images/equipment/bobcat-e32-mobile.webp",
+    withOperatorAvailable: true,
+    deliveryAvailable: true
+  },
+  {
     id: "eq-jcb-1cx",
     slug: "new-holland-l160",
     title: "NEW HOLLAND L160",

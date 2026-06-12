@@ -1,6 +1,7 @@
 import { Calculator, Check, Clock3, Info, Ruler, Truck, Wrench } from "lucide-react";
 import { useMemo, useState } from "react";
 import { Button } from "./Button";
+import { useOrderModal } from "./OrderModal";
 
 const DELIVERY_BASE_PRICE = 180;
 const DELIVERY_KM_PRICE = 3;
@@ -10,16 +11,18 @@ const MIN_HOURS = 0;
 
 type RentalCalculatorProps = {
   className?: string;
-  target?: string;
+  id?: string;
+  sourcePage?: string;
 };
 
 function formatRub(value: number) {
   return new Intl.NumberFormat("ru-BY").format(value) + " руб";
 }
 
-export function RentalCalculator({ className = "", target = "#lead" }: RentalCalculatorProps) {
-  const [hours, setHours] = useState(MIN_HOURS);
-  const [distanceKm, setDistanceKm] = useState(0);
+export function RentalCalculator({ className = "", id, sourcePage = "calculator" }: RentalCalculatorProps) {
+  const { openOrderModal } = useOrderModal();
+  const [hours, setHours] = useState(String(MIN_HOURS));
+  const [distanceKm, setDistanceKm] = useState("0");
   const [hydroDrill, setHydroDrill] = useState(false);
   const [hydraulicHammer, setHydraulicHammer] = useState(false);
 
@@ -27,8 +30,10 @@ export function RentalCalculator({ className = "", target = "#lead" }: RentalCal
   const hourlyPrice = attachmentSelected ? ATTACHMENT_HOURLY_PRICE : BASE_HOURLY_PRICE;
 
   const totals = useMemo(() => {
-    const safeHours = Math.max(0, Number.isFinite(hours) ? hours : MIN_HOURS);
-    const safeDistance = Math.max(0, Number.isFinite(distanceKm) ? distanceKm : 0);
+    const parsedHours = Number(hours);
+    const parsedDistance = Number(distanceKm);
+    const safeHours = Math.max(0, Number.isFinite(parsedHours) ? parsedHours : MIN_HOURS);
+    const safeDistance = Math.max(0, Number.isFinite(parsedDistance) ? parsedDistance : 0);
     const delivery = DELIVERY_BASE_PRICE + safeDistance * DELIVERY_KM_PRICE;
     const work = safeHours * hourlyPrice;
 
@@ -40,7 +45,7 @@ export function RentalCalculator({ className = "", target = "#lead" }: RentalCal
   }, [distanceKm, hourlyPrice, hours]);
 
   return (
-    <section className={`rounded-[16px] bg-night p-4 text-white shadow-soft md:rounded-[20px] md:p-6 ${className}`}>
+    <section id={id} className={`rounded-[16px] bg-night p-4 text-white shadow-soft md:rounded-[20px] md:p-6 ${className}`}>
       <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr] lg:items-stretch">
         <div>
           <div className="flex items-center gap-3">
@@ -75,7 +80,9 @@ export function RentalCalculator({ className = "", target = "#lead" }: RentalCal
                 min={MIN_HOURS}
                 step={1}
                 value={hours}
-                onChange={(event) => setHours(Number(event.target.value))}
+                onFocus={() => hours === "0" && setHours("")}
+                onBlur={() => hours === "" && setHours("0")}
+                onChange={(event) => setHours(event.target.value)}
                 className="focus-ring h-14 w-full rounded-[12px] border border-white/10 bg-white/10 px-4 text-xl font-black text-white outline-none placeholder:text-white/38"
               />
             </label>
@@ -90,7 +97,9 @@ export function RentalCalculator({ className = "", target = "#lead" }: RentalCal
                 min={0}
                 step={1}
                 value={distanceKm}
-                onChange={(event) => setDistanceKm(Number(event.target.value))}
+                onFocus={() => distanceKm === "0" && setDistanceKm("")}
+                onBlur={() => distanceKm === "" && setDistanceKm("0")}
+                onChange={(event) => setDistanceKm(event.target.value)}
                 className="focus-ring h-14 w-full rounded-[12px] border border-white/10 bg-white/10 px-4 text-xl font-black text-white outline-none placeholder:text-white/38"
               />
             </label>
@@ -160,7 +169,17 @@ export function RentalCalculator({ className = "", target = "#lead" }: RentalCal
             Расчет приблизительный. Точная сумма согласуется по телефону.
           </p>
 
-          <Button href={target} className="mt-5 h-12 w-full rounded-[10px] text-base font-black uppercase">
+          <Button
+            type="button"
+            className="mt-5 h-12 w-full rounded-[10px] text-base font-black uppercase"
+            onClick={() =>
+              openOrderModal({
+                sourcePage,
+                formType: "calculator-order",
+                hiddenTask: `Заявка из калькулятора. Ориентировочно: ${formatRub(totals.total)}. Часы: ${hours || "0"}, км от МКАД: ${distanceKm || "0"}.`
+              })
+            }
+          >
             Заказать
           </Button>
         </div>

@@ -7,6 +7,7 @@ type EquipmentVisualProps = {
   priorityLabel?: string;
   variant?: "card" | "hero" | "dark";
   imageFit?: "contain" | "cover";
+  imageBackdrop?: "blur" | "none";
 };
 
 const imageMap: Record<ImagePlaceholderType, string> = {
@@ -31,7 +32,8 @@ export function EquipmentVisual({
   imageUrl,
   priorityLabel,
   variant = "card",
-  imageFit = "contain"
+  imageFit = "contain",
+  imageBackdrop = "blur"
 }: EquipmentVisualProps) {
   const foregroundFitClass = imageFit === "cover" ? "object-cover" : "object-contain p-2";
 
@@ -40,12 +42,14 @@ export function EquipmentVisual({
       aria-label="Схематичное изображение спецтехники"
       className={`relative isolate min-h-56 overflow-hidden rounded-[28px] bg-[#dde4dc] ${className}`}
     >
-      <img
-        src={imageUrl || imageMap[type]}
-        alt=""
-        className={`absolute inset-0 h-full w-full scale-110 object-cover opacity-35 blur-sm ${objectPosition[type]}`}
-        loading="lazy"
-      />
+      {imageBackdrop === "blur" ? (
+        <img
+          src={imageUrl || imageMap[type]}
+          alt=""
+          className={`absolute inset-0 h-full w-full scale-110 object-cover opacity-35 blur-sm ${objectPosition[type]}`}
+          loading="lazy"
+        />
+      ) : null}
       <img
         src={imageUrl || imageMap[type]}
         alt=""

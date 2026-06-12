@@ -2,6 +2,7 @@ import { Check, Heart, MapPin, Plus, Ruler, Weight } from "lucide-react";
 import { availabilityLabels, formatPrice, type Equipment } from "@/lib/equipment";
 import { Button } from "./Button";
 import { EquipmentVisual } from "./EquipmentVisual";
+import { useOrderModal } from "./OrderModal";
 
 type EquipmentCardProps = {
   item: Equipment;
@@ -11,6 +12,23 @@ type EquipmentCardProps = {
 };
 
 export function EquipmentCard({ item, selected, onToggleSelected, onRequest }: EquipmentCardProps) {
+  const { openOrderModal } = useOrderModal();
+
+  function handleRequest() {
+    if (onRequest) {
+      onRequest(item.id);
+      return;
+    }
+
+    openOrderModal({
+      sourcePage: `/equipment/${item.slug}`,
+      equipmentId: item.id,
+      selectedEquipment: [item.id],
+      formType: "equipment-card-order",
+      hiddenTask: `Заказать ${item.title}`
+    });
+  }
+
   return (
     <article className="overflow-hidden rounded-[12px] border border-ink/8 bg-white shadow-card">
       <div className="relative">
@@ -72,7 +90,7 @@ export function EquipmentCard({ item, selected, onToggleSelected, onRequest }: E
           <Button
             size="sm"
             type="button"
-            onClick={() => onRequest?.(item.id)}
+            onClick={handleRequest}
             className="h-6 rounded-[7px] px-3 text-[10px] xl:h-8 xl:rounded-[8px] xl:px-3 xl:text-[10px]"
           >
             <Plus className="size-3 xl:size-4" /> Заказать
