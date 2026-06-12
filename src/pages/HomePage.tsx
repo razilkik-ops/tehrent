@@ -11,7 +11,8 @@ import { QuickRequestForm } from "@/components/QuickRequestForm";
 import { RentalCalculator } from "@/components/RentalCalculator";
 import { SectionTitle } from "@/components/SectionTitle";
 import { StickyMobileCTA } from "@/components/StickyMobileCTA";
-import { equipment, formatPrice, type Equipment } from "@/lib/equipment";
+import { useEquipmentCatalog } from "@/lib/equipment-catalog";
+import { formatPrice, type Equipment } from "@/lib/equipment";
 import { usePageMeta } from "@/src/usePageMeta";
 
 const mobileHeroItems = [
@@ -30,9 +31,6 @@ const featuredEquipmentIds = [
   "eq-amkodor-loader",
   "eq-bobcat-e32"
 ];
-const mobileFeaturedEquipment = featuredEquipmentIds
-  .map((id) => equipment.find((item) => item.id === id))
-  .filter((item): item is Equipment => Boolean(item));
 
 const cases = [
   {
@@ -174,6 +172,13 @@ function getFeaturedEquipmentCard(item: Equipment) {
 
 export function HomePage() {
   const { openOrderModal } = useOrderModal();
+  const { equipment } = useEquipmentCatalog();
+  const mobileFeaturedEquipment = [
+    ...featuredEquipmentIds
+      .map((id) => equipment.find((item) => item.id === id))
+      .filter((item): item is Equipment => Boolean(item)),
+    ...equipment.filter((item) => !featuredEquipmentIds.includes(item.id))
+  ];
 
   usePageMeta(
     "Аренда спецтехники с доставкой | Arentex.by",
@@ -207,9 +212,6 @@ export function HomePage() {
                   <h1 className="max-w-[340px] text-[22px] font-black leading-[1.2] drop-shadow-[0_3px_12px_rgba(0,0,0,0.86)]">
                     Мини-экскаваторы, погрузчики и другая спецтехника в аренду с доставкой
                   </h1>
-                  <p className="mt-5 max-w-[300px] text-base font-semibold leading-7 text-white/92 drop-shadow-[0_2px_10px_rgba(0,0,0,0.82)]">
-                    Подберем мини-экскаватор, мини-погрузчик под любую задачу, доставим на объект в течение двух часов.
-                  </p>
                   <div className="mt-8 grid grid-cols-3 gap-2">
                     {mobileHeroItems.map(({ icon: Icon, label }) => (
                       <span
@@ -283,7 +285,7 @@ export function HomePage() {
                           {card.title}
                         </h3>
                         <p className="mt-3 text-sm font-semibold leading-6 text-ink/62">{item.shortDescription}</p>
-                        <dl className="mt-4 grid grid-cols-3 overflow-hidden rounded-[10px] border border-ink/8 bg-paper/70 text-center">
+                        <dl className="mt-4 grid h-[92px] grid-cols-3 overflow-hidden rounded-[10px] border border-ink/8 bg-paper/70 text-center">
                           {[
                             {
                               label: "Масса",
@@ -298,9 +300,9 @@ export function HomePage() {
                               value: card.attachmentsValue
                             }
                           ].map((spec) => (
-                            <div key={spec.label} className="border-r border-ink/8 px-2 py-3 last:border-r-0">
+                            <div key={spec.label} className="flex min-w-0 flex-col items-center justify-center border-r border-ink/8 px-2 py-2 last:border-r-0">
                               <dt className="text-[9px] font-black uppercase leading-tight text-ink/42">{spec.label}</dt>
-                              <dd className="mt-1.5 break-words text-xs font-black leading-tight text-ink">{spec.value}</dd>
+                              <dd className="mt-1.5 max-w-full break-words text-xs font-black leading-tight text-ink">{spec.value}</dd>
                             </div>
                           ))}
                         </dl>
@@ -350,13 +352,13 @@ export function HomePage() {
             <div className="rounded-[28px]">
               <div className="relative isolate min-h-[700px] overflow-hidden rounded-[28px] bg-night px-8 py-9 text-white shadow-soft lg:min-h-[730px] lg:px-12 lg:py-11 xl:min-h-[760px] xl:px-16">
                 <img
-                  src="/images/equipment/hero-mini-equipment.png"
+                  src="/images/equipment/hero-mini-equipment-desktop.jpg"
                   alt=""
                   className="absolute inset-0 h-full w-full scale-105 object-cover object-center opacity-42 blur-sm"
                   loading="eager"
                 />
                 <img
-                  src="/images/equipment/hero-mini-equipment.png"
+                  src="/images/equipment/hero-mini-equipment-desktop.jpg"
                   alt=""
                   className="absolute inset-0 h-full w-full object-cover object-center"
                   loading="eager"
@@ -458,7 +460,7 @@ export function HomePage() {
                         <p className="mt-2 text-xs font-semibold leading-5 text-ink/62">
                           {item.shortDescription}
                         </p>
-                        <dl className="mt-4 grid grid-cols-3 overflow-hidden rounded-[9px] border border-ink/8 bg-paper/70 text-center">
+                        <dl className="mt-4 grid h-[74px] grid-cols-3 overflow-hidden rounded-[9px] border border-ink/8 bg-paper/70 text-center">
                           {[
                             {
                               label: "Масса",
@@ -473,9 +475,9 @@ export function HomePage() {
                               value: card.attachmentsValue
                             }
                           ].map((spec) => (
-                            <div key={spec.label} className="border-r border-ink/8 px-1.5 py-2.5 last:border-r-0">
+                            <div key={spec.label} className="flex min-w-0 flex-col items-center justify-center border-r border-ink/8 px-1.5 py-2 last:border-r-0">
                               <dt className="text-[8px] font-black uppercase leading-tight text-ink/42">{spec.label}</dt>
-                              <dd className="mt-1 break-words text-[10px] font-black leading-tight text-ink xl:text-[11px]">{spec.value}</dd>
+                              <dd className="mt-1 max-w-full break-words text-[10px] font-black leading-tight text-ink xl:text-[11px]">{spec.value}</dd>
                             </div>
                           ))}
                         </dl>

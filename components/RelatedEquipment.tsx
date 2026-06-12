@@ -1,9 +1,11 @@
-import { formatPrice, getRelatedEquipment, type Equipment } from "@/lib/equipment";
+import { useEquipmentCatalog } from "@/lib/equipment-catalog";
+import { formatPrice, type Equipment } from "@/lib/equipment";
 import { Button } from "./Button";
 import { EquipmentVisual } from "./EquipmentVisual";
 import { useOrderModal } from "./OrderModal";
 
 export function RelatedEquipment({ current }: { current: Equipment }) {
+  const { getRelatedEquipment } = useEquipmentCatalog();
   const related = getRelatedEquipment(current);
   const { openOrderModal } = useOrderModal();
 

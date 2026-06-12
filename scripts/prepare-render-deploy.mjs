@@ -1,3 +1,4 @@
+import fsSync from "node:fs";
 import fs from "node:fs/promises";
 import path from "node:path";
 
@@ -34,6 +35,12 @@ async function copyIndexToRoute(routePath) {
 }
 
 async function equipmentSlugs() {
+  const equipmentJsonPath = path.join(root, "data", "equipment.json");
+  if (fsSync.existsSync(equipmentJsonPath)) {
+    const equipment = JSON.parse(await fs.readFile(equipmentJsonPath, "utf8"));
+    return equipment.map((item) => item.slug).filter(Boolean);
+  }
+
   const equipmentSource = await fs.readFile(path.join(root, "lib", "equipment.ts"), "utf8");
   return [...equipmentSource.matchAll(/slug:\s*"([^"]+)"/g)].map((match) => match[1]);
 }
@@ -41,6 +48,7 @@ async function equipmentSlugs() {
 await copyDistToRoot();
 
 await copyIndexToRoute("catalog");
+await copyIndexToRoute("admin");
 
 for (const slug of await equipmentSlugs()) {
   await copyIndexToRoute(path.join("equipment", slug));

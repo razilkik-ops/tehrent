@@ -7,12 +7,14 @@ import { useOrderModal } from "@/components/OrderModal";
 import { RelatedEquipment } from "@/components/RelatedEquipment";
 import { SpecsTable } from "@/components/SpecsTable";
 import { StickyMobileCTA } from "@/components/StickyMobileCTA";
-import { formatPrice, getEquipmentBySlug } from "@/lib/equipment";
+import { useEquipmentCatalog } from "@/lib/equipment-catalog";
+import { formatPrice } from "@/lib/equipment";
 import { usePageMeta } from "@/src/usePageMeta";
 
 export function EquipmentPage() {
   const { slug = "" } = useParams();
   const { openOrderModal } = useOrderModal();
+  const { getEquipmentBySlug } = useEquipmentCatalog();
   const item = getEquipmentBySlug(slug);
 
   usePageMeta(
@@ -76,9 +78,8 @@ export function EquipmentPage() {
               ))}
             </div>
             <p className="mt-8 text-base leading-8 text-ink/68">
-              {item.title} подходит для строительных бригад, коммунальных служб и частных проектов.
-              Техника поставляется в исправном состоянии, а диспетчер помогает подобрать навесное
-              оборудование под конкретную задачу.
+              {item.description ||
+                `${item.title} подходит для строительных бригад, коммунальных служб и частных проектов. Техника поставляется в исправном состоянии, а диспетчер помогает подобрать навесное оборудование под конкретную задачу.`}
             </p>
             <p className="mt-4 text-base leading-8 text-ink/68">
               Доставка, оператор и срок аренды согласуются заранее, чтобы смена прошла без простоя.

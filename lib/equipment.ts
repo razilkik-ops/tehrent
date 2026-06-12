@@ -8,6 +8,7 @@ export type Equipment = {
   title: string;
   category: string;
   shortDescription: string;
+  description?: string;
   hourlyPrice?: number;
   pricePerShift: number;
   priceLabel?: string;

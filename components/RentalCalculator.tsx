@@ -44,6 +44,33 @@ export function RentalCalculator({ className = "", id, sourcePage = "calculator"
     };
   }, [distanceKm, hourlyPrice, hours]);
 
+  const safeHours = Math.max(0, Number.isFinite(Number(hours)) ? Number(hours) : MIN_HOURS);
+  const safeDistanceKm = Math.max(0, Number.isFinite(Number(distanceKm)) ? Number(distanceKm) : 0);
+  const selectedAttachments = [
+    hydroDrill ? "Гидробур" : null,
+    hydraulicHammer ? "Гидромолот" : null
+  ].filter((item): item is string => Boolean(item));
+  const attachmentsLabel = selectedAttachments.length ? selectedAttachments.join(", ") : "Без навесного";
+  const calculatorSummary = [
+    { label: "Часы работы", value: `${safeHours} ч` },
+    { label: "Км от МКАД", value: `${safeDistanceKm} км` },
+    { label: "Навесное", value: attachmentsLabel },
+    { label: "Цена часа", value: `${formatRub(hourlyPrice)}/час` },
+    { label: "Доставка", value: formatRub(totals.delivery) },
+    { label: "Работа", value: formatRub(totals.work) },
+    { label: "Итого", value: formatRub(totals.total) }
+  ];
+  const calculatorTask = [
+    "Заявка из калькулятора.",
+    `Часы работы: ${safeHours} ч.`,
+    `Км от МКАД: ${safeDistanceKm} км.`,
+    `Навесное: ${attachmentsLabel}.`,
+    `Цена часа: ${formatRub(hourlyPrice)}/час.`,
+    `Доставка: ${formatRub(totals.delivery)}.`,
+    `Работа: ${formatRub(totals.work)}.`,
+    `Итого ориентировочно: ${formatRub(totals.total)}.`
+  ].join(" ");
+
   return (
     <section id={id} className={`rounded-[16px] bg-night p-4 text-white shadow-soft md:rounded-[20px] md:p-6 ${className}`}>
       <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr] lg:items-stretch">
@@ -176,7 +203,8 @@ export function RentalCalculator({ className = "", id, sourcePage = "calculator"
               openOrderModal({
                 sourcePage,
                 formType: "calculator-order",
-                hiddenTask: `Заявка из калькулятора. Ориентировочно: ${formatRub(totals.total)}. Часы: ${hours || "0"}, км от МКАД: ${distanceKm || "0"}.`
+                hiddenTask: calculatorTask,
+                summaryItems: calculatorSummary
               })
             }
           >
