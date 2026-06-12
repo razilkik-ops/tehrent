@@ -232,7 +232,8 @@ export function HomePage() {
                       <a href={`/equipment/${item.slug}`} aria-label={item.title}>
                         <EquipmentVisual
                           type={item.imagePlaceholderType}
-                          imageUrl={item.imageUrl}
+                          imageUrl={item.mobileImageUrl || item.imageUrl}
+                          imageFit="cover"
                           priorityLabel="В наличии"
                           className="h-[220px] !min-h-0 rounded-none"
                         />

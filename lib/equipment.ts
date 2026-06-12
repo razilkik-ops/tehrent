@@ -17,6 +17,7 @@ export type Equipment = {
   useCases: string[];
   imagePlaceholderType: ImagePlaceholderType;
   imageUrl?: string;
+  mobileImageUrl?: string;
   withOperatorAvailable: boolean;
   deliveryAvailable: boolean;
 };
@@ -48,6 +49,7 @@ export const equipment: Equipment[] = [
     ],
     imagePlaceholderType: "excavator",
     imageUrl: "/images/equipment/kubota-kx41-3w-model.webp",
+    mobileImageUrl: "/images/equipment/kubota-kx41-3w-mobile.webp",
     withOperatorAvailable: true,
     deliveryAvailable: true
   },
@@ -72,6 +74,7 @@ export const equipment: Equipment[] = [
     useCases: ["Бурение под сваи", "Заборы", "Фундамент", "Посадочные ямы"],
     imagePlaceholderType: "excavator",
     imageUrl: "/images/equipment/kubota-kx41-3v-auger-model.webp",
+    mobileImageUrl: "/images/equipment/kubota-kx41-3v-auger-mobile.webp",
     withOperatorAvailable: true,
     deliveryAvailable: true
   },
@@ -96,6 +99,7 @@ export const equipment: Equipment[] = [
     useCases: ["Погрузка грунта", "Уборка территории", "Планировка", "Перемещение материалов"],
     imagePlaceholderType: "loader",
     imageUrl: "/images/equipment/new-holland-l160-model.webp",
+    mobileImageUrl: "/images/equipment/new-holland-l160-mobile.webp",
     withOperatorAvailable: true,
     deliveryAvailable: true
   },
@@ -120,6 +124,7 @@ export const equipment: Equipment[] = [
     useCases: ["Бурение свай", "Посадка деревьев", "Погрузка", "Планировка"],
     imagePlaceholderType: "loader",
     imageUrl: "/images/equipment/new-holland-l160-auger-model.webp",
+    mobileImageUrl: "/images/equipment/new-holland-l160-auger-mobile.webp",
     withOperatorAvailable: true,
     deliveryAvailable: true
   },
@@ -169,6 +174,7 @@ export const equipment: Equipment[] = [
     useCases: ["Вывоз грунта", "Вывоз строительного мусора", "Доставка сыпучих материалов", "Снабжение объекта"],
     imagePlaceholderType: "truck",
     imageUrl: "/images/equipment/samosval-10-20t-model.webp",
+    mobileImageUrl: "/images/equipment/samosval-10-20t-mobile.webp",
     withOperatorAvailable: true,
     deliveryAvailable: true
   },
@@ -192,6 +198,7 @@ export const equipment: Equipment[] = [
     useCases: ["Копка траншей", "Погрузка грунта", "Планировка", "Обратная засыпка"],
     imagePlaceholderType: "backhoe",
     imageUrl: "/images/equipment/volvo-bl71-model.webp",
+    mobileImageUrl: "/images/equipment/volvo-bl71-mobile.webp",
     withOperatorAvailable: true,
     deliveryAvailable: true
   },
@@ -215,6 +222,7 @@ export const equipment: Equipment[] = [
     useCases: ["Погрузка материалов", "Разгрузка", "Планировка", "Работы на складе"],
     imagePlaceholderType: "loader",
     imageUrl: "/images/equipment/amkodor-front-loader-model.webp",
+    mobileImageUrl: "/images/equipment/amkodor-front-loader-mobile.webp",
     withOperatorAvailable: true,
     deliveryAvailable: true
   },

@@ -6,6 +6,7 @@ type EquipmentVisualProps = {
   imageUrl?: string;
   priorityLabel?: string;
   variant?: "card" | "hero" | "dark";
+  imageFit?: "contain" | "cover";
 };
 
 const imageMap: Record<ImagePlaceholderType, string> = {
@@ -29,8 +30,11 @@ export function EquipmentVisual({
   className = "",
   imageUrl,
   priorityLabel,
-  variant = "card"
+  variant = "card",
+  imageFit = "contain"
 }: EquipmentVisualProps) {
+  const foregroundFitClass = imageFit === "cover" ? "object-cover" : "object-contain p-2";
+
   return (
     <div
       aria-label="Схематичное изображение спецтехники"
@@ -45,7 +49,7 @@ export function EquipmentVisual({
       <img
         src={imageUrl || imageMap[type]}
         alt=""
-        className={`absolute inset-0 h-full w-full object-contain p-2 ${objectPosition[type]}`}
+        className={`absolute inset-0 h-full w-full ${foregroundFitClass} ${objectPosition[type]}`}
         loading="lazy"
       />
       <span
