@@ -1,5 +1,6 @@
 import { CalendarCheck, X } from "lucide-react";
 import { createContext, type ReactNode, useContext, useMemo, useState } from "react";
+import { equipment, getEquipmentBySlug, type Equipment } from "@/lib/equipment";
 import { QuickRequestForm } from "./QuickRequestForm";
 
 type OrderModalPayload = {
@@ -8,6 +9,7 @@ type OrderModalPayload = {
   selectedEquipment?: string[];
   formType?: string;
   hiddenTask?: string;
+  equipmentTitle?: string;
 };
 
 type OrderModalContextValue = {
@@ -25,8 +27,49 @@ function getCurrentSourcePage() {
   return `${window.location.pathname}${window.location.hash}`;
 }
 
+function getCurrentEquipmentFromUrl() {
+  if (typeof window === "undefined") {
+    return undefined;
+  }
+
+  const match = window.location.pathname.match(/^\/equipment\/([^/]+)/);
+  if (!match) {
+    return undefined;
+  }
+
+  return getEquipmentBySlug(decodeURIComponent(match[1]));
+}
+
+function getEquipmentFromPayload(payload: OrderModalPayload) {
+  const payloadEquipmentId = payload.equipmentId || payload.selectedEquipment?.[0];
+
+  if (payloadEquipmentId) {
+    return equipment.find((item) => item.id === payloadEquipmentId);
+  }
+
+  return getCurrentEquipmentFromUrl();
+}
+
+function getHiddenTask(payload: OrderModalPayload, item?: Equipment) {
+  const defaultTask = payload.hiddenTask || "Заявка с кнопки Заказать";
+
+  if (!item) {
+    return defaultTask;
+  }
+
+  if (defaultTask.includes(item.title)) {
+    return defaultTask;
+  }
+
+  return `${defaultTask}. Техника: ${item.title}`;
+}
+
 export function OrderModalProvider({ children }: { children: ReactNode }) {
   const [payload, setPayload] = useState<OrderModalPayload | null>(null);
+  const payloadEquipment = payload ? getEquipmentFromPayload(payload) : undefined;
+  const equipmentTitle = payload?.equipmentTitle || payloadEquipment?.title;
+  const equipmentId = payload?.equipmentId || payloadEquipment?.id || "";
+  const selectedEquipment = payload?.selectedEquipment || (equipmentId ? [equipmentId] : []);
 
   const value = useMemo<OrderModalContextValue>(
     () => ({
@@ -63,6 +106,11 @@ export function OrderModalProvider({ children }: { children: ReactNode }) {
                   <p className="mt-1 text-xs font-semibold leading-5 text-ink/58">
                     Оставьте имя и телефон, мы быстро уточним задачу.
                   </p>
+                  {equipmentTitle ? (
+                    <p className="mt-2 inline-flex rounded-full bg-accent/14 px-3 py-1 text-[11px] font-black leading-4 text-ink">
+                      Техника: {equipmentTitle}
+                    </p>
+                  ) : null}
                 </div>
               </div>
               <button
@@ -78,10 +126,10 @@ export function OrderModalProvider({ children }: { children: ReactNode }) {
               id="order-modal-lead"
               sourcePage={payload.sourcePage || getCurrentSourcePage()}
               variant="modal"
-              equipmentId={payload.equipmentId}
-              selectedEquipment={payload.selectedEquipment}
+              equipmentId={equipmentId}
+              selectedEquipment={selectedEquipment}
               formType={payload.formType || "order-modal"}
-              hiddenTask={payload.hiddenTask || "Заявка с кнопки Заказать"}
+              hiddenTask={getHiddenTask(payload, payloadEquipment)}
             />
           </div>
         </div>

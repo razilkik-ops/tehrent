@@ -18,6 +18,7 @@ export function RelatedEquipment({ current }: { current: Equipment }) {
             <EquipmentVisual
               type={item.imagePlaceholderType}
               imageUrl={item.imageUrl}
+              imageFit="cover"
               imageBackdrop="none"
               className="aspect-[1200/751] !min-h-0 rounded-none"
             />

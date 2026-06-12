@@ -36,28 +36,28 @@ const mobileFeaturedEquipment = featuredEquipmentIds
 
 const cases = [
   {
-    title: "Строительство зданий и сооружений",
-    imageUrl: "/images/services/building-construction.webp"
+    title: "Бурение свай под фундамент",
+    imageUrl: "/images/services/foundation-pile-drilling.jpg"
   },
   {
     title: "Благоустройство территорий",
     imageUrl: "/images/services/landscaping.webp"
   },
   {
-    title: "Коммунальные работы",
-    imageUrl: "/images/services/municipal-utilities.webp"
+    title: "Доставка грунта",
+    imageUrl: "/images/services/soil-delivery.jpg"
   },
   {
-    title: "Демонтаж и снос конструкций",
-    imageUrl: "/images/services/demolition.webp"
+    title: "Укладка плитки",
+    imageUrl: "/images/services/paving-installation.jpg"
   },
   {
-    title: "Промышленные объекты",
-    imageUrl: "/images/services/industrial-sites.webp"
+    title: "Монтаж канализации",
+    imageUrl: "/images/services/sewer-installation.jpg"
   },
   {
-    title: "Складская и логистика",
-    imageUrl: "/images/services/warehouse-logistics.webp"
+    title: "Дренаж участка",
+    imageUrl: "/images/services/site-drainage.jpg"
   }
 ];
 
@@ -444,6 +444,7 @@ export function HomePage() {
                         <EquipmentVisual
                           type={item.imagePlaceholderType}
                           imageUrl={item.imageUrl}
+                          imageFit="cover"
                           imageBackdrop="none"
                           priorityLabel="В наличии"
                           className="aspect-[1200/751] !min-h-0 w-full rounded-none"
