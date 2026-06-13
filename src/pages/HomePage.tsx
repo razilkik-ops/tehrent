@@ -381,22 +381,8 @@ export function HomePage() {
                     </p>
                   </div>
 
-                  <div className="max-w-[780px]">
-                    <div className="grid grid-cols-3 gap-4">
-                      {mobileHeroItems.map(({ icon: Icon, label }) => (
-                        <div
-                          key={label}
-                          className="grid min-h-[118px] place-items-center gap-3 rounded-[16px] bg-night/54 px-4 py-5 text-center text-white shadow-[0_18px_45px_rgba(0,0,0,0.28)] backdrop-blur-xl lg:min-h-[126px] xl:min-h-[136px]"
-                        >
-                          <span className="grid size-11 place-items-center rounded-[12px] bg-accent/14 text-accent lg:size-12 xl:size-14">
-                            <Icon className="size-6 lg:size-7 xl:size-8" strokeWidth={2.2} />
-                          </span>
-                          <span className="text-sm font-black leading-tight text-white/94">{label}</span>
-                        </div>
-                      ))}
-                    </div>
-
-                    <div className="mt-5 grid grid-cols-2 gap-4">
+                  <div className="flex items-end justify-between gap-8">
+                    <div className="grid w-full max-w-[640px] grid-cols-2 gap-4">
                       <a
                         href="tel:+375299209582"
                         className="flex h-[76px] min-w-0 items-center gap-4 rounded-[14px] border border-accent/55 bg-white px-5 text-night shadow-[0_18px_45px_rgba(0,0,0,0.22)]"
@@ -419,6 +405,20 @@ export function HomePage() {
                       >
                         Заказать
                       </Button>
+                    </div>
+
+                    <div className="grid w-full max-w-[520px] grid-cols-3 gap-3 xl:max-w-[560px]">
+                      {mobileHeroItems.map(({ icon: Icon, label }) => (
+                        <div
+                          key={label}
+                          className="grid min-h-[82px] place-items-center gap-2 rounded-[14px] bg-night/54 px-3 py-3 text-center text-white shadow-[0_14px_34px_rgba(0,0,0,0.26)] backdrop-blur-xl xl:min-h-[90px]"
+                        >
+                          <span className="grid size-8 place-items-center rounded-[10px] bg-accent/14 text-accent xl:size-9">
+                            <Icon className="size-5 xl:size-6" strokeWidth={2.2} />
+                          </span>
+                          <span className="text-[11px] font-black leading-tight text-white/94 xl:text-xs">{label}</span>
+                        </div>
+                      ))}
                     </div>
                   </div>
                 </div>

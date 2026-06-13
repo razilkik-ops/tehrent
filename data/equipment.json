@@ -163,37 +163,6 @@
     "deliveryAvailable": true
   },
   {
-    "id": "eq-manitou-180-atj",
-    "slug": "manitou-180-atj",
-    "title": "Manitou 180 ATJ",
-    "category": "Автовышки",
-    "shortDescription": "Подъемная техника для фасадных, монтажных и электромонтажных работ на высоте.",
-    "pricePerShift": 14000,
-    "availability": "today",
-    "specs": {
-      "Высота подъема": "18 м",
-      "Грузоподъемность": "250 кг",
-      "Привод": "4x4",
-      "Поворот башни": "360 градусов",
-      "Горизонтальный вылет": "10.6 м",
-      "Питание": "дизель"
-    },
-    "attachments": [
-      "Люлька",
-      "Страховочный комплект"
-    ],
-    "useCases": [
-      "Фасады",
-      "Монтаж рекламы",
-      "Электромонтаж",
-      "Работы на складах"
-    ],
-    "imagePlaceholderType": "lift",
-    "imageUrl": "/images/equipment/manitou-180-atj.png",
-    "withOperatorAvailable": true,
-    "deliveryAvailable": true
-  },
-  {
     "id": "eq-kamaz-6520",
     "slug": "kamaz-6520",
     "title": "Самосвалы 10-20 т",
@@ -284,68 +253,6 @@
     "imagePlaceholderType": "loader",
     "imageUrl": "/images/equipment/amkodor-front-loader-model.webp",
     "mobileImageUrl": "/images/equipment/amkodor-front-loader-mobile.webp",
-    "withOperatorAvailable": true,
-    "deliveryAvailable": true
-  },
-  {
-    "id": "eq-hamm-hd12",
-    "slug": "hamm-hd12",
-    "title": "Виброкаток Hamm HD 12",
-    "category": "Катки",
-    "shortDescription": "Компактный каток для уплотнения асфальта, основания дорожек и благоустройства.",
-    "pricePerShift": 9000,
-    "availability": "request",
-    "specs": {
-      "Масса": "2.7 т",
-      "Ширина вальца": "1.2 м",
-      "Частота вибрации": "60 Гц",
-      "Тип": "тандемный",
-      "Двигатель": "дизель",
-      "Рабочая смена": "8 часов"
-    },
-    "attachments": [
-      "Оператор",
-      "Доставка"
-    ],
-    "useCases": [
-      "Асфальтирование",
-      "Дорожки",
-      "Парковки",
-      "Благоустройство"
-    ],
-    "imagePlaceholderType": "loader",
-    "imageUrl": "/images/equipment/hamm-hd12.png",
-    "withOperatorAvailable": true,
-    "deliveryAvailable": true
-  },
-  {
-    "id": "eq-hydraulic-hammer",
-    "slug": "hydraulic-hammer",
-    "title": "Гидромолот Delta F-5",
-    "category": "Навесное оборудование",
-    "shortDescription": "Навесной гидромолот для демонтажа бетона, кирпича и мерзлого грунта.",
-    "pricePerShift": 7500,
-    "availability": "today",
-    "specs": {
-      "Масса": "280 кг",
-      "Совместимость": "2.5-5 т",
-      "Энергия удара": "650 Дж",
-      "Частота": "900 уд/мин",
-      "Назначение": "демонтаж",
-      "Подача": "с техникой"
-    },
-    "attachments": [
-      "Пика",
-      "Долото"
-    ],
-    "useCases": [
-      "Демонтаж бетона",
-      "Разрушение кирпича",
-      "Мерзлый грунт",
-      "Проемы"
-    ],
-    "imagePlaceholderType": "excavator",
-    "imageUrl": "/images/equipment/delta-f5-hydraulic-hammer.png",
     "withOperatorAvailable": true,
     "deliveryAvailable": true
   }
