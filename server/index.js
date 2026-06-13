@@ -307,6 +307,21 @@ async function createApp() {
     });
   }
 
+  app.use((error, request, response, _next) => {
+    console.error("[server-error]", error);
+
+    const message = error instanceof Error ? error.message : "Внутренняя ошибка сервера";
+    if (request.originalUrl.startsWith("/api/")) {
+      response.status(500).json({
+        success: false,
+        message
+      });
+      return;
+    }
+
+    response.status(500).send("Internal Server Error");
+  });
+
   return app;
 }
 

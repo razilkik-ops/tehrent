@@ -109,14 +109,33 @@ async function jsonRequest<T>(url: string, options?: RequestInit) {
   const response = await fetch(url, {
     ...options,
     headers: {
+      Accept: "application/json",
       "Content-Type": "application/json",
       ...options?.headers
     }
   });
-  const data = (await response.json()) as T & { message?: string };
+  const contentType = response.headers.get("content-type") || "";
+  const raw = await response.text();
+  let data: (T & { message?: string }) | null = null;
+
+  if (raw.trim()) {
+    if (contentType.includes("application/json")) {
+      try {
+        data = JSON.parse(raw) as T & { message?: string };
+      } catch {
+        throw new Error("Сервер вернул некорректный JSON");
+      }
+    } else {
+      throw new Error("Сервер вернул не JSON. Проверьте, что backend админки запущен.");
+    }
+  }
 
   if (!response.ok) {
-    throw new Error(data.message || "Ошибка запроса");
+    throw new Error(data?.message || "Ошибка запроса");
+  }
+
+  if (!data) {
+    throw new Error("Сервер вернул пустой ответ");
   }
 
   return data;
