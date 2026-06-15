@@ -1,8 +1,9 @@
 [
   {
     "id": "eq-bobcat-e35",
-    "slug": "kubota-kx41-3w",
-    "title": "KUBOTA KX41-3W",
+    "slug": "kubota-kx41-3v",
+    "legacySlugs": ["kubota-kx41-3w"],
+    "title": "KUBOTA KX41-3V",
     "category": "Мини-экскаваторы",
     "shortDescription": "Мощный японский мини-экскаватор для траншей, котлованов и работ на ограниченной территории.",
     "hourlyPrice": 85,

@@ -1,16 +1,56 @@
 import fsSync from "node:fs";
 import fs from "node:fs/promises";
 import path from "node:path";
+import { applySeoToHtml, buildSitemapXml, getMetaForPath } from "../lib/seo.js";
 
 const isRender = process.env.RENDER === "true";
-
-if (!isRender) {
-  process.exit(0);
-}
-
 const root = process.cwd();
 const distPath = path.join(root, "dist");
-const rootIndexPath = path.join(root, "index.html");
+const rootIndexPath = path.join(distPath, "index.html");
+
+async function loadEquipment() {
+  const equipmentJsonPath = path.join(root, "data", "equipment.json");
+
+  if (fsSync.existsSync(equipmentJsonPath)) {
+    return JSON.parse(await fs.readFile(equipmentJsonPath, "utf8"));
+  }
+
+  const equipmentSource = await fs.readFile(path.join(root, "lib", "equipment.ts"), "utf8");
+  return [...equipmentSource.matchAll(/slug:\s*"([^"]+)"/g)].map((match, index) => ({
+    id: `equipment-${index}`,
+    slug: match[1]
+  }));
+}
+
+async function ensureRouteHtml(targetPath, html) {
+  const targetDirectory = path.join(distPath, targetPath);
+  await fs.mkdir(targetDirectory, { recursive: true });
+  await fs.writeFile(path.join(targetDirectory, "index.html"), html, "utf8");
+}
+
+async function generateStaticRoutes() {
+  const equipment = await loadEquipment();
+  const baseHtml = await fs.readFile(rootIndexPath, "utf8");
+
+  await fs.writeFile(rootIndexPath, applySeoToHtml(baseHtml, getMetaForPath("/", equipment)), "utf8");
+  await ensureRouteHtml("admin", applySeoToHtml(baseHtml, getMetaForPath("/admin", equipment)));
+
+  for (const item of equipment) {
+    await ensureRouteHtml(
+      path.join("equipment", item.slug),
+      applySeoToHtml(baseHtml, getMetaForPath(`/equipment/${item.slug}`, equipment))
+    );
+
+    for (const legacySlug of item.legacySlugs || []) {
+      await ensureRouteHtml(
+        path.join("equipment", legacySlug),
+        applySeoToHtml(baseHtml, getMetaForPath(`/equipment/${legacySlug}`, equipment))
+      );
+    }
+  }
+
+  await fs.writeFile(path.join(distPath, "sitemap.xml"), buildSitemapXml(equipment), "utf8");
+}
 
 async function copyDistToRoot() {
   const entries = await fs.readdir(distPath, { withFileTypes: true });
@@ -28,30 +68,9 @@ async function copyDistToRoot() {
   }
 }
 
-async function copyIndexToRoute(routePath) {
-  const targetDirectory = path.join(root, routePath);
-  await fs.mkdir(targetDirectory, { recursive: true });
-  await fs.copyFile(rootIndexPath, path.join(targetDirectory, "index.html"));
+await generateStaticRoutes();
+
+if (isRender) {
+  await copyDistToRoot();
+  console.log("Prepared Render root publish fallback.");
 }
-
-async function equipmentSlugs() {
-  const equipmentJsonPath = path.join(root, "data", "equipment.json");
-  if (fsSync.existsSync(equipmentJsonPath)) {
-    const equipment = JSON.parse(await fs.readFile(equipmentJsonPath, "utf8"));
-    return equipment.map((item) => item.slug).filter(Boolean);
-  }
-
-  const equipmentSource = await fs.readFile(path.join(root, "lib", "equipment.ts"), "utf8");
-  return [...equipmentSource.matchAll(/slug:\s*"([^"]+)"/g)].map((match) => match[1]);
-}
-
-await copyDistToRoot();
-
-await copyIndexToRoute("catalog");
-await copyIndexToRoute("admin");
-
-for (const slug of await equipmentSlugs()) {
-  await copyIndexToRoute(path.join("equipment", slug));
-}
-
-console.log("Prepared Render root publish fallback.");

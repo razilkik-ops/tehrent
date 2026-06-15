@@ -1,5 +1,5 @@
 import { CheckCircle2 } from "lucide-react";
-import { useParams } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
 import { EquipmentDetailHero } from "@/components/EquipmentDetailHero";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
@@ -8,7 +8,7 @@ import { RelatedEquipment } from "@/components/RelatedEquipment";
 import { SpecsTable } from "@/components/SpecsTable";
 import { StickyMobileCTA } from "@/components/StickyMobileCTA";
 import { useEquipmentCatalog } from "@/lib/equipment-catalog";
-import { formatPrice } from "@/lib/equipment";
+import { getEquipmentMeta, toAbsoluteUrl } from "@/lib/seo.js";
 import { usePageMeta } from "@/src/usePageMeta";
 
 export function EquipmentPage() {
@@ -18,11 +18,21 @@ export function EquipmentPage() {
   const item = getEquipmentBySlug(slug);
 
   usePageMeta(
-    item ? `${item.title} аренда | Arentex.by` : "Техника не найдена | Arentex.by",
     item
-      ? `${item.title} в аренду: ${item.shortDescription} ${item.priceLabel || `Цена от ${formatPrice(item.pricePerShift)} за смену.`}`
-      : "Запрошенная техника не найдена в каталоге."
+      ? getEquipmentMeta(item)
+      : {
+          title: "Техника не найдена | Arentex.by",
+          description: "Запрошенная техника не найдена в каталоге Arentex.by.",
+          canonical: toAbsoluteUrl("/"),
+          robots: "noindex, follow",
+          type: "website",
+          structuredData: []
+        }
   );
+
+  if (item && slug !== item.slug) {
+    return <Navigate to={`/equipment/${item.slug}`} replace />;
+  }
 
   if (!item) {
     return (

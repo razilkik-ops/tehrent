@@ -3,6 +3,8 @@ import type { FormEvent } from "react";
 import { useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/Button";
 import { categories, type Availability, type Equipment, type ImagePlaceholderType } from "@/lib/equipment";
+import { toAbsoluteUrl } from "@/lib/seo.js";
+import { usePageMeta } from "@/src/usePageMeta";
 
 type AdminResponse = {
   items?: Equipment[];
@@ -208,6 +210,15 @@ export function AdminPage() {
   const [selectedId, setSelectedId] = useState("");
   const [status, setStatus] = useState("");
   const [saving, setSaving] = useState(false);
+
+  usePageMeta({
+    title: "Админ-панель | Arentex.by",
+    description: "Служебный раздел управления каталогом спецтехники.",
+    canonical: toAbsoluteUrl("/admin"),
+    robots: "noindex, nofollow",
+    type: "website",
+    structuredData: []
+  });
 
   const selected = useMemo(() => items.find((item) => item.id === selectedId), [items, selectedId]);
 

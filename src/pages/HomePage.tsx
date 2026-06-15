@@ -13,6 +13,7 @@ import { SectionTitle } from "@/components/SectionTitle";
 import { StickyMobileCTA } from "@/components/StickyMobileCTA";
 import { useEquipmentCatalog } from "@/lib/equipment-catalog";
 import { formatPrice, type Equipment } from "@/lib/equipment";
+import { getHomeMeta } from "@/lib/seo.js";
 import { usePageMeta } from "@/src/usePageMeta";
 
 const mobileHeroItems = [
@@ -61,6 +62,19 @@ const cases = [
 
 function getFeaturedEquipmentCard(item: Equipment) {
   const hourlyPrice = item.hourlyPrice ?? Math.round(item.pricePerShift / 8);
+
+  if (item.id === "eq-bobcat-e35") {
+    return {
+      hourlyPrice,
+      title: "Аренда мини-экскаватора KUBOTA KX41-3V",
+      workLabel: "Глубина копания",
+      workSpec: item.specs["Глубина копания"],
+      attachmentsLabel: "Ковши",
+      attachmentsValue: "20, 30, 50 см, планировочные",
+      hourlyPriceLabel: `от ${formatPrice(hourlyPrice)}`,
+      shiftPriceLabel: `от ${formatPrice(item.pricePerShift)}`
+    };
+  }
 
   if (item.id === "eq-kubota-u27") {
     return {
@@ -180,10 +194,7 @@ export function HomePage() {
     ...equipment.filter((item) => !featuredEquipmentIds.includes(item.id))
   ];
 
-  usePageMeta(
-    "Аренда спецтехники с доставкой | Arentex.by",
-    "Аренда мини-экскаваторов, мини-погрузчиков, автовышек, самосвалов и навесного оборудования с оператором."
-  );
+  usePageMeta(getHomeMeta(equipment));
 
   return (
     <>
@@ -192,31 +203,31 @@ export function HomePage() {
         <section className="w-full content-gutter pt-0">
           <div className="md:hidden">
             <div className="rounded-[18px]">
-              <div className="relative isolate min-h-[360px] overflow-hidden rounded-[18px] bg-night px-5 py-6 text-white shadow-soft">
+              <div className="relative isolate min-h-[400px] overflow-hidden rounded-[18px] bg-night px-5 pb-5 pt-6 text-white shadow-soft">
                 <img
-                  src="/images/equipment/hero-mini-equipment-mobile.webp"
+                  src="/images/equipment/hero-mini-equipment-desktop.jpg"
                   alt=""
-                  className="absolute inset-0 h-full w-full scale-110 object-cover object-center opacity-45 blur-sm"
+                  className="absolute inset-0 h-full w-full scale-110 object-cover object-[58%_center] opacity-45 blur-sm"
                   loading="eager"
                 />
                 <img
-                  src="/images/equipment/hero-mini-equipment-mobile.webp"
+                  src="/images/equipment/hero-mini-equipment-desktop.jpg"
                   alt=""
-                  className="absolute inset-0 h-full w-full object-cover object-center"
+                  className="absolute inset-0 h-full w-full object-cover object-[58%_center]"
                   loading="eager"
                 />
                 <span className="absolute inset-0 bg-night/72" />
                 <span className="absolute inset-0 bg-gradient-to-b from-night/62 via-night/42 to-night/80" />
                 <span className="absolute inset-x-0 top-0 h-[48%] bg-gradient-to-b from-night/96 via-night/82 to-night/8" />
-                <div className="relative z-10">
+                <div className="relative z-10 flex min-h-[350px] flex-col">
                   <h1 className="max-w-[340px] text-[22px] font-black leading-[1.2] drop-shadow-[0_3px_12px_rgba(0,0,0,0.86)]">
                     Мини-экскаваторы, погрузчики и другая спецтехника в аренду с доставкой
                   </h1>
-                  <div className="mt-8 grid grid-cols-3 gap-2">
+                  <div className="mt-auto grid grid-cols-3 gap-2 pt-8">
                     {mobileHeroItems.map(({ icon: Icon, label }) => (
                       <span
                         key={label}
-                        className="grid min-h-[76px] place-items-center gap-1.5 rounded-[12px] bg-night/58 px-1.5 py-2 text-center text-[10px] font-black leading-tight text-white/94 backdrop-blur-sm"
+                        className="grid min-h-[84px] place-items-center gap-1.5 rounded-[12px] bg-night/58 px-2 py-3 text-center text-[10px] font-black leading-tight text-white/94 backdrop-blur-sm"
                       >
                         <Icon size={18} className="text-accent" />
                         {label}
@@ -381,8 +392,8 @@ export function HomePage() {
                     </p>
                   </div>
 
-                  <div className="flex items-end justify-between gap-8">
-                    <div className="grid w-full max-w-[640px] grid-cols-2 gap-4">
+                  <div className="flex flex-col gap-5 xl:flex-row xl:items-end xl:justify-between xl:gap-8">
+                    <div className="grid w-full max-w-[720px] grid-cols-2 gap-4 xl:max-w-[640px]">
                       <a
                         href="tel:+375299209582"
                         className="flex h-[76px] min-w-0 items-center gap-4 rounded-[14px] border border-accent/55 bg-white px-5 text-night shadow-[0_18px_45px_rgba(0,0,0,0.22)]"
@@ -390,7 +401,9 @@ export function HomePage() {
                         <span className="grid size-12 shrink-0 place-items-center rounded-[12px] border border-accent/45 bg-accent/12 text-accent">
                           <PhoneCall size={24} />
                         </span>
-                        <span className="truncate text-2xl font-black">+375 29 920-95-82</span>
+                        <span className="text-[20px] font-black leading-none lg:text-[22px] xl:text-2xl">
+                          +375 29 920-95-82
+                        </span>
                       </a>
                       <Button
                         type="button"
@@ -407,7 +420,7 @@ export function HomePage() {
                       </Button>
                     </div>
 
-                    <div className="grid w-full max-w-[520px] grid-cols-3 gap-3 xl:max-w-[560px]">
+                    <div className="grid w-full max-w-[560px] grid-cols-3 gap-3 self-end xl:max-w-[560px]">
                       {mobileHeroItems.map(({ icon: Icon, label }) => (
                         <div
                           key={label}

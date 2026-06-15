@@ -5,6 +5,7 @@ export type ImagePlaceholderType = "excavator" | "loader" | "backhoe" | "lift" |
 export type Equipment = {
   id: string;
   slug: string;
+  legacySlugs?: string[];
   title: string;
   category: string;
   shortDescription: string;
@@ -26,8 +27,9 @@ export type Equipment = {
 export const equipment: Equipment[] = [
   {
     id: "eq-bobcat-e35",
-    slug: "kubota-kx41-3w",
-    title: "KUBOTA KX41-3W",
+    slug: "kubota-kx41-3v",
+    legacySlugs: ["kubota-kx41-3w"],
+    title: "KUBOTA KX41-3V",
     category: "Мини-экскаваторы",
     shortDescription:
       "Мощный японский мини-экскаватор для траншей, котлованов и работ на ограниченной территории.",
@@ -258,7 +260,7 @@ export function formatPrice(value: number) {
 }
 
 export function getEquipmentBySlug(slug: string) {
-  return equipment.find((item) => item.slug === slug);
+  return equipment.find((item) => item.slug === slug || item.legacySlugs?.includes(slug));
 }
 
 export function getRelatedEquipment(current: Equipment) {

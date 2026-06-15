@@ -6,6 +6,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { createServer as createViteServer } from "vite";
 import { z } from "zod";
+import { applySeoToHtml, buildSitemapXml, getMetaForPath } from "../lib/seo.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, "..");
@@ -43,6 +44,7 @@ const leadSchema = z
 const equipmentItemSchema = z.object({
   id: z.string().trim().min(1),
   slug: z.string().trim().min(1),
+  legacySlugs: z.array(z.string().trim().min(1)).optional(),
   title: z.string().trim().min(1),
   category: z.string().trim().min(1),
   shortDescription: z.string().trim().min(1),
@@ -166,6 +168,14 @@ async function createApp() {
   app.use(express.json({ limit: "20mb" }));
   app.use("/uploads", express.static(uploadsDir));
 
+  app.get("/sitemap.xml", async (_request, response, next) => {
+    try {
+      response.type("application/xml").send(buildSitemapXml(await readEquipment()));
+    } catch (error) {
+      next(error);
+    }
+  });
+
   app.get("/api/equipment", async (_request, response, next) => {
     try {
       response.json({ items: await readEquipment() });
@@ -281,8 +291,14 @@ async function createApp() {
   if (isProduction) {
     const clientPath = path.join(root, "dist");
     app.use(express.static(clientPath));
-    app.get("*", (_request, response) => {
-      response.sendFile(path.join(clientPath, "index.html"));
+    app.get("*", async (request, response, next) => {
+      try {
+        const template = await fsp.readFile(path.join(clientPath, "index.html"), "utf8");
+        const html = applySeoToHtml(template, getMetaForPath(request.path, await readEquipment()));
+        response.status(200).set({ "Content-Type": "text/html" }).end(html);
+      } catch (error) {
+        next(error);
+      }
     });
   } else {
     const vite = await createViteServer({
@@ -290,7 +306,7 @@ async function createApp() {
       server: {
         middlewareMode: true
       },
-      appType: "spa"
+      appType: "custom"
     });
 
     app.use(vite.middlewares);
@@ -299,6 +315,7 @@ async function createApp() {
         const url = request.originalUrl;
         let template = fs.readFileSync(path.resolve(root, "index.html"), "utf-8");
         template = await vite.transformIndexHtml(url, template);
+        template = applySeoToHtml(template, getMetaForPath(url, await readEquipment()));
         response.status(200).set({ "Content-Type": "text/html" }).end(template);
       } catch (error) {
         vite.ssrFixStacktrace(error);

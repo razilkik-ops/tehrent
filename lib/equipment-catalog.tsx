@@ -50,7 +50,8 @@ export function EquipmentCatalogProvider({ children }: { children: ReactNode }) 
       loading,
       error,
       refreshEquipment,
-      getEquipmentBySlug: (slug) => items.find((item) => item.slug === slug),
+      getEquipmentBySlug: (slug) =>
+        items.find((item) => item.slug === slug || item.legacySlugs?.includes(slug)),
       getEquipmentById: (id) => items.find((item) => item.id === id),
       getRelatedEquipment: (current) =>
         items

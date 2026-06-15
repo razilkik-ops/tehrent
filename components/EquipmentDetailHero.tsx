@@ -1,16 +1,8 @@
 import { CheckCircle2, Phone } from "lucide-react";
 import { availabilityLabels, formatPrice, type Equipment } from "@/lib/equipment";
+import { getEquipmentSeoHeading } from "@/lib/seo.js";
 import { Button } from "./Button";
 import { EquipmentVisual } from "./EquipmentVisual";
-
-const detailPrefixes: Record<string, string> = {
-  "Мини-экскаваторы": "Мини-экскаватор",
-  "Мини-погрузчики": "Мини-погрузчик",
-  Автовышки: "Автовышка",
-  Самосвалы: "Самосвал",
-  Катки: "Каток",
-  "Навесное оборудование": "Навесное оборудование"
-};
 
 type EquipmentDetailHeroProps = {
   item: Equipment;
@@ -25,7 +17,7 @@ export function EquipmentDetailHero({ item, onOrderClick }: EquipmentDetailHeroP
       </nav>
       <div className="mt-5">
         <h1 className="max-w-4xl text-[34px] font-black leading-tight tracking-normal md:text-[40px]">
-          {detailPrefixes[item.category] ?? item.category} {item.title}
+          {getEquipmentSeoHeading(item)}
         </h1>
         <p className="mt-2 max-w-3xl text-sm leading-6 text-ink/68">{item.shortDescription}</p>
       </div>
