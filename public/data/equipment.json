@@ -1,30 +1,5 @@
 [
   {
-    "id": "eq-1781598305357",
-    "slug": "eq-1781598305357",
-    "title": "Админка",
-    "category": "Фронтальные погрузчики",
-    "shortDescription": "Привет админ",
-    "hourlyPrice": 67,
-    "pricePerShift": 100,
-    "availability": "today",
-    "specs": {
-      "Масса": "100т",
-      "Глубина копания": "3м"
-    },
-    "attachments": [
-      "Ковш"
-    ],
-    "useCases": [
-      "Копка траншей",
-      "Копка могил"
-    ],
-    "imagePlaceholderType": "lift",
-    "imageUrl": "/uploads/equipment/eq-1781598305357-desktop-1781598348321.png",
-    "withOperatorAvailable": true,
-    "deliveryAvailable": false
-  },
-  {
     "id": "eq-bobcat-e35",
     "slug": "kubota-kx41-3v",
     "legacySlugs": [
