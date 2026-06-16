@@ -35,7 +35,8 @@
     "mobileImageUrl": "/images/equipment/kubota-kx41-3w-mobile.webp",
     "withOperatorAvailable": true,
     "deliveryAvailable": true,
-    "priceLabel": "75"
+    "priceLabel": "75",
+    "description": "при заказе мини экскваватора и мини погрузчика скидка 20%"
   },
   {
     "id": "eq-kubota-u27",
