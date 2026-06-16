@@ -2,7 +2,9 @@
   {
     "id": "eq-bobcat-e35",
     "slug": "kubota-kx41-3v",
-    "legacySlugs": ["kubota-kx41-3w"],
+    "legacySlugs": [
+      "kubota-kx41-3w"
+    ],
     "title": "KUBOTA KX41-3V",
     "category": "Мини-экскаваторы",
     "shortDescription": "Мощный японский мини-экскаватор для траншей, котлованов и работ на ограниченной территории.",
@@ -35,7 +37,7 @@
   {
     "id": "eq-kubota-u27",
     "slug": "kubota-kx41-3v-auger",
-    "title": "KUBOTA KX41-3V с буром",
+    "title": "KUBOTA KX41-3V с буром АДМИН",
     "category": "Мини-экскаваторы",
     "shortDescription": "Бурение свай под ленту для забора, фундамент дома и других строительных работ.",
     "hourlyPrice": 120,
