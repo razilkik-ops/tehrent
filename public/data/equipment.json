@@ -32,13 +32,13 @@
     "title": "KUBOTA KX41-3V",
     "category": "Мини-экскаваторы",
     "shortDescription": "Мощный японский мини-экскаватор для траншей, котлованов и работ на ограниченной территории.",
-    "hourlyPrice": 85,
-    "pricePerShift": 680,
+    "hourlyPrice": 75,
+    "pricePerShift": 600,
     "availability": "today",
     "specs": {
       "Эксплуатационная масса": "2 т",
       "Глубина копания": "2,3 м",
-      "Ширина прохода": "1.4 м",
+      "Ширина прохода": "1 м",
       "Объем ковша": "0.08 м3",
       "Мощность двигателя": "17 л.с."
     },
@@ -57,7 +57,7 @@
     "mobileImageUrl": "/images/equipment/kubota-kx41-3w-mobile.webp",
     "withOperatorAvailable": true,
     "deliveryAvailable": true,
-    "priceLabel": "цена за час возможно договорная"
+    "priceLabel": "возможна договорная цена"
   },
   {
     "id": "eq-kubota-u27",
