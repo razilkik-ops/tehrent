@@ -57,7 +57,8 @@
     "imageUrl": "/images/equipment/kubota-kx41-3w-model.webp",
     "mobileImageUrl": "/images/equipment/kubota-kx41-3w-mobile.webp",
     "withOperatorAvailable": true,
-    "deliveryAvailable": true
+    "deliveryAvailable": true,
+    "priceLabel": "цена за час возможно договорная"
   },
   {
     "id": "eq-kubota-u27",
