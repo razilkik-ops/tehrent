@@ -1,5 +1,30 @@
 [
   {
+    "id": "eq-1781598724649",
+    "slug": "eq-1781598724649",
+    "title": "Админ",
+    "category": "Автовышки",
+    "shortDescription": "Короткое описание техники. Админка в деле",
+    "hourlyPrice": 85,
+    "pricePerShift": 680,
+    "availability": "today",
+    "specs": {
+      "Масса": "100",
+      "Глубина копания": "10"
+    },
+    "attachments": [
+      "Ковш",
+      "Бур"
+    ],
+    "useCases": [
+      "Копка траншей"
+    ],
+    "imagePlaceholderType": "lift",
+    "imageUrl": "/uploads/equipment/eq-1781598724649-desktop-1781598750353.png",
+    "withOperatorAvailable": true,
+    "deliveryAvailable": true
+  },
+  {
     "id": "eq-bobcat-e35",
     "slug": "kubota-kx41-3v",
     "legacySlugs": [
