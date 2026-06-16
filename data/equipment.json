@@ -20,7 +20,6 @@
       "Копка траншей"
     ],
     "imagePlaceholderType": "lift",
-    "imageUrl": "/uploads/equipment/eq-1781598724649-desktop-1781598750353.png",
     "withOperatorAvailable": true,
     "deliveryAvailable": true
   },
@@ -34,7 +33,7 @@
     "category": "Мини-экскаваторы",
     "shortDescription": "Мощный японский мини-экскаватор для траншей, котлованов и работ на ограниченной территории.",
     "hourlyPrice": 85,
-    "pricePerShift": 1000,
+    "pricePerShift": 680,
     "availability": "today",
     "specs": {
       "Эксплуатационная масса": "2 т",
@@ -54,10 +53,11 @@
       "Работы на ограниченной территории"
     ],
     "imagePlaceholderType": "excavator",
-    "imageUrl": "/uploads/equipment/kubota-kx41-3v-desktop-1781601341884.png",
+    "imageUrl": "/images/equipment/kubota-kx41-3w-model.webp",
     "mobileImageUrl": "/images/equipment/kubota-kx41-3w-mobile.webp",
     "withOperatorAvailable": true,
-    "deliveryAvailable": true
+    "deliveryAvailable": true,
+    "priceLabel": "цена за час возможно договорная"
   },
   {
     "id": "eq-kubota-u27",
