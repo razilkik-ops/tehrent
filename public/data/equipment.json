@@ -1,5 +1,25 @@
 [
   {
+    "id": "eq-1781602436689",
+    "slug": "eq-1781602436689",
+    "title": "Новая техника",
+    "category": "Мини-экскаваторы",
+    "shortDescription": "Короткое описание техники.",
+    "hourlyPrice": 85,
+    "pricePerShift": 680,
+    "availability": "today",
+    "specs": {},
+    "attachments": [
+      "Ковш"
+    ],
+    "useCases": [
+      "Копка траншей"
+    ],
+    "imagePlaceholderType": "excavator",
+    "withOperatorAvailable": true,
+    "deliveryAvailable": true
+  },
+  {
     "id": "eq-1781598724649",
     "slug": "eq-1781598724649",
     "title": "Админ",
@@ -43,8 +63,10 @@
       "Мощность двигателя": "17 л.с."
     },
     "attachments": [
-      "Ковши 20, 30, 50 см",
-      "Планировочный ковш"
+      "Ковши 20, 30, 40 см",
+      "Планировочный ковш",
+      "Ямобур",
+      "Гидромолот"
     ],
     "useCases": [
       "Траншеи под коммуникации",
