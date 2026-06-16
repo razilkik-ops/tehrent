@@ -20,9 +20,7 @@
     },
     "attachments": [
       "Ковши 20, 30, 40 см",
-      "Планировочный",
-      "Ямобур",
-      "Гидромолот"
+      "Планировочный"
     ],
     "useCases": [
       "Траншеи под коммуникации",
@@ -34,9 +32,7 @@
     "imageUrl": "/images/equipment/kubota-kx41-3w-model.webp",
     "mobileImageUrl": "/images/equipment/kubota-kx41-3w-mobile.webp",
     "withOperatorAvailable": true,
-    "deliveryAvailable": true,
-    "priceLabel": "75",
-    "description": "при заказе мини экскваватора и мини погрузчика скидка 20%"
+    "deliveryAvailable": true
   },
   {
     "id": "eq-kubota-u27",
