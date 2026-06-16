@@ -14,13 +14,18 @@ type EquipmentCatalogContextValue = {
 const EquipmentCatalogContext = createContext<EquipmentCatalogContextValue | null>(null);
 
 async function loadEquipmentFromApi() {
-  const response = await fetch("/api/equipment");
+  const response = await fetch("/data/equipment.json", {
+    headers: {
+      Accept: "application/json"
+    }
+  });
   if (!response.ok) {
     throw new Error("Не удалось загрузить каталог");
   }
 
-  const data = (await response.json()) as { items?: Equipment[] };
-  return data.items?.length ? data.items : fallbackEquipment;
+  const data = (await response.json()) as Equipment[] | { items?: Equipment[] };
+  const items = Array.isArray(data) ? data : data.items;
+  return items?.length ? items : fallbackEquipment;
 }
 
 export function EquipmentCatalogProvider({ children }: { children: ReactNode }) {

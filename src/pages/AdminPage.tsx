@@ -2,20 +2,28 @@ import { LogOut, Plus, Save, Trash2, Upload } from "lucide-react";
 import type { FormEvent } from "react";
 import { useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/Button";
+import {
+  buildGitHubConnectionSettings,
+  defaultGitHubSettings,
+  loadCatalogFromGitHub,
+  saveCatalogToGitHub,
+  type GitHubConnectionSettings,
+  type GitHubStoredSettings,
+  uploadImageToGitHub,
+  verifyGitHubConnection
+} from "@/lib/github-admin";
 import { categories, type Availability, type Equipment, type ImagePlaceholderType } from "@/lib/equipment";
 import { toAbsoluteUrl } from "@/lib/seo.js";
 import { usePageMeta } from "@/src/usePageMeta";
-
-type AdminResponse = {
-  items?: Equipment[];
-  authenticated?: boolean;
-  message?: string;
-};
 
 type SpecEntry = {
   key: string;
   value: string;
 };
+
+const githubSettingsStorageKey = "arentex_admin_github_settings";
+const githubSessionTokenStorageKey = "arentex_admin_github_token_session";
+const githubPersistentTokenStorageKey = "arentex_admin_github_token_persistent";
 
 const availabilityOptions: Array<{ value: Availability; label: string }> = [
   { value: "today", label: "В наличии" },
@@ -94,7 +102,7 @@ function makeEmptyEquipment(): Equipment {
     priceLabel: "",
     availability: "today",
     specs: {
-      "Масса": "",
+      Масса: "",
       "Глубина копания": ""
     },
     attachments: ["Ковш"],
@@ -107,61 +115,117 @@ function makeEmptyEquipment(): Equipment {
   };
 }
 
-async function jsonRequest<T>(url: string, options?: RequestInit) {
-  const response = await fetch(url, {
-    ...options,
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-      ...options?.headers
+function readStoredSettings(): GitHubStoredSettings {
+  if (typeof window === "undefined") {
+    return defaultGitHubSettings;
+  }
+
+  try {
+    const raw = window.localStorage.getItem(githubSettingsStorageKey);
+    if (!raw) {
+      return defaultGitHubSettings;
     }
-  });
-  const contentType = response.headers.get("content-type") || "";
-  const raw = await response.text();
-  let data: (T & { message?: string }) | null = null;
 
-  if (raw.trim()) {
-    if (contentType.includes("application/json")) {
-      try {
-        data = JSON.parse(raw) as T & { message?: string };
-      } catch {
-        throw new Error("Сервер вернул некорректный JSON");
-      }
-    } else {
-      throw new Error("Сервер вернул не JSON. Проверьте, что backend админки запущен.");
-    }
+    return {
+      ...defaultGitHubSettings,
+      ...(JSON.parse(raw) as Partial<GitHubStoredSettings>)
+    };
+  } catch {
+    return defaultGitHubSettings;
   }
-
-  if (!response.ok) {
-    throw new Error(data?.message || "Ошибка запроса");
-  }
-
-  if (!data) {
-    throw new Error("Сервер вернул пустой ответ");
-  }
-
-  return data;
 }
 
-function fileToDataUrl(file: File) {
-  return new Promise<string>((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(String(reader.result));
-    reader.onerror = () => reject(new Error("Не удалось прочитать файл"));
-    reader.readAsDataURL(file);
+function readStoredToken() {
+  if (typeof window === "undefined") {
+    return { token: "", rememberToken: false };
+  }
+
+  const persistentToken = window.localStorage.getItem(githubPersistentTokenStorageKey);
+  if (persistentToken) {
+    return { token: persistentToken, rememberToken: true };
+  }
+
+  return {
+    token: window.sessionStorage.getItem(githubSessionTokenStorageKey) || "",
+    rememberToken: false
+  };
+}
+
+function storeConnection(settings: GitHubStoredSettings, token: string, rememberToken: boolean) {
+  if (typeof window === "undefined") return;
+
+  window.localStorage.setItem(githubSettingsStorageKey, JSON.stringify(settings));
+
+  if (rememberToken) {
+    window.localStorage.setItem(githubPersistentTokenStorageKey, token);
+    window.sessionStorage.removeItem(githubSessionTokenStorageKey);
+    return;
+  }
+
+  window.localStorage.removeItem(githubPersistentTokenStorageKey);
+  window.sessionStorage.setItem(githubSessionTokenStorageKey, token);
+}
+
+function clearStoredToken() {
+  if (typeof window === "undefined") return;
+
+  window.localStorage.removeItem(githubPersistentTokenStorageKey);
+  window.sessionStorage.removeItem(githubSessionTokenStorageKey);
+}
+
+function trimArray(values: string[]) {
+  return values.map((value) => value.trim()).filter(Boolean);
+}
+
+function cleanEquipment(items: Equipment[]) {
+  return items.map((item) => {
+    const slug = item.slug.trim() || slugify(item.title) || item.id;
+    const legacySlugs = trimArray(item.legacySlugs || []).filter((legacySlug) => legacySlug !== slug);
+    const specs = Object.fromEntries(
+      Object.entries(item.specs)
+        .map(([key, value]) => [key.trim(), String(value).trim()] as const)
+        .filter(([key, value]) => key && value)
+    );
+
+    return {
+      ...item,
+      id: item.id.trim() || `eq-${Date.now()}`,
+      slug,
+      legacySlugs: legacySlugs.length ? legacySlugs : undefined,
+      title: item.title.trim() || "Новая техника",
+      category: item.category.trim() || "Мини-экскаваторы",
+      shortDescription: item.shortDescription.trim() || "Описание будет добавлено позже.",
+      description: item.description?.trim() || undefined,
+      hourlyPrice: item.hourlyPrice,
+      pricePerShift: item.pricePerShift || 0,
+      priceLabel: item.priceLabel?.trim() || undefined,
+      specs,
+      attachments: trimArray(item.attachments),
+      useCases: trimArray(item.useCases),
+      imageUrl: item.imageUrl?.trim() || undefined,
+      mobileImageUrl: item.mobileImageUrl?.trim() || undefined
+    };
   });
+}
+
+function fileLabel(field: "imageUrl" | "mobileImageUrl") {
+  return field === "imageUrl" ? "desktop" : "mobile";
 }
 
 function TextField({
   label,
   value,
   onChange,
-  placeholder
+  placeholder,
+  type = "text",
+  autoComplete
 }: {
   label: string;
   value: string;
   onChange: (value: string) => void;
   placeholder?: string;
+  type?: string;
+  autoComplete?: string;
 }) {
   return (
     <label className="grid gap-1.5">
@@ -169,6 +233,8 @@ function TextField({
       <input
         className="focus-ring h-11 rounded-[10px] border border-ink/10 bg-white px-3 text-sm font-semibold text-ink"
         value={value}
+        type={type}
+        autoComplete={autoComplete}
         placeholder={placeholder}
         onChange={(event) => onChange(event.target.value)}
       />
@@ -202,14 +268,18 @@ function NumberField({
 }
 
 export function AdminPage() {
-  const [authChecked, setAuthChecked] = useState(false);
-  const [authenticated, setAuthenticated] = useState(false);
-  const [login, setLogin] = useState("admin");
-  const [password, setPassword] = useState("");
+  const storedTokenState = readStoredToken();
+  const [booting, setBooting] = useState(true);
+  const [connected, setConnected] = useState(false);
+  const [connection, setConnection] = useState<GitHubConnectionSettings | null>(null);
+  const [settings, setSettings] = useState<GitHubStoredSettings>(readStoredSettings);
+  const [token, setToken] = useState(storedTokenState.token);
+  const [rememberToken, setRememberToken] = useState(storedTokenState.rememberToken);
   const [items, setItems] = useState<Equipment[]>([]);
   const [selectedId, setSelectedId] = useState("");
   const [status, setStatus] = useState("");
   const [saving, setSaving] = useState(false);
+  const [connecting, setConnecting] = useState(false);
 
   usePageMeta({
     title: "Админ-панель | Arentex.by",
@@ -222,22 +292,60 @@ export function AdminPage() {
 
   const selected = useMemo(() => items.find((item) => item.id === selectedId), [items, selectedId]);
 
-  async function loadEquipment() {
-    const data = await jsonRequest<AdminResponse>("/api/admin/equipment");
-    const nextItems = data.items || [];
-    setItems(nextItems);
-    setSelectedId((current) => (nextItems.some((item) => item.id === current) ? current : nextItems[0]?.id || ""));
+  async function connectToGitHub(nextSettings = settings, nextToken = token, silent = false) {
+    const trimmedToken = nextToken.trim();
+    if (!nextSettings.owner.trim() || !nextSettings.repo.trim() || !trimmedToken) {
+      setBooting(false);
+      setConnected(false);
+      setConnection(null);
+      if (!silent) {
+        setStatus("Укажите owner, repo и GitHub token.");
+      }
+      return;
+    }
+
+    setConnecting(true);
+    if (!silent) {
+      setStatus("");
+    }
+
+    try {
+      const nextConnection = buildGitHubConnectionSettings(nextSettings, trimmedToken);
+      await verifyGitHubConnection(nextConnection);
+      const repoItems = await loadCatalogFromGitHub(nextConnection);
+
+      setConnection(nextConnection);
+      setConnected(true);
+      setItems(repoItems);
+      setSelectedId((current) => (repoItems.some((item) => item.id === current) ? current : repoItems[0]?.id || ""));
+      storeConnection(nextSettings, trimmedToken, rememberToken);
+      setStatus(
+        silent ? "" : "Подключено к GitHub. После сохранения GitHub Actions автоматически отправит обновления на хостинг."
+      );
+    } catch (error) {
+      setConnected(false);
+      setConnection(null);
+      setStatus(error instanceof Error ? error.message : "Не удалось подключиться к GitHub");
+    } finally {
+      setConnecting(false);
+      setBooting(false);
+    }
   }
 
   useEffect(() => {
-    void jsonRequest<AdminResponse>("/api/admin/session")
-      .then((data) => {
-        setAuthenticated(Boolean(data.authenticated));
-        if (data.authenticated) {
-          void loadEquipment();
-        }
-      })
-      .finally(() => setAuthChecked(true));
+    const storedSettings = readStoredSettings();
+    const storedToken = readStoredToken();
+
+    setSettings(storedSettings);
+    setToken(storedToken.token);
+    setRememberToken(storedToken.rememberToken);
+
+    if (storedSettings.owner && storedSettings.repo && storedToken.token) {
+      void connectToGitHub(storedSettings, storedToken.token, true);
+      return;
+    }
+
+    setBooting(false);
   }, []);
 
   function updateSelected(patch: Partial<Equipment>) {
@@ -259,17 +367,17 @@ export function AdminPage() {
     if (!selected) return;
     const next = [...selected[field]];
     next[index] = value;
-    updateSelected({ [field]: next });
+    updateSelected({ [field]: next } as Partial<Equipment>);
   }
 
   function addArrayItem(field: "attachments" | "useCases") {
     if (!selected) return;
-    updateSelected({ [field]: [...selected[field], ""] });
+    updateSelected({ [field]: [...selected[field], ""] } as Partial<Equipment>);
   }
 
   function removeArrayItem(field: "attachments" | "useCases", index: number) {
     if (!selected) return;
-    updateSelected({ [field]: selected[field].filter((_, itemIndex) => itemIndex !== index) });
+    updateSelected({ [field]: selected[field].filter((_, itemIndex) => itemIndex !== index) } as Partial<Equipment>);
   }
 
   function specEntries(item: Equipment): SpecEntry[] {
@@ -281,52 +389,37 @@ export function AdminPage() {
     updateSelected({ specs });
   }
 
-  async function handleLogin(event: FormEvent) {
+  async function handleConnect(event: FormEvent) {
     event.preventDefault();
-    setStatus("");
-    try {
-      await jsonRequest("/api/admin/login", {
-        method: "POST",
-        body: JSON.stringify({ username: login, password })
-      });
-      setAuthenticated(true);
-      setPassword("");
-      await loadEquipment();
-    } catch (error) {
-      setStatus(error instanceof Error ? error.message : "Не удалось войти");
-    }
+    await connectToGitHub();
   }
 
-  async function handleLogout() {
-    await jsonRequest("/api/admin/logout", { method: "POST", body: "{}" });
-    setAuthenticated(false);
+  function handleDisconnect() {
+    clearStoredToken();
+    setConnected(false);
+    setConnection(null);
+    setToken("");
     setItems([]);
     setSelectedId("");
+    setStatus("Подключение к GitHub отключено.");
   }
 
   async function saveEquipment() {
+    if (!connection) {
+      setStatus("Сначала подключите GitHub.");
+      return;
+    }
+
     setSaving(true);
     setStatus("");
+
     try {
-      const cleaned = items.map((item) => ({
-        ...item,
-        slug: item.slug || slugify(item.title) || item.id,
-        priceLabel: item.priceLabel || undefined,
-        hourlyPrice: item.hourlyPrice,
-        imageUrl: item.imageUrl || undefined,
-        mobileImageUrl: item.mobileImageUrl || undefined,
-        description: item.description || undefined,
-        attachments: item.attachments.filter(Boolean),
-        useCases: item.useCases.filter(Boolean)
-      }));
-      const data = await jsonRequest<AdminResponse>("/api/admin/equipment", {
-        method: "PUT",
-        body: JSON.stringify({ items: cleaned })
-      });
-      setItems(data.items || cleaned);
-      setStatus("Сохранено");
+      const cleaned = cleanEquipment(items);
+      await saveCatalogToGitHub(connection, cleaned);
+      setItems(cleaned);
+      setStatus("Каталог сохранён в репозитории. После завершения GitHub Actions сайт на хостинге обновится автоматически.");
     } catch (error) {
-      setStatus(error instanceof Error ? error.message : "Не удалось сохранить");
+      setStatus(error instanceof Error ? error.message : "Не удалось сохранить каталог");
     } finally {
       setSaving(false);
     }
@@ -346,47 +439,120 @@ export function AdminPage() {
   }
 
   async function uploadImage(file: File, field: "imageUrl" | "mobileImageUrl") {
-    setStatus("Загружаю фото...");
+    if (!connection || !selected) {
+      setStatus("Сначала подключите GitHub.");
+      return;
+    }
+
+    setStatus("Загружаю фото в репозиторий...");
+
     try {
-      const dataUrl = await fileToDataUrl(file);
-      const data = await jsonRequest<{ success: boolean; url: string }>("/api/admin/uploads", {
-        method: "POST",
-        body: JSON.stringify({ fileName: file.name, dataUrl })
-      });
-      updateSelected({ [field]: data.url });
-      setStatus("Фото загружено. Не забудьте сохранить каталог.");
+      const slug = selected.slug || slugify(selected.title) || selected.id;
+      const url = await uploadImageToGitHub(connection, file, slug, fileLabel(field));
+      updateSelected({ [field]: url } as Partial<Equipment>);
+      setStatus("Фото загружено в репозиторий. Нажмите «Сохранить», чтобы обновить карточку на сайте.");
     } catch (error) {
       setStatus(error instanceof Error ? error.message : "Не удалось загрузить фото");
     }
   }
 
-  if (!authChecked) {
-    return <div className="grid min-h-screen place-items-center bg-paper text-ink">Загрузка...</div>;
+  if (booting) {
+    return <div className="grid min-h-screen place-items-center bg-paper text-ink">Проверяю подключение к GitHub...</div>;
   }
 
-  if (!authenticated) {
+  if (!connected) {
     return (
       <main className="grid min-h-screen place-items-center bg-paper p-4 text-ink">
-        <form onSubmit={handleLogin} className="w-full max-w-[420px] rounded-[20px] bg-white p-6 shadow-card">
-          <h1 className="text-3xl font-black">Админ-панель</h1>
-          <p className="mt-2 text-sm font-semibold leading-6 text-ink/58">Войдите, чтобы редактировать каталог техники.</p>
-          <div className="mt-6 grid gap-4">
-            <TextField label="Логин" value={login} onChange={setLogin} />
-            <label className="grid gap-1.5">
-              <span className="text-xs font-black uppercase text-ink/44">Пароль</span>
-              <input
-                className="focus-ring h-11 rounded-[10px] border border-ink/10 bg-white px-3 text-sm font-semibold text-ink"
-                type="password"
-                value={password}
-                onChange={(event) => setPassword(event.target.value)}
+        <div className="grid w-full max-w-[980px] gap-5 lg:grid-cols-[1.1fr_0.9fr]">
+          <form onSubmit={handleConnect} className="rounded-[20px] bg-white p-6 shadow-card">
+            <p className="text-xs font-black uppercase text-accent">GitHub-backed admin</p>
+            <h1 className="mt-2 text-3xl font-black">Подключение админки</h1>
+            <p className="mt-3 text-sm font-semibold leading-6 text-ink/58">
+              Админка сохраняет каталог и фотографии прямо в git-репозиторий. После коммита GitHub Actions собирает сайт
+              и отправляет файлы на обычный хостинг по FTP/SFTP.
+            </p>
+
+            <div className="mt-6 grid gap-4 md:grid-cols-2">
+              <TextField
+                label="GitHub owner"
+                value={settings.owner}
+                placeholder="ваш-логин-или-организация"
+                autoComplete="username"
+                onChange={(value) => setSettings((current) => ({ ...current, owner: value }))}
               />
+              <TextField
+                label="Репозиторий"
+                value={settings.repo}
+                placeholder="site-repo"
+                onChange={(value) => setSettings((current) => ({ ...current, repo: value }))}
+              />
+              <TextField
+                label="Ветка"
+                value={settings.branch}
+                placeholder="main"
+                onChange={(value) => setSettings((current) => ({ ...current, branch: value }))}
+              />
+              <TextField
+                label="GitHub token"
+                type="password"
+                autoComplete="current-password"
+                value={token}
+                placeholder="ghp_..."
+                onChange={setToken}
+              />
+            </div>
+
+            <details className="mt-5 rounded-[14px] bg-paper p-4">
+              <summary className="cursor-pointer text-sm font-black text-ink">Расширенные пути</summary>
+              <div className="mt-4 grid gap-4">
+                <TextField
+                  label="Файл каталога в repo"
+                  value={settings.catalogPath}
+                  onChange={(value) => setSettings((current) => ({ ...current, catalogPath: value }))}
+                />
+                <TextField
+                  label="Публичный JSON для сайта"
+                  value={settings.publicCatalogPath}
+                  onChange={(value) => setSettings((current) => ({ ...current, publicCatalogPath: value }))}
+                />
+                <TextField
+                  label="Папка изображений"
+                  value={settings.uploadsDir}
+                  onChange={(value) => setSettings((current) => ({ ...current, uploadsDir: value }))}
+                />
+              </div>
+            </details>
+
+            <label className="mt-5 flex items-center gap-3 rounded-[12px] bg-paper px-4 py-3 text-sm font-bold text-ink">
+              <input
+                type="checkbox"
+                checked={rememberToken}
+                onChange={(event) => setRememberToken(event.target.checked)}
+              />
+              Запомнить токен на этом устройстве
             </label>
-            <Button type="submit" className="w-full">
-              Войти
+
+            <Button type="submit" className="mt-5 w-full" disabled={connecting}>
+              {connecting ? "Подключаю..." : "Подключить GitHub"}
             </Button>
-          </div>
-          {status ? <p className="mt-4 text-sm font-bold text-accent">{status}</p> : null}
-        </form>
+
+            {status ? <p className="mt-4 text-sm font-bold text-accent">{status}</p> : null}
+          </form>
+
+          <section className="rounded-[20px] bg-night p-6 text-white shadow-card">
+            <h2 className="text-2xl font-black">Что нужно для работы</h2>
+            <div className="mt-4 grid gap-3 text-sm font-semibold leading-6 text-white/78">
+              <p>1. Репозиторий сайта на GitHub.</p>
+              <p>2. Fine-grained token с доступом к репозиторию и правом Contents: Read and write.</p>
+              <p>3. GitHub Actions workflow, который после push заливает сборку сайта на хостинг.</p>
+              <p>4. Секреты `FTP_SERVER`, `FTP_USERNAME`, `FTP_PASSWORD` и `FTP_TARGET_DIR` в настройках GitHub.</p>
+            </div>
+            <div className="mt-5 rounded-[16px] bg-white/10 p-4 text-sm font-semibold leading-6 text-white/84">
+              Токен используется только из браузера администратора. Для публичного доступа к `/admin` настоящей защитой
+              здесь является именно GitHub token с правами на запись.
+            </div>
+          </section>
+        </div>
       </main>
     );
   }
@@ -394,21 +560,41 @@ export function AdminPage() {
   return (
     <main className="min-h-screen bg-paper p-4 text-ink md:p-6">
       <div className="mx-auto max-w-[1480px]">
-        <header className="flex flex-wrap items-center justify-between gap-4 rounded-[18px] bg-night p-4 text-white shadow-card">
-          <div>
-            <p className="text-xs font-black uppercase text-accent">Arentex.by</p>
-            <h1 className="text-2xl font-black">Управление каталогом</h1>
+        <header className="rounded-[18px] bg-night p-4 text-white shadow-card">
+          <div className="flex flex-wrap items-start justify-between gap-4">
+            <div>
+              <p className="text-xs font-black uppercase text-accent">Arentex.by</p>
+              <h1 className="text-2xl font-black">Управление каталогом</h1>
+              <p className="mt-2 text-sm font-semibold text-white/72">
+                Репозиторий: {connection?.owner}/{connection?.repo} • ветка {connection?.branch}
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-3">
+              <Button type="button" variant="outline" onClick={addEquipment} className="gap-2">
+                <Plus size={17} /> Добавить технику
+              </Button>
+              <Button type="button" onClick={saveEquipment} disabled={saving} className="gap-2">
+                <Save size={17} /> {saving ? "Сохраняю..." : "Сохранить"}
+              </Button>
+              <Button
+                type="button"
+                variant="ghost"
+                onClick={() => {
+                  setConnected(false);
+                  setConnection(null);
+                  setStatus("Параметры GitHub можно изменить и подключить заново.");
+                }}
+              >
+                Сменить GitHub
+              </Button>
+              <Button type="button" variant="ghost" onClick={handleDisconnect} className="gap-2">
+                <LogOut size={17} /> Отключить
+              </Button>
+            </div>
           </div>
-          <div className="flex flex-wrap gap-3">
-            <Button type="button" variant="outline" onClick={addEquipment} className="gap-2">
-              <Plus size={17} /> Добавить технику
-            </Button>
-            <Button type="button" onClick={saveEquipment} disabled={saving} className="gap-2">
-              <Save size={17} /> {saving ? "Сохраняю..." : "Сохранить"}
-            </Button>
-            <Button type="button" variant="ghost" onClick={handleLogout} className="gap-2">
-              <LogOut size={17} /> Выйти
-            </Button>
+          <div className="mt-4 rounded-[12px] bg-white/10 px-4 py-3 text-sm font-semibold text-white/82">
+            После нажатия «Сохранить» JSON обновляется в GitHub, а затем workflow автоматически собирает и заливает сайт
+            на ваш обычный хостинг.
           </div>
         </header>
 
@@ -452,6 +638,19 @@ export function AdminPage() {
                     label="URL slug"
                     value={selected.slug}
                     onChange={(value) => updateSelected({ slug: value })}
+                    placeholder="kubota-kx41-3v"
+                  />
+                  <TextField
+                    label="Старые slug через запятую"
+                    value={selected.legacySlugs?.join(", ") || ""}
+                    onChange={(value) =>
+                      updateSelected({
+                        legacySlugs: value
+                          .split(",")
+                          .map((entry) => entry.trim())
+                          .filter(Boolean)
+                      })
+                    }
                     placeholder="kubota-kx41-3w"
                   />
                   <TextField
@@ -566,7 +765,7 @@ export function AdminPage() {
                             Фото не выбрано
                           </div>
                         )}
-                        <TextField label="URL" value={selected[field] || ""} onChange={(value) => updateSelected({ [field]: value })} />
+                        <TextField label="URL" value={selected[field] || ""} onChange={(value) => updateSelected({ [field]: value } as Partial<Equipment>)} />
                         <label className="mt-3 inline-flex h-11 cursor-pointer items-center justify-center gap-2 rounded-[10px] bg-night px-4 text-sm font-black text-white">
                           <Upload size={16} /> Загрузить
                           <input
