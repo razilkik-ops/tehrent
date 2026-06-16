@@ -13,7 +13,7 @@ import { SectionTitle } from "@/components/SectionTitle";
 import { StickyMobileCTA } from "@/components/StickyMobileCTA";
 import { useEquipmentCatalog } from "@/lib/equipment-catalog";
 import { formatPrice, type Equipment } from "@/lib/equipment";
-import { getEquipmentSeoHeading, getHomeMeta } from "@/lib/seo.js";
+import { getHomeMeta } from "@/lib/seo.js";
 import { usePageMeta } from "@/src/usePageMeta";
 
 const mobileHeroItems = [
@@ -61,127 +61,25 @@ const cases = [
 ];
 
 function getFeaturedEquipmentCard(item: Equipment) {
-  const hourlyPrice = item.hourlyPrice ?? Math.round(item.pricePerShift / 8);
-  const title = getEquipmentSeoHeading(item);
-
-  if (item.id === "eq-bobcat-e35") {
-    return {
-      hourlyPrice,
-      title,
-      workLabel: "Глубина копания",
-      workSpec: item.specs["Глубина копания"],
-      attachmentsLabel: "Ковши",
-      attachmentsValue: "20, 30, 50 см, планировочные",
-      hourlyPriceLabel: `от ${formatPrice(hourlyPrice)}`,
-      shiftPriceLabel: `от ${formatPrice(item.pricePerShift)}`
-    };
-  }
-
-  if (item.id === "eq-kubota-u27") {
-    return {
-      hourlyPrice,
-      title,
-      workLabel: "Глубина отверстий",
-      workSpec: item.specs["Глубина отверстий"],
-      attachmentsLabel: "Шнеки",
-      attachmentsValue: "Шнеки 200, 250, 300, 400 мм",
-      hourlyPriceLabel: `от ${formatPrice(hourlyPrice)}`,
-      shiftPriceLabel: `от ${formatPrice(item.pricePerShift)}`
-    };
-  }
-
-  if (item.id === "eq-jcb-1cx") {
-    return {
-      hourlyPrice,
-      title,
-      workLabel: "Ширина ковша",
-      workSpec: item.specs["Ширина ковша"],
-      attachmentsLabel: "Навесное",
-      attachmentsValue: "Ковш 0,35 м3, гидробур",
-      hourlyPriceLabel: `от ${formatPrice(hourlyPrice)}`,
-      shiftPriceLabel: `от ${formatPrice(item.pricePerShift)}`
-    };
-  }
-
-  if (item.id === "eq-bobcat-e32") {
-    return {
-      hourlyPrice,
-      title,
-      workLabel: "Глубина копания",
-      workSpec: item.specs["Глубина копания"],
-      attachmentsLabel: "Навесное",
-      attachmentsValue: "Ковши 30, 50, 60, 120 см, гидромолот",
-      hourlyPriceLabel: `от ${formatPrice(hourlyPrice)}`,
-      shiftPriceLabel: `от ${formatPrice(item.pricePerShift)}`
-    };
-  }
-
-  if (item.id === "eq-bobcat-s650") {
-    return {
-      hourlyPrice,
-      title,
-      workLabel: "Глубина отверстий",
-      workSpec: item.specs["Глубина отверстий"],
-      attachmentsLabel: "Диаметр шнека",
-      attachmentsValue: "200, 300, 400 мм",
-      hourlyPriceLabel: `от ${formatPrice(hourlyPrice)}`,
-      shiftPriceLabel: `от ${formatPrice(item.pricePerShift)}`
-    };
-  }
-
-  if (item.id === "eq-kamaz-6520") {
-    return {
-      hourlyPrice,
-      title,
-      workLabel: "Работы",
-      workSpec: "вывоз и доставка",
-      attachmentsLabel: "Цена",
-      attachmentsValue: "договорная",
-      hourlyPriceLabel: "Цена договорная",
-      shiftPriceLabel: "Цена договорная"
-    };
-  }
-
-  if (item.id === "eq-volvo-bl71") {
-    return {
-      hourlyPrice,
-      title,
-      workLabel: "Глубина копания",
-      workSpec: item.specs["Глубина копания"],
-      attachmentsLabel: "Цена",
-      attachmentsValue: "130 руб/час",
-      hourlyPriceLabel: `от ${formatPrice(hourlyPrice)}`,
-      shiftPriceLabel: `от ${formatPrice(item.pricePerShift)}`
-    };
-  }
-
-  if (item.id === "eq-amkodor-loader") {
-    return {
-      hourlyPrice,
-      title,
-      workLabel: "Объем ковша",
-      workSpec: item.specs["Объем ковша"],
-      attachmentsLabel: "Цена",
-      attachmentsValue: "130 руб/час",
-      hourlyPriceLabel: `от ${formatPrice(hourlyPrice)}`,
-      shiftPriceLabel: `от ${formatPrice(item.pricePerShift)}`
-    };
-  }
+  const massSpec = item.specs["Эксплуатационная масса"] || item.specs["Масса"] || item.specs["Грузоподъемность"];
+  const workEntry =
+    Object.entries(item.specs).find(([key]) => !["Эксплуатационная масса", "Масса", "Грузоподъемность"].includes(key)) ||
+    Object.entries(item.specs)[0];
+  const workLabel = workEntry?.[0] || "Параметр";
+  const workSpec = workEntry?.[1] || "—";
+  const attachmentsValue = item.attachments.slice(0, 2).join(", ") || "Уточняйте";
+  const hourlyPriceLabel = item.hourlyPrice ? `от ${formatPrice(item.hourlyPrice)}` : item.priceLabel || "По запросу";
+  const shiftPriceLabel = item.priceLabel || `от ${formatPrice(item.pricePerShift)}`;
 
   return {
-    hourlyPrice,
-    title,
-    workLabel: item.specs["Глубина копания"] ? "Глубина копания" : item.specs["Глубина отверстий"] ? "Глубина" : "Работа",
-    workSpec:
-      item.specs["Глубина копания"] ||
-      item.specs["Глубина отверстий"] ||
-      item.specs["Высота выгрузки"] ||
-      item.specs["Работа"] ||
-      item.specs["Ширина"],
-    attachmentsLabel: item.id === "eq-bobcat-e35" ? "Ковши" : "Навесное",
-    attachmentsValue: item.id === "eq-bobcat-e35" ? "20, 30, 50 см, планировочные" : item.attachments[0],
-    hourlyPriceLabel: `от ${formatPrice(hourlyPrice)}`,
-    shiftPriceLabel: `от ${formatPrice(item.pricePerShift)}`
+    title: item.title,
+    massSpec,
+    workLabel,
+    workSpec,
+    attachmentsLabel: "Навесное",
+    attachmentsValue,
+    hourlyPriceLabel,
+    shiftPriceLabel
   };
 }
 
@@ -301,7 +199,7 @@ export function HomePage() {
                           {[
                             {
                               label: "Масса",
-                              value: item.specs["Эксплуатационная масса"] || item.specs["Масса"] || item.specs["Грузоподъемность"]
+                              value: card.massSpec
                             },
                             {
                               label: card.workLabel,
@@ -478,7 +376,7 @@ export function HomePage() {
                           {[
                             {
                               label: "Масса",
-                              value: item.specs["Эксплуатационная масса"] || item.specs["Масса"] || item.specs["Грузоподъемность"]
+                              value: card.massSpec
                             },
                             {
                               label: card.workLabel,

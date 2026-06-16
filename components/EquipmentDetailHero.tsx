@@ -1,6 +1,5 @@
 import { CheckCircle2, Phone } from "lucide-react";
 import { availabilityLabels, formatPrice, type Equipment } from "@/lib/equipment";
-import { getEquipmentSeoHeading } from "@/lib/seo.js";
 import { Button } from "./Button";
 import { EquipmentVisual } from "./EquipmentVisual";
 
@@ -10,6 +9,11 @@ type EquipmentDetailHeroProps = {
 };
 
 export function EquipmentDetailHero({ item, onOrderClick }: EquipmentDetailHeroProps) {
+  const featureTags = [
+    item.withOperatorAvailable ? "С оператором" : null,
+    item.deliveryAvailable ? "Доставка" : null
+  ].filter((tag): tag is string => Boolean(tag));
+
   return (
     <section className="container-page pt-6 md:pt-8">
       <nav className="text-xs text-ink/48">
@@ -17,7 +21,7 @@ export function EquipmentDetailHero({ item, onOrderClick }: EquipmentDetailHeroP
       </nav>
       <div className="mt-5">
         <h1 className="max-w-4xl text-[34px] font-black leading-tight tracking-normal md:text-[40px]">
-          {getEquipmentSeoHeading(item)}
+          {item.title}
         </h1>
         <p className="mt-2 max-w-3xl text-sm leading-6 text-ink/68">{item.shortDescription}</p>
       </div>
@@ -46,6 +50,15 @@ export function EquipmentDetailHero({ item, onOrderClick }: EquipmentDetailHeroP
           <span className="rounded-full bg-moss/12 px-3 py-1 text-sm font-bold text-moss">
             {availabilityLabels[item.availability]}
           </span>
+          {featureTags.length ? (
+            <div className="mt-3 flex flex-wrap gap-2">
+              {featureTags.map((tag) => (
+                <span key={tag} className="rounded-full bg-paper px-3 py-1 text-xs font-black text-ink/72">
+                  {tag}
+                </span>
+              ))}
+            </div>
+          ) : null}
           <div className="mt-6">
             <p className="text-3xl font-black">{item.priceLabel || `от ${formatPrice(item.pricePerShift)}/смена`}</p>
             <p className="mt-2 text-xs font-bold uppercase leading-5 text-accent">

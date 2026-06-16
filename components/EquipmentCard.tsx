@@ -13,6 +13,10 @@ type EquipmentCardProps = {
 
 export function EquipmentCard({ item, selected, onToggleSelected, onRequest }: EquipmentCardProps) {
   const { openOrderModal } = useOrderModal();
+  const featureTags = [
+    item.withOperatorAvailable ? "С оператором" : null,
+    item.deliveryAvailable ? "Доставка" : null
+  ].filter((tag): tag is string => Boolean(tag));
 
   function handleRequest() {
     if (onRequest) {
@@ -73,7 +77,7 @@ export function EquipmentCard({ item, selected, onToggleSelected, onRequest }: E
           </span>
         </div>
         <div className="mt-3 flex flex-wrap gap-2 md:mt-1 md:gap-1.5 xl:mt-2">
-          {["С оператором", "Доставка"].map((tag) => (
+          {featureTags.map((tag) => (
             <span key={tag} className="rounded-full bg-[#dff0d6]/80 px-2 py-0.5 text-[8px] font-black text-moss xl:text-[9px]">
               {tag}
             </span>
