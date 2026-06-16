@@ -82,7 +82,9 @@ export function LeadForm({
         />
         <input
           className={`focus-ring h-6 rounded-[6px] border px-3 text-[10px] font-semibold ${fieldClass}`}
-          placeholder="Телефон"
+          placeholder="+375291234567"
+          inputMode="tel"
+          autoComplete="tel"
           {...register("phone")}
         />
         <input
@@ -138,7 +140,9 @@ export function LeadForm({
         <div>
           <input
             className={`focus-ring h-12 w-full rounded-2xl border px-4 ${fieldClass}`}
-            placeholder="+375 (__) ___-__-__"
+            placeholder="+375291234567"
+            inputMode="tel"
+            autoComplete="tel"
             {...register("phone")}
           />
           {errors.phone ? <p className="mt-1 text-xs text-accent">{errors.phone.message}</p> : null}

@@ -1,17 +1,18 @@
 import { Menu, Phone, X } from "lucide-react";
 import { useState } from "react";
+import { buildAppPath } from "@/lib/site-paths";
 import { Button } from "./Button";
 import { useOrderModal } from "./OrderModal";
 
 const nav = [
-  { href: "/#services", label: "Услуги" },
-  { href: "/#about", label: "О компании" },
-  { href: "/#contacts", label: "Контакты" }
+  { href: buildAppPath("/#services"), label: "Услуги" },
+  { href: buildAppPath("/#about"), label: "О компании" },
+  { href: buildAppPath("/#contacts"), label: "Контакты" }
 ];
 
 export function Logo() {
   return (
-    <a href="/" className="flex shrink-0 items-center gap-2 md:gap-2.5" aria-label="Arentex.by на главную">
+    <a href={buildAppPath("/")} className="flex shrink-0 items-center gap-2 md:gap-2.5" aria-label="Arentex.by на главную">
       <span className="grid h-9 w-9 place-items-center rounded-[9px] bg-accent text-night shadow-card md:h-[34px] md:w-[34px] xl:h-[44px] xl:w-[44px]">
         <span className="h-0 w-0 border-x-[6px] border-b-[15px] border-x-transparent border-b-night xl:border-x-[7px] xl:border-b-[18px]" />
       </span>

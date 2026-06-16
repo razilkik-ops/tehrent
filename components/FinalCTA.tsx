@@ -1,4 +1,5 @@
 import { ShieldCheck, Zap } from "lucide-react";
+import { buildAppPath } from "@/lib/site-paths";
 import { Button } from "./Button";
 import { useOrderModal } from "./OrderModal";
 
@@ -15,7 +16,7 @@ export function FinalCTA() {
     <section id="contacts" className="w-full content-gutter pb-10 pt-3 md:pb-14 md:pt-6">
       <div className="relative isolate mx-auto max-w-none overflow-hidden rounded-[14px] bg-night p-4 text-white shadow-[0_30px_90px_rgba(23,27,22,0.28),0_10px_28px_rgba(23,27,22,0.16)] md:rounded-[16px] md:p-5 lg:h-[392px] lg:p-[66px_76px]">
         <img
-          src="/images/equipment/hero-excavator.png"
+          src={buildAppPath("/images/equipment/hero-excavator.png")}
           alt=""
           className="absolute inset-y-0 right-0 -z-10 hidden h-full w-[48%] object-cover object-[80%_50%] opacity-95 lg:block"
         />

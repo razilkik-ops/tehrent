@@ -4,21 +4,74 @@ import fs from "node:fs";
 import fsp from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { createServer as createViteServer } from "vite";
 import { z } from "zod";
 import { applySeoToHtml, buildSitemapXml, getMetaForPath } from "../lib/seo.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, "..");
+
+function loadLocalEnvFile(filePath) {
+  try {
+    const raw = fs.readFileSync(filePath, "utf8");
+    for (const line of raw.split(/\r?\n/)) {
+      const trimmed = line.trim();
+      if (!trimmed || trimmed.startsWith("#")) {
+        continue;
+      }
+
+      const separatorIndex = trimmed.indexOf("=");
+      if (separatorIndex <= 0) {
+        continue;
+      }
+
+      const key = trimmed.slice(0, separatorIndex).trim();
+      if (!key || process.env[key] !== undefined) {
+        continue;
+      }
+
+      let value = trimmed.slice(separatorIndex + 1).trim();
+      if (
+        (value.startsWith('"') && value.endsWith('"')) ||
+        (value.startsWith("'") && value.endsWith("'"))
+      ) {
+        value = value.slice(1, -1);
+      }
+
+      process.env[key] = value;
+    }
+  } catch (error) {
+    if (error.code !== "ENOENT") {
+      console.warn("[env] failed to load .env file", error);
+    }
+  }
+}
+
+loadLocalEnvFile(path.join(root, ".env"));
+
+function normalizeBasePath(basePath = process.env.APP_BASE_PATH || "/") {
+  const trimmed = String(basePath).trim();
+  if (!trimmed || trimmed === "/") {
+    return "/";
+  }
+
+  return `/${trimmed.replace(/^\/+|\/+$/g, "")}`;
+}
+
 const isProduction = process.env.NODE_ENV === "production";
 const port = Number(process.env.PORT || 3001);
+const appBasePath = normalizeBasePath();
 const dataDir = path.resolve(process.env.DATA_DIR || path.join(root, "data"));
 const uploadsDir = path.join(dataDir, "uploads");
 const equipmentFile = path.join(dataDir, "equipment.json");
+const telegramBotToken = process.env.TELEGRAM_BOT_TOKEN?.trim() || "";
+const telegramChatId = process.env.TELEGRAM_CHAT_ID?.trim() || "";
+const telegramThreadId = process.env.TELEGRAM_THREAD_ID?.trim() || "";
+const leadsTimezone = process.env.LEADS_TIMEZONE?.trim() || "Europe/Minsk";
 const adminUsername = process.env.ADMIN_USERNAME || "admin";
 const adminPassword = process.env.ADMIN_PASSWORD || "Arentex2026!";
 const sessionCookieName = "arentex_admin_session";
 const sessions = new Map();
+const belarusPhonePattern = /^\+375(?:25|29|33|44)\d{7}$/;
 
 const leadSchema = z
   .object({
@@ -26,8 +79,10 @@ const leadSchema = z
     phone: z
       .string()
       .trim()
-      .min(6)
-      .refine((value) => value.replace(/[^\d+]/g, "").length >= 6),
+      .min(1)
+      .refine((value) => belarusPhonePattern.test(value), {
+        message: "Введите номер в формате +375291234567"
+      }),
     task: z.string().trim().optional(),
     equipmentId: z.string().trim().optional(),
     rentalPeriod: z.string().trim().optional(),
@@ -161,9 +216,144 @@ function safeFileName(fileName) {
   return `${base || "equipment"}-${Date.now()}${safeExtension}`;
 }
 
+function escapeTelegramHtml(value) {
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+}
+
+function formatLeadDate(date) {
+  return new Intl.DateTimeFormat("ru-BY", {
+    dateStyle: "medium",
+    timeStyle: "short",
+    timeZone: leadsTimezone
+  }).format(date);
+}
+
+function getTelegramThreadId() {
+  if (!telegramThreadId) {
+    return undefined;
+  }
+
+  const parsedValue = Number.parseInt(telegramThreadId, 10);
+  if (!Number.isInteger(parsedValue)) {
+    throw new Error("TELEGRAM_THREAD_ID должен быть целым числом");
+  }
+
+  return parsedValue;
+}
+
+function getTelegramChatIds() {
+  return [...new Set(
+    telegramChatId
+      .split(/[\s,;]+/)
+      .map((value) => value.trim())
+      .filter(Boolean)
+  )];
+}
+
+function formatLeadMessage(lead, equipmentTitles, request) {
+  const lines = [
+    "<b>Новая заявка с сайта</b>",
+    "",
+    `<b>Дата:</b> ${escapeTelegramHtml(formatLeadDate(new Date()))}`,
+    `<b>Форма:</b> ${escapeTelegramHtml(lead.formType)}`,
+    `<b>Телефон:</b> ${escapeTelegramHtml(lead.phone)}`,
+    `<b>Имя:</b> ${escapeTelegramHtml(lead.name || "Не указано")}`,
+    `<b>Задача:</b> ${escapeTelegramHtml(lead.task || "Не указана")}`,
+    `<b>Техника:</b> ${escapeTelegramHtml(equipmentTitles.join(", ") || "Не выбрана")}`,
+    `<b>Период:</b> ${escapeTelegramHtml(lead.rentalPeriod || "Не указан")}`,
+    `<b>Адрес:</b> ${escapeTelegramHtml(lead.address || "Не указан")}`,
+    `<b>Страница:</b> ${escapeTelegramHtml(lead.sourcePage)}`
+  ];
+
+  const utmEntries = Object.entries(lead.utm || {}).filter(([, value]) => value?.trim());
+  if (utmEntries.length) {
+    lines.push(
+      "",
+      "<b>UTM:</b>",
+      ...utmEntries.map(([key, value]) => `${escapeTelegramHtml(key)}: ${escapeTelegramHtml(value)}`)
+    );
+  }
+
+  const ipAddress = request.headers["x-forwarded-for"] || request.socket?.remoteAddress;
+  const userAgent = request.headers["user-agent"];
+  if (ipAddress || userAgent) {
+    lines.push("", "<b>Техническая информация:</b>");
+    if (ipAddress) {
+      lines.push(`IP: ${escapeTelegramHtml(String(ipAddress))}`);
+    }
+    if (userAgent) {
+      lines.push(`User-Agent: ${escapeTelegramHtml(String(userAgent))}`);
+    }
+  }
+
+  return lines.join("\n");
+}
+
+async function sendLeadToTelegram(lead, request) {
+  const chatIds = getTelegramChatIds();
+  if (!telegramBotToken || !chatIds.length) {
+    throw new Error("Telegram не настроен: задайте TELEGRAM_BOT_TOKEN и TELEGRAM_CHAT_ID");
+  }
+
+  const messageThreadId = getTelegramThreadId();
+  const equipment = await readEquipment();
+  const equipmentMap = new Map(equipment.map((item) => [item.id, item.title]));
+  const equipmentIds = [...new Set([lead.equipmentId, ...lead.selectedEquipment].filter(Boolean))];
+  const equipmentTitles = equipmentIds.map((id) => equipmentMap.get(id) || id);
+
+  const messageText = formatLeadMessage(lead, equipmentTitles, request);
+  const telegramResults = [];
+
+  for (const chatId of chatIds) {
+    const telegramPayload = {
+      chat_id: chatId,
+      text: messageText,
+      parse_mode: "HTML",
+      disable_web_page_preview: true,
+      ...(messageThreadId ? { message_thread_id: messageThreadId } : {})
+    };
+
+    const telegramResponse = await fetch(`https://api.telegram.org/bot${telegramBotToken}/sendMessage`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(telegramPayload)
+    });
+
+    const telegramResult = await telegramResponse.json().catch(() => null);
+    if (!telegramResponse.ok || !telegramResult?.ok) {
+      const description =
+        telegramResult && typeof telegramResult.description === "string"
+          ? telegramResult.description
+          : `HTTP ${telegramResponse.status}`;
+      throw new Error(`Не удалось отправить заявку в Telegram: ${description}`);
+    }
+
+    telegramResults.push(telegramResult);
+  }
+
+  return telegramResults;
+}
+
 async function createApp() {
   const app = express();
   await ensureDataDirectories();
+
+  if (appBasePath !== "/") {
+    app.use((request, _response, next) => {
+      if (request.url === appBasePath) {
+        request.url = "/";
+      } else if (request.url.startsWith(`${appBasePath}/`)) {
+        request.url = request.url.slice(appBasePath.length) || "/";
+      }
+
+      next();
+    });
+  }
 
   app.use(express.json({ limit: "20mb" }));
   app.use("/uploads", express.static(uploadsDir));
@@ -184,7 +374,7 @@ async function createApp() {
     }
   });
 
-  app.post("/api/leads", (request, response) => {
+  app.post("/api/leads", async (request, response, next) => {
     const parsed = leadSchema.safeParse(request.body);
 
     if (!parsed.success) {
@@ -195,12 +385,22 @@ async function createApp() {
       return;
     }
 
-    console.log("[lead]", {
+    const lead = {
       createdAt: new Date().toISOString(),
       ...parsed.data
-    });
+    };
 
-    response.json({ success: true });
+    try {
+      console.log("[lead]", lead);
+      const telegramResults = await sendLeadToTelegram(parsed.data, request);
+      response.json({
+        success: true,
+        telegramMessageId: telegramResults[0]?.result?.message_id || null,
+        telegramMessageIds: telegramResults.map((result) => result.result?.message_id).filter(Boolean)
+      });
+    } catch (error) {
+      next(error);
+    }
   });
 
   app.get("/api/admin/session", (request, response) => {
@@ -301,6 +501,7 @@ async function createApp() {
       }
     });
   } else {
+    const { createServer: createViteServer } = await import("vite");
     const vite = await createViteServer({
       root,
       server: {

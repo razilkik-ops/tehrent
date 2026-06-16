@@ -57,3 +57,26 @@ VITE_GITHUB_UPLOADS_DIR=public/uploads/equipment
 ```
 
 Тогда админу останется ввести только GitHub token.
+
+## Прием заявок в Telegram
+
+Заявки с форм отправляются сервером в Telegram Bot API, поэтому сайт должен работать как `Node web service`, а не как полностью статический хостинг.
+
+Что нужно:
+
+- создать бота через `@BotFather`
+- получить `TELEGRAM_BOT_TOKEN`
+- добавить бота в нужный чат или канал
+- получить `TELEGRAM_CHAT_ID`
+- если используется тема в группе, опционально указать `TELEGRAM_THREAD_ID`
+
+Переменные окружения:
+
+```env
+TELEGRAM_BOT_TOKEN=1234567890:your-bot-token
+TELEGRAM_CHAT_ID=-1001234567890
+TELEGRAM_THREAD_ID=
+LEADS_TIMEZONE=Europe/Minsk
+```
+
+Если `TELEGRAM_BOT_TOKEN` или `TELEGRAM_CHAT_ID` не заданы, `/api/leads` вернет ошибку и форма не отправится.

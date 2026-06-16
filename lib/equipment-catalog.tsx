@@ -1,5 +1,6 @@
 import { createContext, type ReactNode, useContext, useEffect, useMemo, useState } from "react";
 import { equipment as fallbackEquipment, type Equipment } from "./equipment";
+import { buildAppPath, buildAssetUrl } from "./site-paths";
 
 type EquipmentCatalogContextValue = {
   equipment: Equipment[];
@@ -12,9 +13,19 @@ type EquipmentCatalogContextValue = {
 };
 
 const EquipmentCatalogContext = createContext<EquipmentCatalogContextValue | null>(null);
+const equipmentCatalogUrl = buildAppPath(`/data/equipment.json?v=${encodeURIComponent(__APP_BUILD_ID__)}`);
+
+function normalizeEquipmentAssets(items: Equipment[]) {
+  return items.map((item) => ({
+    ...item,
+    imageUrl: buildAssetUrl(item.imageUrl),
+    mobileImageUrl: buildAssetUrl(item.mobileImageUrl)
+  }));
+}
 
 async function loadEquipmentFromApi() {
-  const response = await fetch("/data/equipment.json", {
+  const response = await fetch(equipmentCatalogUrl, {
+    cache: "no-store",
     headers: {
       Accept: "application/json"
     }
@@ -25,11 +36,11 @@ async function loadEquipmentFromApi() {
 
   const data = (await response.json()) as Equipment[] | { items?: Equipment[] };
   const items = Array.isArray(data) ? data : data.items;
-  return items?.length ? items : fallbackEquipment;
+  return normalizeEquipmentAssets(items?.length ? items : fallbackEquipment);
 }
 
 export function EquipmentCatalogProvider({ children }: { children: ReactNode }) {
-  const [items, setItems] = useState<Equipment[]>(fallbackEquipment);
+  const [items, setItems] = useState<Equipment[]>(() => normalizeEquipmentAssets(fallbackEquipment));
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 

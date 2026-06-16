@@ -2,6 +2,7 @@ import { CalendarCheck, X } from "lucide-react";
 import { createContext, type ReactNode, useContext, useMemo, useState } from "react";
 import { useEquipmentCatalog } from "@/lib/equipment-catalog";
 import type { Equipment } from "@/lib/equipment";
+import { stripBasePath } from "@/lib/site-paths";
 import { QuickRequestForm } from "./QuickRequestForm";
 
 type OrderModalPayload = {
@@ -29,7 +30,7 @@ function getCurrentSourcePage() {
     return "site";
   }
 
-  return `${window.location.pathname}${window.location.hash}`;
+  return `${stripBasePath(window.location.pathname)}${window.location.hash}`;
 }
 
 function getCurrentEquipmentFromUrl(getEquipmentBySlug: (slug: string) => Equipment | undefined) {
@@ -37,7 +38,7 @@ function getCurrentEquipmentFromUrl(getEquipmentBySlug: (slug: string) => Equipm
     return undefined;
   }
 
-  const match = window.location.pathname.match(/^\/equipment\/([^/]+)/);
+  const match = stripBasePath(window.location.pathname).match(/^\/equipment\/([^/]+)/);
   if (!match) {
     return undefined;
   }

@@ -2,6 +2,7 @@ node_modules
 .next
 out
 dist
+.deploy
 screenshots
 tmp
 .env*
@@ -11,3 +12,4 @@ yarn-debug.log*
 yarn-error.log*
 .DS_Store
 *.tsbuildinfo
+tehrent-*.zip

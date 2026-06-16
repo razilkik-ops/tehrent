@@ -1,5 +1,6 @@
 import { useEquipmentCatalog } from "@/lib/equipment-catalog";
 import { formatPrice, type Equipment } from "@/lib/equipment";
+import { buildAppPath } from "@/lib/site-paths";
 import { Button } from "./Button";
 import { EquipmentVisual } from "./EquipmentVisual";
 import { useOrderModal } from "./OrderModal";
@@ -38,7 +39,7 @@ export function RelatedEquipment({ current }: { current: Equipment }) {
                   ))}
               </ul>
               <div className="mt-5 grid grid-cols-2 gap-3">
-                <Button href={`/equipment/${item.slug}`} size="sm" variant="outline">
+                <Button href={buildAppPath(`/equipment/${item.slug}`)} size="sm" variant="outline">
                   Подробнее
                 </Button>
                 <Button

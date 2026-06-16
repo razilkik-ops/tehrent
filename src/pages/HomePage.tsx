@@ -14,6 +14,7 @@ import { StickyMobileCTA } from "@/components/StickyMobileCTA";
 import { useEquipmentCatalog } from "@/lib/equipment-catalog";
 import { formatPrice, type Equipment } from "@/lib/equipment";
 import { getHomeMeta } from "@/lib/seo.js";
+import { buildAppPath } from "@/lib/site-paths";
 import { usePageMeta } from "@/src/usePageMeta";
 
 const mobileHeroItems = [
@@ -36,27 +37,27 @@ const featuredEquipmentIds = [
 const cases = [
   {
     title: "Бурение свай под фундамент",
-    imageUrl: "/images/services/foundation-pile-drilling.jpg"
+    imageUrl: buildAppPath("/images/services/foundation-pile-drilling.jpg")
   },
   {
     title: "Благоустройство территорий",
-    imageUrl: "/images/services/landscaping.webp"
+    imageUrl: buildAppPath("/images/services/landscaping.webp")
   },
   {
     title: "Доставка грунта",
-    imageUrl: "/images/services/soil-delivery.jpg"
+    imageUrl: buildAppPath("/images/services/soil-delivery.jpg")
   },
   {
     title: "Укладка плитки",
-    imageUrl: "/images/services/paving-installation.jpg"
+    imageUrl: buildAppPath("/images/services/paving-installation.jpg")
   },
   {
     title: "Монтаж канализации",
-    imageUrl: "/images/services/sewer-installation.jpg"
+    imageUrl: buildAppPath("/images/services/sewer-installation.jpg")
   },
   {
     title: "Дренаж участка",
-    imageUrl: "/images/services/site-drainage.jpg"
+    imageUrl: buildAppPath("/images/services/site-drainage.jpg")
   }
 ];
 
@@ -104,13 +105,13 @@ export function HomePage() {
             <div className="rounded-[18px]">
               <div className="relative isolate min-h-[400px] overflow-hidden rounded-[18px] bg-night px-5 pb-5 pt-6 text-white shadow-soft">
                 <img
-                  src="/images/equipment/hero-mini-equipment-desktop.jpg"
+                  src={buildAppPath("/images/equipment/hero-mini-equipment-desktop.jpg")}
                   alt=""
                   className="absolute inset-0 h-full w-full scale-110 object-cover object-[58%_center] opacity-45 blur-sm"
                   loading="eager"
                 />
                 <img
-                  src="/images/equipment/hero-mini-equipment-desktop.jpg"
+                  src={buildAppPath("/images/equipment/hero-mini-equipment-desktop.jpg")}
                   alt=""
                   className="absolute inset-0 h-full w-full object-cover object-[58%_center]"
                   loading="eager"
@@ -180,7 +181,7 @@ export function HomePage() {
 
                   return (
                     <article key={item.id} className="overflow-hidden rounded-[12px] bg-white shadow-card">
-                      <a href={`/equipment/${item.slug}`} aria-label={item.title}>
+                      <a href={buildAppPath(`/equipment/${item.slug}`)} aria-label={item.title}>
                         <EquipmentVisual
                           type={item.imagePlaceholderType}
                           imageUrl={item.mobileImageUrl || item.imageUrl}
@@ -262,13 +263,13 @@ export function HomePage() {
             <div className="rounded-[28px]">
               <div className="relative isolate min-h-[700px] overflow-hidden rounded-[28px] bg-night px-8 py-9 text-white shadow-soft lg:min-h-[730px] lg:px-12 lg:py-11 xl:min-h-[760px] xl:px-16">
                 <img
-                  src="/images/equipment/hero-mini-equipment-desktop.jpg"
+                  src={buildAppPath("/images/equipment/hero-mini-equipment-desktop.jpg")}
                   alt=""
                   className="absolute inset-0 h-full w-full scale-105 object-cover object-center opacity-42 blur-sm"
                   loading="eager"
                 />
                 <img
-                  src="/images/equipment/hero-mini-equipment-desktop.jpg"
+                  src={buildAppPath("/images/equipment/hero-mini-equipment-desktop.jpg")}
                   alt=""
                   className="absolute inset-0 h-full w-full object-cover object-center"
                   loading="eager"
@@ -354,7 +355,7 @@ export function HomePage() {
 
                   return (
                     <article key={item.id} className="flex flex-col overflow-hidden rounded-[12px] bg-white shadow-card">
-                      <a href={`/equipment/${item.slug}`} aria-label={item.title} className="block">
+                      <a href={buildAppPath(`/equipment/${item.slug}`)} aria-label={item.title} className="block">
                         <EquipmentVisual
                           type={item.imagePlaceholderType}
                           imageUrl={item.imageUrl}

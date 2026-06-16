@@ -1,0 +1,10 @@
+<FilesMatch "^telegram-config(?:\\.example)?\\.php$">
+  Require all denied
+</FilesMatch>
+
+<IfModule !mod_authz_core.c>
+  <FilesMatch "^telegram-config(?:\\.example)?\\.php$">
+    Order allow,deny
+    Deny from all
+  </FilesMatch>
+</IfModule>

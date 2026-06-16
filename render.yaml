@@ -1,10 +1,17 @@
 services:
   - type: web
     name: tehrent
-    runtime: static
+    runtime: node
     buildCommand: npm ci && npm run build
-    staticPublishPath: .
-    routes:
-      - type: rewrite
-        source: /*
-        destination: /index.html
+    startCommand: npm run start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: LEADS_TIMEZONE
+        value: Europe/Minsk
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+      - key: TELEGRAM_CHAT_ID
+        sync: false
+      - key: TELEGRAM_THREAD_ID
+        sync: false

@@ -1,11 +1,12 @@
 import { MessageCircle, Send, Youtube } from "lucide-react";
+import { buildAppPath } from "@/lib/site-paths";
 import { Logo } from "./Header";
 
 export function Footer() {
   const clientLinks = [
-    { label: "Услуги", href: "/#services" },
-    { label: "О компании", href: "/#about" },
-    { label: "Контакты", href: "/#contacts" }
+    { label: "Услуги", href: buildAppPath("/#services") },
+    { label: "О компании", href: buildAppPath("/#about") },
+    { label: "Контакты", href: buildAppPath("/#contacts") }
   ];
 
   return (
@@ -35,7 +36,7 @@ export function Footer() {
             <div className="mt-4 grid gap-2 text-sm text-white/62 md:mt-1 md:gap-0 md:text-[9px] xl:mt-4 xl:gap-2 xl:text-sm">
               {["Мини-экскаваторы", "Мини-погрузчики", "Бурение", "Планировка", "Вывоз грунта"].map(
                 (item) => (
-                  <a href="/#services" key={item} className="hover:text-white">
+                  <a href={buildAppPath("/#services")} key={item} className="hover:text-white">
                     {item}
                   </a>
                 )

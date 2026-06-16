@@ -1,5 +1,6 @@
 import { Check, Heart, MapPin, Plus, Ruler, Weight } from "lucide-react";
 import { availabilityLabels, formatPrice, type Equipment } from "@/lib/equipment";
+import { buildAppPath } from "@/lib/site-paths";
 import { Button } from "./Button";
 import { EquipmentVisual } from "./EquipmentVisual";
 import { useOrderModal } from "./OrderModal";
@@ -36,7 +37,7 @@ export function EquipmentCard({ item, selected, onToggleSelected, onRequest }: E
   return (
     <article className="overflow-hidden rounded-[12px] border border-ink/8 bg-white shadow-card">
       <div className="relative">
-        <a href={`/equipment/${item.slug}`}>
+        <a href={buildAppPath(`/equipment/${item.slug}`)}>
           <EquipmentVisual
             type={item.imagePlaceholderType}
             imageUrl={item.imageUrl}
@@ -61,7 +62,7 @@ export function EquipmentCard({ item, selected, onToggleSelected, onRequest }: E
       </div>
       <div className="p-4 md:p-2 xl:p-3">
         <div className="flex items-start justify-between gap-3">
-          <a href={`/equipment/${item.slug}`} className="text-[13px] font-black hover:text-moss xl:text-[15px]">
+          <a href={buildAppPath(`/equipment/${item.slug}`)} className="text-[13px] font-black hover:text-moss xl:text-[15px]">
             {item.title}
           </a>
         </div>

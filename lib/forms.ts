@@ -1,10 +1,14 @@
 import { z } from "zod";
+import { buildAppPath } from "./site-paths";
+
+const belarusPhonePattern = /^\+375(?:25|29|33|44)\d{7}$/;
+const belarusPhoneMessage = "Введите номер в формате +375291234567";
 
 const phoneSchema = z
   .string()
   .trim()
-  .min(6, "Введите телефон")
-  .refine((value) => value.replace(/[^\d+]/g, "").length >= 6, "Проверьте телефон");
+  .min(1, "Введите телефон")
+  .refine((value) => belarusPhonePattern.test(value), belarusPhoneMessage);
 
 export const leadSchema = z
   .object({
@@ -26,8 +30,10 @@ export const leadSchema = z
 
 export type LeadFormValues = z.infer<typeof leadSchema>;
 
+const leadEndpoint = import.meta.env.VITE_LEAD_ENDPOINT?.trim() || "/api/leads.php";
+
 export async function submitLead(values: LeadFormValues) {
-  const response = await fetch("/api/leads", {
+  const response = await fetch(buildAppPath(leadEndpoint), {
     method: "POST",
     headers: {
       "Content-Type": "application/json"

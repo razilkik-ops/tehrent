@@ -88,7 +88,9 @@ export function QuickRequestForm({
         />
         <input
           className="focus-ring h-14 min-w-0 rounded-[10px] border border-white/10 bg-white/10 px-4 text-base font-semibold text-white placeholder:text-white/44 md:h-14 md:rounded-[12px] md:text-[15px] 2xl:h-16 2xl:text-base"
-          placeholder="Телефон"
+          placeholder="+375291234567"
+          inputMode="tel"
+          autoComplete="tel"
           {...register("phone")}
         />
         {isModal ? <input type="hidden" {...register("task")} /> : (

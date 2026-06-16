@@ -1,4 +1,5 @@
 import type { ImagePlaceholderType } from "@/lib/equipment";
+import { buildAppPath } from "@/lib/site-paths";
 
 type EquipmentVisualProps = {
   type: ImagePlaceholderType;
@@ -11,11 +12,11 @@ type EquipmentVisualProps = {
 };
 
 const imageMap: Record<ImagePlaceholderType, string> = {
-  excavator: "/images/equipment/excavator.png",
-  loader: "/images/equipment/loader.png",
-  backhoe: "/images/equipment/volvo-bl71-model.webp",
-  lift: "/images/equipment/lift.png",
-  truck: "/images/equipment/truck.png"
+  excavator: buildAppPath("/images/equipment/excavator.png"),
+  loader: buildAppPath("/images/equipment/loader.png"),
+  backhoe: buildAppPath("/images/equipment/volvo-bl71-model.webp"),
+  lift: buildAppPath("/images/equipment/lift.png"),
+  truck: buildAppPath("/images/equipment/truck.png")
 };
 
 const objectPosition: Record<ImagePlaceholderType, string> = {
