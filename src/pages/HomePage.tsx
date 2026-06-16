@@ -13,7 +13,7 @@ import { SectionTitle } from "@/components/SectionTitle";
 import { StickyMobileCTA } from "@/components/StickyMobileCTA";
 import { useEquipmentCatalog } from "@/lib/equipment-catalog";
 import { formatPrice, type Equipment } from "@/lib/equipment";
-import { getHomeMeta } from "@/lib/seo.js";
+import { getEquipmentSeoHeading, getHomeMeta } from "@/lib/seo.js";
 import { usePageMeta } from "@/src/usePageMeta";
 
 const mobileHeroItems = [
@@ -62,11 +62,12 @@ const cases = [
 
 function getFeaturedEquipmentCard(item: Equipment) {
   const hourlyPrice = item.hourlyPrice ?? Math.round(item.pricePerShift / 8);
+  const title = getEquipmentSeoHeading(item);
 
   if (item.id === "eq-bobcat-e35") {
     return {
       hourlyPrice,
-      title: "Аренда мини-экскаватора KUBOTA KX41-3V",
+      title,
       workLabel: "Глубина копания",
       workSpec: item.specs["Глубина копания"],
       attachmentsLabel: "Ковши",
@@ -79,7 +80,7 @@ function getFeaturedEquipmentCard(item: Equipment) {
   if (item.id === "eq-kubota-u27") {
     return {
       hourlyPrice,
-      title: "Аренда мини-экскаватора с буром KX41-3V",
+      title,
       workLabel: "Глубина отверстий",
       workSpec: item.specs["Глубина отверстий"],
       attachmentsLabel: "Шнеки",
@@ -92,7 +93,7 @@ function getFeaturedEquipmentCard(item: Equipment) {
   if (item.id === "eq-jcb-1cx") {
     return {
       hourlyPrice,
-      title: "Аренда мини-погрузчика New Holland L160",
+      title,
       workLabel: "Ширина ковша",
       workSpec: item.specs["Ширина ковша"],
       attachmentsLabel: "Навесное",
@@ -105,7 +106,7 @@ function getFeaturedEquipmentCard(item: Equipment) {
   if (item.id === "eq-bobcat-e32") {
     return {
       hourlyPrice,
-      title: "Аренда мини-экскаватора BOBCAT E32",
+      title,
       workLabel: "Глубина копания",
       workSpec: item.specs["Глубина копания"],
       attachmentsLabel: "Навесное",
@@ -118,7 +119,7 @@ function getFeaturedEquipmentCard(item: Equipment) {
   if (item.id === "eq-bobcat-s650") {
     return {
       hourlyPrice,
-      title: "Аренда мини-погрузчика с гидробуром New Holland L160",
+      title,
       workLabel: "Глубина отверстий",
       workSpec: item.specs["Глубина отверстий"],
       attachmentsLabel: "Диаметр шнека",
@@ -131,7 +132,7 @@ function getFeaturedEquipmentCard(item: Equipment) {
   if (item.id === "eq-kamaz-6520") {
     return {
       hourlyPrice,
-      title: "Аренда самосвала 10-20 т",
+      title,
       workLabel: "Работы",
       workSpec: "вывоз и доставка",
       attachmentsLabel: "Цена",
@@ -144,7 +145,7 @@ function getFeaturedEquipmentCard(item: Equipment) {
   if (item.id === "eq-volvo-bl71") {
     return {
       hourlyPrice,
-      title: "Аренда экскаватора-погрузчика Volvo BL71",
+      title,
       workLabel: "Глубина копания",
       workSpec: item.specs["Глубина копания"],
       attachmentsLabel: "Цена",
@@ -157,7 +158,7 @@ function getFeaturedEquipmentCard(item: Equipment) {
   if (item.id === "eq-amkodor-loader") {
     return {
       hourlyPrice,
-      title: "Аренда фронтального погрузчика Амкодор",
+      title,
       workLabel: "Объем ковша",
       workSpec: item.specs["Объем ковша"],
       attachmentsLabel: "Цена",
@@ -169,7 +170,7 @@ function getFeaturedEquipmentCard(item: Equipment) {
 
   return {
     hourlyPrice,
-    title: `Аренда ${item.title}`,
+    title,
     workLabel: item.specs["Глубина копания"] ? "Глубина копания" : item.specs["Глубина отверстий"] ? "Глубина" : "Работа",
     workSpec:
       item.specs["Глубина копания"] ||
@@ -401,13 +402,13 @@ export function HomePage() {
                         <span className="grid size-12 shrink-0 place-items-center rounded-[12px] border border-accent/45 bg-accent/12 text-accent">
                           <PhoneCall size={24} />
                         </span>
-                        <span className="text-[20px] font-black leading-none lg:text-[22px] xl:text-2xl">
+                        <span className="whitespace-nowrap text-[16px] font-black leading-none lg:text-[18px] xl:text-[20px] 2xl:text-[22px]">
                           +375 29 920-95-82
                         </span>
                       </a>
                       <Button
                         type="button"
-                        className="h-[76px] w-full rounded-[14px] px-5 text-lg font-black uppercase"
+                        className="h-[76px] w-full rounded-[14px] px-5 text-[16px] font-black uppercase whitespace-nowrap lg:text-[17px] xl:text-lg"
                         onClick={() =>
                           openOrderModal({
                             sourcePage: "home-desktop-hero",
